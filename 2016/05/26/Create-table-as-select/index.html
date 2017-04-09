@@ -1,0 +1,828 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DDL,Mysql,Create," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Hi，I‘m Zaki，今天，在做数据变更，使用Create table as select的方式进行备份，最后还原回来的时候，发现整个表都没有了主键，然后进行了如下小实验来测试。
+建一个测试表12345678910111213141516CREATE TABLE `yq_ad` (  `ad_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMME">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Create table as select 方式无法创建主键">
+<meta property="og:url" content="http://yoursite.com/2016/05/26/Create-table-as-select/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="Hi，I‘m Zaki，今天，在做数据变更，使用Create table as select的方式进行备份，最后还原回来的时候，发现整个表都没有了主键，然后进行了如下小实验来测试。
+建一个测试表12345678910111213141516CREATE TABLE `yq_ad` (  `ad_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMME">
+<meta property="og:updated_time" content="2016-05-26T06:14:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Create table as select 方式无法创建主键">
+<meta name="twitter:description" content="Hi，I‘m Zaki，今天，在做数据变更，使用Create table as select的方式进行备份，最后还原回来的时候，发现整个表都没有了主键，然后进行了如下小实验来测试。
+建一个测试表12345678910111213141516CREATE TABLE `yq_ad` (  `ad_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMME">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/26/Create-table-as-select/"/>
+
+
+
+
+
+  <title> Create table as select 方式无法创建主键 | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/26/Create-table-as-select/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Create table as select 方式无法创建主键
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-26T11:11:05+08:00">
+                2016-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/26/Create-table-as-select/" class="leancloud_visitors" data-flag-title="Create table as select 方式无法创建主键">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　<code>Hi，I‘m Zaki，</code>今天，在做数据变更，使用<code>Create table as select</code>的方式进行备份，最后还原回来的时候，发现整个表都没有了主键，然后进行了如下小实验来测试。</p>
+<h4 id="建一个测试表"><a href="#建一个测试表" class="headerlink" title="建一个测试表"></a>建一个测试表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `yq_ad` (</div><div class="line">  `ad_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;广告id&apos;,</div><div class="line">  `ad_group_id` int(10) unsigned NOT NULL COMMENT &apos;城市广告组id&apos;,</div><div class="line">  `title` varchar(50) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;标题&apos;,</div><div class="line">  `ad_describe` varchar(200) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;描述&apos;,</div><div class="line">  `pic_url` varchar(100) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;图片&apos;,</div><div class="line">  `ad_url` varchar(100) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;链接&apos;,</div><div class="line">  `sort_num` tinyint(1) unsigned NOT NULL DEFAULT &apos;1&apos; COMMENT &apos;显示排序&apos;,</div><div class="line">  `is_delete` tinyint(1) NOT NULL DEFAULT &apos;0&apos; COMMENT &apos;是否被删除&apos;,</div><div class="line">  `linkid` varchar(255) NOT NULL DEFAULT &apos;&apos;,</div><div class="line">  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</div><div class="line">  `create_date` date NOT NULL DEFAULT &apos;1970-01-01&apos; COMMENT &apos;创建日期&apos;,</div><div class="line">  PRIMARY KEY (`ad_id`),</div><div class="line">  KEY `idx_adgroupid` (`ad_group_id`),</div><div class="line">  KEY `idx_createdate` (`create_date`)</div><div class="line">) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT=&apos;广告表&apos;</div></pre></td></tr></table></figure>
+<h4 id="进行备份"><a href="#进行备份" class="headerlink" title="进行备份"></a>进行备份</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create table yq_ad20160526 as select * from yq_ad;</div></pre></td></tr></table></figure>
+<h4 id="查看备份表"><a href="#查看备份表" class="headerlink" title="查看备份表"></a>查看备份表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">mysql &gt; show create table yq_ad20160526;</div><div class="line">CREATE TABLE `yq_ad20160526` (</div><div class="line">  `ad_id` int(10) unsigned NOT NULL DEFAULT &apos;0&apos; COMMENT &apos;广告id&apos;,</div><div class="line">  `ad_group_id` int(10) unsigned NOT NULL COMMENT &apos;城市广告组id&apos;,</div><div class="line">  `title` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;标题&apos;,</div><div class="line">  `ad_describe` varchar(200) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;描述&apos;,</div><div class="line">  `pic_url` varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;图片&apos;,</div><div class="line">  `ad_url` varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;链接&apos;,</div><div class="line">  `sort_num` tinyint(1) unsigned NOT NULL DEFAULT &apos;1&apos; COMMENT &apos;显示排序&apos;,</div><div class="line">  `is_delete` tinyint(1) NOT NULL DEFAULT &apos;0&apos; COMMENT &apos;是否被删除&apos;,</div><div class="line">  `linkid` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos;,</div><div class="line">  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</div><div class="line">  `create_date` date NOT NULL DEFAULT &apos;1970-01-01&apos; COMMENT &apos;创建日期&apos;</div><div class="line">) ENGINE=InnoDB DEFAULT CHARSET=latin1</div></pre></td></tr></table></figure>
+<h4 id="得出结论"><a href="#得出结论" class="headerlink" title="得出结论"></a>得出结论</h4><p>　　果然主键和索引都消失了，所以通过这个方式来备份的只有表的结构和数据，并没有约束条件。</p>
+<h4 id="Create-table-as-select性能简介"><a href="#Create-table-as-select性能简介" class="headerlink" title="Create table as select性能简介"></a>Create table as select性能简介</h4><p>　　<strong>在数据库中移动数据最快的方法是将其从一个表移动到别一个表，而不是需要进入操作系统将数据从一个表移动到别一个表，有一些常见的方法可用于提高数据迁移的性能：</strong><br><strong>1．</strong>调整表的结构（删除索引和触发器）<br><strong>2．</strong>在数据迁移期间禁用约束<br><strong>3．</strong>使用提示和选项来改进事务性能</p>
+<p>　　第一个技巧是调整表的结构，它涉及禁用目标表上面的任何触发器或索引。例如，如果在目标表上有行级触发器，则插入到表中的每一行都会执行触发器。如果可能的话，最好在数据插入之前将目标表的触发器禁用；如果应该为每个插入的行执行该触发器，则可以在批量插入完成以后再创建此触发器，而不应该在批量插入期间每插入一条数据重复执行触发器。<br>　　除了禁用触发器，应该在启动数据加载之前删除目标表上面的索引，然后在数据加载完毕后再重新创建索引。<br>　　<strong>注意：删除索引和禁用触发器可以解决大多数数和大型表与表之间数据迁移中遇到的性能问题。</strong><br>　　除了禁用索引，还要考虑到表上的约束。如果源数据已经在数据库的表中，在将数据加载到目标表之前，可以检查该数据了解它的相关约束（例如外键或<code>check</code>约束），一旦加载数据完成就可以重新启用这些约束。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDL/" rel="tag"># DDL</a>
+          
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          
+            <a href="/tags/Create/" rel="tag"># Create</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/24/Eclipse-with-PyDev-Windows/" rel="next" title="Eclipse和PyDev搭建完美Python 开发环境（Windows篇）">
+                <i class="fa fa-chevron-left"></i> Eclipse和PyDev搭建完美Python 开发环境（Windows篇）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/26/Truncate-table/" rel="prev" title="Truncate table命令的了解">
+                Truncate table命令的了解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#建一个测试表"><span class="nav-number">1.</span> <span class="nav-text">建一个测试表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进行备份"><span class="nav-number">2.</span> <span class="nav-text">进行备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看备份表"><span class="nav-number">3.</span> <span class="nav-text">查看备份表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#得出结论"><span class="nav-number">4.</span> <span class="nav-text">得出结论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Create-table-as-select性能简介"><span class="nav-number">5.</span> <span class="nav-text">Create table as select性能简介</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+</body>
+</html>

@@ -1,0 +1,1040 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PXC集群," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="环境情况：OS: centos release 6.6
+
+
+
+server
+Hostname
+ip
+
+
+
+
+PXC
+node1
+192.168.42.135
+
+
+PXC
+node2
+192.168.42.136
+
+
+PXC
+node3
+192.168.42.137
+
+
+
+一、PXC的优缺点优点：①.数据同步复制(并发复制)，几乎无延迟；②.多个可同时读写节点，可实现写扩展，不过最好事先进行分库分表">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PXC集群搭建">
+<meta property="og:url" content="http://yoursite.com/2016/04/08/PXC/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="环境情况：OS: centos release 6.6
+
+
+
+server
+Hostname
+ip
+
+
+
+
+PXC
+node1
+192.168.42.135
+
+
+PXC
+node2
+192.168.42.136
+
+
+PXC
+node3
+192.168.42.137
+
+
+
+一、PXC的优缺点优点：①.数据同步复制(并发复制)，几乎无延迟；②.多个可同时读写节点，可实现写扩展，不过最好事先进行分库分表">
+<meta property="og:updated_time" content="2016-05-01T05:16:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PXC集群搭建">
+<meta name="twitter:description" content="环境情况：OS: centos release 6.6
+
+
+
+server
+Hostname
+ip
+
+
+
+
+PXC
+node1
+192.168.42.135
+
+
+PXC
+node2
+192.168.42.136
+
+
+PXC
+node3
+192.168.42.137
+
+
+
+一、PXC的优缺点优点：①.数据同步复制(并发复制)，几乎无延迟；②.多个可同时读写节点，可实现写扩展，不过最好事先进行分库分表">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/04/08/PXC/"/>
+
+
+
+
+
+  <title> PXC集群搭建 | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/08/PXC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PXC集群搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-08T14:11:05+08:00">
+                2016-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/04/08/PXC/" class="leancloud_visitors" data-flag-title="PXC集群搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="环境情况："><a href="#环境情况：" class="headerlink" title="环境情况："></a>环境情况：</h3><p>OS: centos release 6.6</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">server</th>
+<th style="text-align:center">Hostname</th>
+<th style="text-align:center">ip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">PXC</td>
+<td style="text-align:center">node1</td>
+<td style="text-align:center">192.168.42.135</td>
+</tr>
+<tr>
+<td style="text-align:center">PXC</td>
+<td style="text-align:center">node2</td>
+<td style="text-align:center">192.168.42.136</td>
+</tr>
+<tr>
+<td style="text-align:center">PXC</td>
+<td style="text-align:center">node3</td>
+<td style="text-align:center">192.168.42.137</td>
+</tr>
+</tbody>
+</table>
+<h3 id="一、PXC的优缺点"><a href="#一、PXC的优缺点" class="headerlink" title="一、PXC的优缺点"></a>一、PXC的优缺点</h3><h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><p><strong>①.</strong>数据同步复制(并发复制)，几乎无延迟；<br><strong>②.</strong>多个可同时读写节点，可实现写扩展，不过最好事先进行分库分表，让各个节点分别写不同的表或者库，避免让galera解决数据冲突；<br><strong>③.</strong>新节点可以自动部署，部署操作简单；<br><strong>④.</strong>数据严格一致性，尤其适合电商类应用；<br><strong>⑤.</strong>完全兼容MySQL；<br><strong>⑥.</strong>虽然有这么多好处，但也有些局限性：<br><strong>⑦.</strong>服务高可用；</p>
+<h4 id="缺陷："><a href="#缺陷：" class="headerlink" title="缺陷："></a>缺陷：</h4><p><strong>①.</strong>只支持InnoDB引擎；<br><strong>②.</strong>所有表都要有主键；<br><strong>③.</strong>不支持LOCK TABLE等显式锁操作；<br><strong>④.</strong>锁冲突、死锁问题相对更多；<br><strong>⑤.</strong>不支持XA；<br><strong>⑥.</strong>集群吞吐量/性能取决于短板；<br><strong>⑦.</strong>新加入节点采用SST时代价高；<br><strong>⑧.</strong>存在写扩大问题；<br><strong>⑨.</strong>如果并发事务量很大的话，建议采用InfiniBand网络，降低网络延迟；</p>
+<p><strong>事实上，采用PXC的主要目的是解决数据的一致性问题，高可用是顺带实现的。因为PXC存在写扩大以及短板效应，并发效率会有较大损失，类似semi sync replication机制。</strong></p>
+<h3 id="二、PXC和M-S（主从同步）的对比"><a href="#二、PXC和M-S（主从同步）的对比" class="headerlink" title="二、PXC和M/S（主从同步）的对比"></a>二、PXC和M/S（主从同步）的对比</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">\</th>
+<th style="text-align:center">PXC</th>
+<th style="text-align:center">M/S</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">数据同步复制，无延迟</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">数据异步复制</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">√</td>
+</tr>
+<tr>
+<td style="text-align:center">一致性（所有节点的数据一致）</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">可用性（一个或多个节点失效，不影响服务请求。）</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center">√</td>
+</tr>
+<tr>
+<td style="text-align:center">分区容忍性（节点间的连接失效，仍然可以处理请求。）</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">√</td>
+</tr>
+<tr>
+<td style="text-align:center">执行查询查询本地</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">多个库的同时读写</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">支持的存储引擎</td>
+<td style="text-align:center">innodb</td>
+<td style="text-align:center">ALL</td>
+</tr>
+<tr>
+<td style="text-align:center">表结构</td>
+<td style="text-align:center">特殊</td>
+<td style="text-align:center">一般</td>
+</tr>
+<tr>
+<td style="text-align:center">锁冲突、死锁问题</td>
+<td style="text-align:center">较多</td>
+<td style="text-align:center">较少</td>
+</tr>
+<tr>
+<td style="text-align:center">是否支持XA</td>
+<td style="text-align:center">NO</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">新加入节点</td>
+<td style="text-align:center">代价较大</td>
+<td style="text-align:center">相对简单</td>
+</tr>
+<tr>
+<td style="text-align:center">脑裂</td>
+<td style="text-align:center">可以防止</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">处理并发大事务</td>
+<td style="text-align:center">不能</td>
+<td style="text-align:center">能</td>
+</tr>
+</tbody>
+</table>
+<h3 id="三、PXC集群搭建"><a href="#三、PXC集群搭建" class="headerlink" title="三、PXC集群搭建"></a>三、PXC集群搭建</h3><h4 id="1、关闭集群的防火墙和selinux"><a href="#1、关闭集群的防火墙和selinux" class="headerlink" title="1、关闭集群的防火墙和selinux"></a>1、关闭集群的防火墙和selinux</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#即时关闭防火墙</div><div class="line">service iptables stop</div><div class="line">#永久关闭防火墙</div><div class="line">chkconfig iptables off</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#永久禁用，需要重启生效。</div><div class="line">sed -i &apos;s/SELINUX=enforcing/SELINUX=disabled/g&apos; /etc/selinux/config  </div><div class="line">#临时禁用，不需要重启</div><div class="line">setenforce 0</div></pre></td></tr></table></figure>
+<h4 id="2、修改主机名"><a href="#2、修改主机名" class="headerlink" title="2、修改主机名"></a>2、修改主机名</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#在每个节点上的hosts里面加入</div><div class="line">vim /etc/hosts</div><div class="line">192.168.42.135 node1</div><div class="line">192.168.42.136 node2</div><div class="line">192.168.42.137 node3</div><div class="line">#修改为本机应该的节点名</div><div class="line">vim /etc/sysconfig/network</div><div class="line">hostname=node（1、2、3）</div><div class="line">#重启网络服务</div><div class="line">service network restart</div><div class="line">#查看主机名和主机名对应的IP</div><div class="line">hostname</div><div class="line">hostname -i</div></pre></td></tr></table></figure>
+<h4 id="3、实现3个节点之间的无密码登录"><a href="#3、实现3个节点之间的无密码登录" class="headerlink" title="3、实现3个节点之间的无密码登录"></a>3、实现3个节点之间的无密码登录</h4><p>1）在所有节点上执行：<br><code>ssh-keygen -t rsa</code><br> 2）将所有机子上公钥（<code>id_rsa.pub</code>）导到一个主机的<code>/root/.ssh/authorized_keys</code>文件中,然后将<code>authorized_keys</code>分别拷贝到所有主机上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#在192.168.42.137上操作</div><div class="line">cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys</div><div class="line">#将192.168.42.136上的公钥拷到137本地</div><div class="line">ssh root@192.168.42.135  cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys</div><div class="line">#将192.168.42.135上的公钥拷到137本地</div><div class="line">ssh root@192.168.42.136  cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys</div><div class="line">#拷贝到135服务器上</div><div class="line">scp /root/.ssh/authorized_keys root@192.168.42.135:/root/.ssh/authorized_keys</div><div class="line">#拷贝到136服务器上</div><div class="line">scp /root/.ssh/authorized_keys root@192.168.42.136:/root/.ssh/authorized_keys</div><div class="line">#测试是否免密登录</div><div class="line">ssh 192.168.42.136</div><div class="line">ssh 192.168.42.135</div></pre></td></tr></table></figure>
+<p>··············································································<br>（更新后的方法，使用<code>ssh-copy-id</code>远程传公钥）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#创建公钥</div><div class="line">ssh-keygen -t rsa</div><div class="line">#把公钥追加到其他需要免密登录的服务器</div><div class="line">ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.42.135</div><div class="line">ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.42.136</div><div class="line">ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.42.137</div><div class="line">#测试免密登录</div><div class="line">[root@node1 .ssh]# ssh 192.168.42.137</div><div class="line">Last login: Tue Mar 22 23:29:55 2016 from 192.168.42.1</div><div class="line">[root@node3 ~]#</div></pre></td></tr></table></figure>
+<h4 id="4、安装percona环境"><a href="#4、安装percona环境" class="headerlink" title="4、安装percona环境"></a>4、安装percona环境</h4><h5 id="1）配置yum源："><a href="#1）配置yum源：" class="headerlink" title="1）配置yum源："></a>1）配置yum源：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum -y install http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm</div><div class="line">yum -y install epel*</div></pre></td></tr></table></figure>
+<h5 id="2）安装Percona软件："><a href="#2）安装Percona软件：" class="headerlink" title="2）安装Percona软件："></a>2）安装Percona软件：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install Percona-XtraDB-Cluster-server Percona-XtraDB-Cluster-client Percona-Server-shared-compat percona-xtrabackup</div></pre></td></tr></table></figure>
+<h5 id="3）添加账号"><a href="#3）添加账号" class="headerlink" title="3）添加账号"></a>3）添加账号</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/mysql bootstrap-pxc     //启动PXC</div><div class="line">mysql</div><div class="line">----------------------------------------&gt;</div><div class="line">grant all privileges on *.* to &apos;sst&apos;@localhost identified by &apos;123456&apos;;</div><div class="line">FLUSH PRIVILEGES;</div><div class="line">&lt;----------------------------------------</div><div class="line">/etc/init.d/mysql stop</div></pre></td></tr></table></figure>
+<h4 id="5、PXC的节点配置"><a href="#5、PXC的节点配置" class="headerlink" title="5、PXC的节点配置"></a>5、PXC的节点配置</h4><h5 id="1）135："><a href="#1）135：" class="headerlink" title="1）135："></a>1）135：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">serv-id = 1</div><div class="line"># Percona XtraDB Cluster</div><div class="line">wsrep_provider=/usr/lib64/libgalera_smm.so</div><div class="line">wsrep_cluster_address=&quot;gcomm://192.168.42.135,192.168.42.136,192.168.42.137&quot;</div><div class="line">wsrep_sst_auth=sst:123456</div><div class="line">wsrep_cluster_name=Percona</div><div class="line">wsrep_sst_method=xtrabackup-v2</div><div class="line">wsrep_node_address=192.168.42.135</div><div class="line">wsrep_slave_threads=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">innodb_autoinc_lock_mode=2</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#启动第一个节点</div><div class="line">/etc/init.d/mysql bootstrap-pxc</div></pre></td></tr></table></figure>
+<h5 id="2）136"><a href="#2）136" class="headerlink" title="2）136"></a>2）136</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">serv-id = 2</div><div class="line"># Percona XtraDB Cluster</div><div class="line">wsrep_provider=/usr/lib64/libgalera_smm.so</div><div class="line">wsrep_cluster_address=&quot;gcomm://192.168.42.135,192.168.42.136,192.168.42.137&quot;</div><div class="line">wsrep_sst_auth=sst:123456</div><div class="line">wsrep_cluster_name=Percona</div><div class="line">wsrep_sst_method=xtrabackup-v2</div><div class="line">wsrep_node_address=192.168.42.136</div><div class="line">wsrep_slave_threads=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">innodb_autoinc_lock_mode=2</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#启动第二个节点</div><div class="line">/etc/init.d/mysql start</div></pre></td></tr></table></figure>
+<h5 id="3）137"><a href="#3）137" class="headerlink" title="3）137"></a>3）137</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">serv-id = 3</div><div class="line"># Percona XtraDB Cluster</div><div class="line">wsrep_provider=/usr/lib64/libgalera_smm.so</div><div class="line">wsrep_cluster_address=&quot;gcomm://192.168.42.135,192.168.42.136,192.168.42.137&quot;</div><div class="line">wsrep_sst_auth=sst:123456</div><div class="line">wsrep_cluster_name=Percona</div><div class="line">wsrep_sst_method=xtrabackup-v2</div><div class="line">wsrep_node_address=192.168.42.137</div><div class="line">wsrep_slave_threads=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">innodb_autoinc_lock_mode=2</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#启动第三个节点</div><div class="line">/etc/init.d/mysql start</div></pre></td></tr></table></figure>
+<h5 id="4）随便进一个节点查看集群状态"><a href="#4）随便进一个节点查看集群状态" class="headerlink" title="4）随便进一个节点查看集群状态"></a>4）随便进一个节点查看集群状态</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SHOW STATUS LIKE &apos;%wsrep%&apos;;</div><div class="line">+------------------------------+-------------------------------------------------------------+</div><div class="line">| Variable_name                | Value                                                       |</div><div class="line">+------------------------------+-------------------------------------------------------------+</div><div class="line">| wsrep_local_state_uuid       | 54ebc9fd-f57f-11e5-baaa-96a1ced0928f                        |</div><div class="line">| wsrep_protocol_version       | 7                                                           |</div><div class="line">| wsrep_last_committed         | 0                                                           |</div><div class="line">| wsrep_replicated             | 0                                                           |</div><div class="line">| wsrep_replicated_bytes       | 0                                                           |</div><div class="line">| wsrep_repl_keys              | 0                                                           |</div><div class="line">| wsrep_repl_keys_bytes        | 0                                                           |</div><div class="line">| wsrep_repl_data_bytes        | 0                                                           |</div><div class="line">| wsrep_repl_other_bytes       | 0                                                           |</div><div class="line">| wsrep_received               | 10                                                          |</div><div class="line">| wsrep_received_bytes         | 784                                                         |</div><div class="line">| wsrep_local_commits          | 0                                                           |</div><div class="line">| wsrep_local_cert_failures    | 0                                                           |</div><div class="line">| wsrep_local_replays          | 0                                                           |</div><div class="line">| wsrep_local_send_queue       | 0                                                           |</div><div class="line">| wsrep_local_send_queue_max   | 1                                                           |</div><div class="line">| wsrep_local_send_queue_min   | 0                                                           |</div><div class="line">| wsrep_local_send_queue_avg   | 0.000000                                                    |</div><div class="line">| wsrep_local_recv_queue       | 0                                                           |</div><div class="line">| wsrep_local_recv_queue_max   | 1                                                           |</div><div class="line">| wsrep_local_recv_queue_min   | 0                                                           |</div><div class="line">| wsrep_local_recv_queue_avg   | 0.000000                                                    |</div><div class="line">| wsrep_local_cached_downto    | 0                                                           |</div><div class="line">| wsrep_flow_control_paused_ns | 0                                                           |</div><div class="line">| wsrep_flow_control_paused    | 0.000000                                                    |</div><div class="line">| wsrep_flow_control_sent      | 0                                                           |</div><div class="line">| wsrep_flow_control_recv      | 0                                                           |</div><div class="line">| wsrep_cert_deps_distance     | 0.000000                                                    |</div><div class="line">| wsrep_apply_oooe             | 0.000000                                                    |</div><div class="line">| wsrep_apply_oool             | 0.000000                                                    |</div><div class="line">| wsrep_apply_window           | 0.000000                                                    |</div><div class="line">| wsrep_commit_oooe            | 0.000000                                                    |</div><div class="line">| wsrep_commit_oool            | 0.000000                                                    |</div><div class="line">| wsrep_commit_window          | 0.000000                                                    |</div><div class="line">| wsrep_local_state            | 4                                                           |</div><div class="line">| wsrep_local_state_comment    | Synced                                                      |</div><div class="line">| wsrep_cert_index_size        | 0                                                           |</div><div class="line">| wsrep_cert_bucket_count      | 22                                                          |</div><div class="line">| wsrep_gcache_pool_size       | 1580                                                        |</div><div class="line">| wsrep_causal_reads           | 0                                                           |</div><div class="line">| wsrep_cert_interval          | 0.000000                                                    |</div><div class="line">| wsrep_incoming_addresses     | 192.168.42.135:3306,192.168.42.137:3306,192.168.42.136:3306 |</div><div class="line">| wsrep_evs_delayed            |                                                             |</div><div class="line">| wsrep_evs_evict_list         |                                                             |</div><div class="line">| wsrep_evs_repl_latency       | 0.00090448/0.00124879/0.00183671/0.000306234/6              |</div><div class="line">| wsrep_evs_state              | OPERATIONAL                                                 |</div><div class="line">| wsrep_gcomm_uuid             | 54e770a4-f57f-11e5-a4eb-1ae05e4a0e6e                        |</div><div class="line">| wsrep_cluster_conf_id        | 3                                                           |</div><div class="line">| wsrep_cluster_size           | 3                                                           |</div><div class="line">| wsrep_cluster_state_uuid     | 54ebc9fd-f57f-11e5-baaa-96a1ced0928f                        |</div><div class="line">| wsrep_cluster_status         | Primary                                                     |</div><div class="line">| wsrep_connected              | ON                                                          |</div><div class="line">| wsrep_local_bf_aborts        | 0                                                           |</div><div class="line">| wsrep_local_index            | 0                                                           |</div><div class="line">| wsrep_provider_name          | Galera                                                      |</div><div class="line">| wsrep_provider_vendor        | Codership Oy &lt;info@codership.com&gt;                           |</div><div class="line">| wsrep_provider_version       | 3.14(r53b88eb)                                              |</div><div class="line">| wsrep_ready                  | ON                                                          |</div><div class="line">| wsrep_thread_count           | 3                                                           |</div><div class="line">+------------------------------+-------------------------------------------------------------+</div><div class="line">59 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p><strong>这里PXC集群搭建完毕，可以在每个节点上进行读写，而且每个节点数据保证完整一致。</strong></p>
+<h3 id="四、PXC集群测试"><a href="#四、PXC集群测试" class="headerlink" title="四、PXC集群测试"></a>四、PXC集群测试</h3><h4 id="1、基础测试"><a href="#1、基础测试" class="headerlink" title="1、基础测试"></a>1、基础测试</h4><h5 id="1）在135上："><a href="#1）在135上：" class="headerlink" title="1）在135上："></a>1）在135上：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">create database test_pxc;</div><div class="line">use test_pxc;</div><div class="line">create table test_pxc (id int,name char(10)) engine=innodb;</div><div class="line">commit;</div></pre></td></tr></table></figure>
+<h5 id="2）在136上："><a href="#2）在136上：" class="headerlink" title="2）在136上："></a>2）在136上：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">use test_pxc</div><div class="line">insert into test_pxc values(1,&apos;test&apos;);</div><div class="line">commit;</div></pre></td></tr></table></figure>
+<h5 id="3）在137上："><a href="#3）在137上：" class="headerlink" title="3）在137上："></a>3）在137上：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">use test_pxc;</div><div class="line">select * from test_pxc;</div><div class="line">+------+------+</div><div class="line">| id   | name |</div><div class="line">+------+------+</div><div class="line">|    1 | test |</div><div class="line">+------+------+</div></pre></td></tr></table></figure>
+<h4 id="2、并发测试"><a href="#2、并发测试" class="headerlink" title="2、并发测试"></a>2、并发测试</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#创建一个测试表</div><div class="line">create table t2(id int(11),name varchar(20),time timestamp) engine=innodb;</div><div class="line">#写插入数据脚本</div><div class="line">vim in.sh</div><div class="line">#脚本内容</div><div class="line"># 插入大量测试数据</div><div class="line">#!/bin/bash</div><div class="line">for (( a=1 ; a&lt;=1000 ; a++  ))</div><div class="line">do</div><div class="line">            name=&quot;db6.$a&quot;</div><div class="line">                    mysql -e &quot;insert into test_pxc.t2 (name, time) values (\&quot;$name\&quot;, now())&quot;</div><div class="line">                done</div><div class="line">#将这个脚本拷贝到每个服务器上</div><div class="line">scp in.sh root@192.168.42.136:/zxh/scripts/</div><div class="line">scp in.sh root@192.168.42.137:/zxh/scripts/</div><div class="line">#3个节点同时执行插入数据（并发执行）</div><div class="line">#其中一个节点的一条数据出现死锁</div><div class="line">ERROR 1213 (40001) at line 1: Deadlock found when trying to get lock; try restarting transaction</div><div class="line">#查看表中数据，发现有一条数据没有插入</div><div class="line">mysql&gt; select count(*) from t2;</div><div class="line">+----------+</div><div class="line">| count(*) |</div><div class="line">+----------+</div><div class="line">|     3009 |</div><div class="line">+----------+</div></pre></td></tr></table></figure>
+<h4 id="3、宕机测试"><a href="#3、宕机测试" class="headerlink" title="3、宕机测试"></a>3、宕机测试</h4><p><strong>Tips：模拟出生产环境的样子，一边插入数据一边宕掉一个节点。</strong></p>
+<h5 id="node1插入数据："><a href="#node1插入数据：" class="headerlink" title="node1插入数据："></a>node1插入数据：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./in.sh   //执行脚本，把量改为10000</div></pre></td></tr></table></figure>
+<h5 id="node3查看是否在写入数据："><a href="#node3查看是否在写入数据：" class="headerlink" title="node3查看是否在写入数据："></a>node3查看是否在写入数据：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iotop</div></pre></td></tr></table></figure>
+<h5 id="停掉node3上的percona实例："><a href="#停掉node3上的percona实例：" class="headerlink" title="停掉node3上的percona实例："></a>停掉node3上的percona实例：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@node3 ~]# /etc/init.d/mysql stop</div><div class="line">Shutting down MySQL (Percona XtraDB Cluster)...... SUCCESS!</div></pre></td></tr></table></figure>
+<h5 id="查看日志："><a href="#查看日志：" class="headerlink" title="查看日志："></a>查看日志：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">160330 14:45:44 [Note] WSREP: (71ee066c, &apos;tcp://0.0.0.0:4567&apos;) turning message relay requesting on, nonlive peers: tcp://192.168.42.135:4567 tcp://192.168.42.136:4567 </div><div class="line">160330 14:45:45 [Note] WSREP: (71ee066c, &apos;tcp://0.0.0.0:4567&apos;) reconnecting to 54e770a4 (tcp://192.168.42.135:4567), attempt 0</div><div class="line">160330 14:45:49 [Note] WSREP: (71ee066c, &apos;tcp://0.0.0.0:4567&apos;) turning message relay requesting off</div><div class="line">160330 14:46:15 [Note] /usr/sbin/mysqld: Normal shutdown</div><div class="line"></div><div class="line">160330 14:46:15 [Note] WSREP: Stop replication</div><div class="line">160330 14:46:15 [Note] WSREP: Closing send monitor...</div><div class="line">160330 14:46:15 [Note] WSREP: Closed send monitor.</div><div class="line">160330 14:46:15 [Note] WSREP: gcomm: terminating thread</div><div class="line">160330 14:46:15 [Note] WSREP: gcomm: joining thread</div><div class="line">160330 14:46:15 [Note] WSREP: gcomm: closing backend</div><div class="line">160330 14:46:15 [Note] WSREP: view(view_id(NON_PRIM,54e770a4,13) memb &#123;</div><div class="line">        71ee066c,0</div><div class="line">&#125; joined &#123;</div><div class="line">&#125; left &#123;</div><div class="line">&#125; partitioned &#123;</div><div class="line">        54e770a4,0</div><div class="line">        8ed58cb5,0</div><div class="line">&#125;)</div><div class="line">160330 14:46:15 [Note] WSREP: New COMPONENT: primary = no, bootstrap = no, my_idx = 0, memb_num = 1</div><div class="line">160330 14:46:15 [Note] WSREP: view((empty))</div><div class="line">160330 14:46:15 [Note] WSREP: gcomm: closed</div><div class="line">160330 14:46:15 [Note] WSREP: Flow-control interval: [16, 16]</div><div class="line">160330 14:46:15 [Note] WSREP: Received NON-PRIMARY.</div><div class="line">160330 14:46:15 [Note] WSREP: Shifting SYNCED -&gt; OPEN (TO: 40708)</div><div class="line">160330 14:46:15 [Note] WSREP: Received self-leave message.</div><div class="line">160330 14:46:15 [Note] WSREP: Flow-control interval: [0, 0]</div><div class="line">160330 14:46:15 [Note] WSREP: Received SELF-LEAVE. Closing connection.</div><div class="line">160330 14:46:15 [Note] WSREP: Shifting OPEN -&gt; CLOSED (TO: 40708)</div><div class="line">160330 14:46:15 [Note] WSREP: RECV thread exiting 0: Success</div><div class="line">160330 14:46:15 [Note] WSREP: recv_thread() joined.</div><div class="line">160330 14:46:15 [Note] WSREP: Closing replication queue.</div><div class="line">160330 14:46:15 [Note] WSREP: Closing slave action queue.</div><div class="line">160330 14:46:15 [Note] WSREP: New cluster view: global state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708, view# -1: non-Primary, number of nodes: 1, my index: 0, protocol version 3</div><div class="line">160330 14:46:15 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.</div><div class="line">160330 14:46:15 [Note] WSREP: New cluster view: global state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708, view# -1: non-Primary, number of nodes: 0, my index: -1, protocol version 3</div><div class="line">160330 14:46:15 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.</div><div class="line">160330 14:46:15 [Note] WSREP: applier thread exiting (code:0)</div><div class="line">160330 14:46:15 [Note] WSREP: applier thread exiting (code:6)</div><div class="line">160330 14:46:17 [Note] WSREP: killing local connection: 5</div><div class="line">160330 14:46:17 [Note] WSREP: rollbacker thread exiting</div><div class="line">160330 14:46:17 [Note] Event Scheduler: Purging the queue. 0 events</div><div class="line">160330 14:46:17 [Note] WSREP: dtor state: CLOSED</div><div class="line">160330 14:46:17 [Note] WSREP: mon: entered 17693 oooe fraction 0 oool fraction 0</div><div class="line">160330 14:46:17 [Note] WSREP: mon: entered 17693 oooe fraction 0.153224 oool fraction 0</div><div class="line">160330 14:46:17 [Note] WSREP: mon: entered 18109 oooe fraction 0 oool fraction 5.52212e-05</div><div class="line">160330 14:46:17 [Note] WSREP: cert index usage at exit 0</div><div class="line">160330 14:46:17 [Note] WSREP: cert trx map usage at exit 92</div><div class="line">160330 14:46:17 [Note] WSREP: deps set usage at exit 0</div><div class="line">160330 14:46:17 [Note] WSREP: avg deps dist 101.239</div><div class="line">160330 14:46:17 [Note] WSREP: avg cert interval 0</div><div class="line">160330 14:46:17 [Note] WSREP: cert index size 94</div><div class="line">160330 14:46:17 [Note] WSREP: Service thread queue flushed.</div><div class="line">160330 14:46:17 [Note] WSREP: wsdb trx map usage 0 conn query map usage 0</div><div class="line">160330 14:46:17 [Note] WSREP: MemPool(LocalTrxHandle): hit ratio: 0, misses: 0, in use: 0, in pool: 0</div><div class="line">160330 14:46:17 [Note] WSREP: MemPool(SlaveTrxHandle): hit ratio: 0.992087, misses: 140, in use: 0, in pool: 140</div><div class="line">160330 14:46:17 [Note] WSREP: Shifting CLOSED -&gt; DESTROYED (TO: 40708)</div><div class="line">160330 14:46:17 [Note] WSREP: Flushing memory map to disk...</div><div class="line">160330 14:46:18  InnoDB: Starting shutdown...</div><div class="line">160330 14:46:22  InnoDB: Shutdown completed; log sequence number 19929651</div><div class="line">160330 14:46:22 [Note] /usr/sbin/mysqld: Shutdown complete</div><div class="line"></div><div class="line">160330 14:46:22 mysqld_safe mysqld from pid file /var/lib/mysql/node3.pid ended</div></pre></td></tr></table></figure>
+<h5 id="重新启动node3实例，并查看日志："><a href="#重新启动node3实例，并查看日志：" class="headerlink" title="重新启动node3实例，并查看日志："></a>重新启动node3实例，并查看日志：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div></pre></td><td class="code"><pre><div class="line">160330 15:02:13 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql</div><div class="line">160330 15:02:13 mysqld_safe Skipping wsrep-recover for 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708 pair</div><div class="line">160330 15:02:13 mysqld_safe Assigning 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708 to wsrep_start_position</div><div class="line">160330 15:02:13 [Note] WSREP: wsrep_start_position var submitted: &apos;54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708&apos;</div><div class="line">160330 15:02:13 [Note] WSREP: Read nil XID from storage engines, skipping position init</div><div class="line">160330 15:02:13 [Note] WSREP: wsrep_load(): loading provider library &apos;/usr/lib64/libgalera_smm.so&apos;</div><div class="line">160330 15:02:14 [Note] WSREP: wsrep_load(): Galera 3.14(r53b88eb) by Codership Oy &lt;info@codership.com&gt; loaded successfully.</div><div class="line">160330 15:02:14 [Note] WSREP: CRC-32C: using hardware acceleration.</div><div class="line">160330 15:02:14 [Note] WSREP: Found saved state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708</div><div class="line">160330 15:02:14 [Note] WSREP: Passing config to GCS: base_dir = /var/lib/mysql/; base_host = 192.168.42.137; base_port = 4567; cert.log_conflicts = no; debug = no; evs.auto_evict = 0; evs.delay_margin = PT1S; evs.delayed_keep_period = PT30S; evs.inactive_check_period = PT0.5S; evs.inactive_timeout = PT15S; evs.join_retrans_period = PT1S; evs.max_install_timeouts = 3; evs.send_window = 4; evs.stats_report_period = PT1M; evs.suspect_timeout = PT5S; evs.user_send_window = 2; evs.view_forget_timeout = PT24H; gcache.dir = /var/lib/mysql/; gcache.keep_pages_count = 0; gcache.keep_pages_size = 0; gcache.mem_size = 0; gcache.name = /var/lib/mysql//galera.cache; gcache.page_size = 128M; gcache.size = 128M; gcs.fc_debug = 0; gcs.fc_factor = 1.0; gcs.fc_limit = 16; gcs.fc_master_slave = no; gcs.max_packet_size = 64500; gcs.max_throttle = 0.25; gcs.recv_q_hard_limit = 9223372036854775807; gcs.recv_q_soft_limit = 0.25; gcs.sync_donor = no; gmcast.segment = 0; gmcast.version = 0; pc.announce_timeout = PT3S; pc.checksum = false; pc.ignore_quorum</div><div class="line">160330 15:02:14 [Note] WSREP: Service thread queue flushed.</div><div class="line">160330 15:02:14 [Note] WSREP: Assign initial position for certification: 40708, protocol version: -1</div><div class="line">160330 15:02:14 [Note] WSREP: wsrep_sst_grab()</div><div class="line">160330 15:02:14 [Note] WSREP: Start replication</div><div class="line">160330 15:02:14 [Note] WSREP: Setting initial position to 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708</div><div class="line">160330 15:02:14 [Note] WSREP: protonet asio version 0</div><div class="line">160330 15:02:14 [Note] WSREP: Using CRC-32C for message checksums.</div><div class="line">160330 15:02:14 [Note] WSREP: backend: asio</div><div class="line">160330 15:02:14 [Warning] WSREP: access file(/var/lib/mysql//gvwstate.dat) failed(No such file or directory)</div><div class="line">160330 15:02:14 [Note] WSREP: restore pc from disk failed</div><div class="line">160330 15:02:14 [Note] WSREP: GMCast version 0</div><div class="line">160330 15:02:14 [Note] WSREP: (54e56db5, &apos;tcp://0.0.0.0:4567&apos;) listening at tcp://0.0.0.0:4567</div><div class="line">160330 15:02:14 [Note] WSREP: (54e56db5, &apos;tcp://0.0.0.0:4567&apos;) multicast: , ttl: 1</div><div class="line">160330 15:02:14 [Note] WSREP: EVS version 0</div><div class="line">160330 15:02:14 [Note] WSREP: gcomm: connecting to group &apos;Percona&apos;, peer &apos;192.168.42.135:,192.168.42.136:,192.168.42.137:&apos;</div><div class="line">160330 15:02:14 [Warning] WSREP: (54e56db5, &apos;tcp://0.0.0.0:4567&apos;) address &apos;tcp://192.168.42.137:4567&apos; points to own listening address, blacklisting</div><div class="line">160330 15:02:14 [Note] WSREP: (54e56db5, &apos;tcp://0.0.0.0:4567&apos;) turning message relay requesting on, nonlive peers: </div><div class="line">160330 15:02:14 [Note] WSREP: declaring 54e770a4 at tcp://192.168.42.135:4567 stable</div><div class="line">160330 15:02:14 [Note] WSREP: declaring 8ed58cb5 at tcp://192.168.42.136:4567 stable</div><div class="line">160330 15:02:14 [Note] WSREP: Node 54e770a4 state prim</div><div class="line">160330 15:02:14 [Note] WSREP: view(view_id(PRIM,54e56db5,15) memb &#123;</div><div class="line">        54e56db5,0</div><div class="line">        54e770a4,0</div><div class="line">        8ed58cb5,0</div><div class="line">&#125; joined &#123;</div><div class="line">&#125; left &#123;</div><div class="line">&#125; partitioned &#123;</div><div class="line">&#125;)</div><div class="line">160330 15:02:14 [Note] WSREP: save pc into disk</div><div class="line">160330 15:02:15 [Note] WSREP: gcomm: connected</div><div class="line">160330 15:02:15 [Note] WSREP: Changing maximum packet size to 64500, resulting msg size: 32636</div><div class="line">160330 15:02:15 [Note] WSREP: Shifting CLOSED -&gt; OPEN (TO: 0)</div><div class="line">160330 15:02:15 [Note] WSREP: Opened channel &apos;Percona&apos;</div><div class="line">160330 15:02:15 [Note] WSREP: Waiting for SST to complete.</div><div class="line">160330 15:02:15 [Note] WSREP: New COMPONENT: primary = yes, bootstrap = no, my_idx = 0, memb_num = 3</div><div class="line">160330 15:02:15 [Note] WSREP: STATE_EXCHANGE: sent state UUID: 55870069-f645-11e5-baaa-5a660b7a7175</div><div class="line">160330 15:02:15 [Note] WSREP: STATE EXCHANGE: sent state msg: 55870069-f645-11e5-baaa-5a660b7a7175</div><div class="line">160330 15:02:15 [Note] WSREP: STATE EXCHANGE: got state msg: 55870069-f645-11e5-baaa-5a660b7a7175 from 0 (node3)</div><div class="line">160330 15:02:15 [Note] WSREP: STATE EXCHANGE: got state msg: 55870069-f645-11e5-baaa-5a660b7a7175 from 2 (node2)</div><div class="line">160330 15:02:15 [Note] WSREP: STATE EXCHANGE: got state msg: 55870069-f645-11e5-baaa-5a660b7a7175 from 1 (node1)</div><div class="line">160330 15:02:15 [Note] WSREP: Quorum results:</div><div class="line">        version    = 3,</div><div class="line">        component  = PRIMARY,</div><div class="line">        conf_id    = 9,</div><div class="line">        members    = 2/3 (joined/total),</div><div class="line">        act_id     = 53016,</div><div class="line">        last_appl. = -1,</div><div class="line">        protocols  = 0/7/3 (gcs/repl/appl),</div><div class="line">        group UUID = 54ebc9fd-f57f-11e5-baaa-96a1ced0928f</div><div class="line">160330 15:02:15 [Note] WSREP: Flow-control interval: [28, 28]</div><div class="line">160330 15:02:15 [Note] WSREP: Shifting OPEN -&gt; PRIMARY (TO: 53016)</div><div class="line">160330 15:02:15 [Note] WSREP: State transfer required: </div><div class="line">        Group state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:53016</div><div class="line">        Local state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708</div><div class="line">160330 15:02:15 [Note] WSREP: New cluster view: global state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:53016, view# 10: Primary, number of nodes: 3, my index: 0, protocol version 3</div><div class="line">160330 15:02:15 [Warning] WSREP: Gap in state sequence. Need state transfer.</div><div class="line">160330 15:02:15 [Note] WSREP: Running: &apos;wsrep_sst_xtrabackup-v2 --role &apos;joiner&apos; --address &apos;192.168.42.137&apos; --auth &apos;sst:123456&apos; --datadir &apos;/var/lib/mysql/&apos; --defaults-file &apos;/etc/my.cnf&apos; --parent &apos;28735&apos;&apos;</div><div class="line">WSREP_SST: [INFO] Streaming with xbstream (20160330 15:02:16.388)</div><div class="line">WSREP_SST: [INFO] Using socat as streamer (20160330 15:02:16.393)</div><div class="line">WSREP_SST: [INFO] Evaluating timeout -s9 100 socat -u TCP-LISTEN:4444,reuseaddr stdio | xbstream -x; RC=( $&#123;PIPESTATUS[@]&#125; ) (20160330 15:02:16.677)</div><div class="line">160330 15:02:16 [Note] WSREP: Prepared SST request: xtrabackup-v2|192.168.42.137:4444/xtrabackup_sst</div><div class="line">160330 15:02:16 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.</div><div class="line">160330 15:02:16 [Note] WSREP: REPL Protocols: 7 (3, 2)</div><div class="line">160330 15:02:16 [Note] WSREP: Service thread queue flushed.</div><div class="line">160330 15:02:16 [Note] WSREP: Assign initial position for certification: 53016, protocol version: 3</div><div class="line">160330 15:02:16 [Note] WSREP: Service thread queue flushed.</div><div class="line">2016/03/30 15:02:16 socat[29014] E bind(3, &#123;AF=2 0.0.0.0:4444&#125;, 16): Address already in use</div><div class="line">160330 15:02:16 [Note] WSREP: Prepared IST receiver, listening at: tcp://192.168.42.137:4568</div><div class="line">160330 15:02:16 [Note] WSREP: Member 0.0 (node3) requested state transfer from &apos;*any*&apos;. Selected 2.0 (node2)(SYNCED) as donor.</div><div class="line">160330 15:02:16 [Note] WSREP: Shifting PRIMARY -&gt; JOINER (TO: 53016)</div><div class="line">160330 15:02:16 [Note] WSREP: Requesting state transfer: success, donor: 2</div><div class="line">WSREP_SST: [ERROR] Error while getting data from donor node:  exit codes: 1 0 (20160330 15:02:16.833)</div><div class="line">WSREP_SST: [ERROR] Cleanup after exit with status:32 (20160330 15:02:16.841)</div><div class="line">160330 15:02:16 [ERROR] WSREP: Process completed with error: wsrep_sst_xtrabackup-v2 --role &apos;joiner&apos; --address &apos;192.168.42.137&apos; --auth &apos;sst:123456&apos; --datadir &apos;/var/lib/mysql/&apos; --defaults-file &apos;/etc/my.cnf&apos; --parent &apos;28735&apos;: 32 (Broken pipe)</div><div class="line">160330 15:02:16 [ERROR] WSREP: Failed to read uuid:seqno from joiner script.</div><div class="line">160330 15:02:16 [ERROR] WSREP: SST failed: 32 (Broken pipe)</div><div class="line">160330 15:02:16 [ERROR] Aborting</div><div class="line">160330 15:02:17 [Note] WSREP: 2.0 (node2): State transfer to 0.0 (node3) complete.</div><div class="line">160330 15:02:17 [Note] WSREP: Member 2.0 (node2) synced with group.</div><div class="line">xbstream: Can&apos;t create/write to file &apos;./xtrabackup_galera_info&apos; (Errcode: 2 - No such file or directory)</div><div class="line">xbstream: failed to create file.</div><div class="line">160330 15:02:17 [Note] WSREP: (54e56db5, &apos;tcp://0.0.0.0:4567&apos;) turning message relay requesting off</div><div class="line">160330 15:02:18 [Note] WSREP: Closing send monitor...</div><div class="line">160330 15:02:18 [Note] WSREP: Closed send monitor.</div><div class="line">160330 15:02:18 [Note] WSREP: gcomm: terminating thread</div><div class="line">160330 15:02:18 [Note] WSREP: gcomm: joining thread</div><div class="line">160330 15:02:18 [Note] WSREP: gcomm: closing backend</div><div class="line">160330 15:02:18 [Note] WSREP: view(view_id(NON_PRIM,54e56db5,15) memb &#123;</div><div class="line">        54e56db5,0</div><div class="line">&#125; joined &#123;</div><div class="line">&#125; left &#123;</div><div class="line">&#125; partitioned &#123;</div><div class="line">        54e770a4,0</div><div class="line">        8ed58cb5,0</div><div class="line">&#125;)</div><div class="line">160330 15:02:18 [Note] WSREP: New COMPONENT: primary = no, bootstrap = no, my_idx = 0, memb_num = 1</div><div class="line">160330 15:02:18 [Note] WSREP: view((empty))</div><div class="line">160330 15:02:18 [Note] WSREP: gcomm: closed</div><div class="line">160330 15:02:18 [Note] WSREP: Flow-control interval: [16, 16]</div><div class="line">160330 15:02:18 [Note] WSREP: Received NON-PRIMARY.</div><div class="line">160330 15:02:18 [Note] WSREP: Shifting JOINER -&gt; OPEN (TO: 53016)</div><div class="line">160330 15:02:18 [Note] WSREP: Received self-leave message.</div><div class="line">160330 15:02:18 [Note] WSREP: Flow-control interval: [0, 0]</div><div class="line">160330 15:02:18 [Note] WSREP: Received SELF-LEAVE. Closing connection.</div><div class="line">160330 15:02:18 [Note] WSREP: Shifting OPEN -&gt; CLOSED (TO: 53016)</div><div class="line">160330 15:02:18 [Note] WSREP: RECV thread exiting 0: Success</div><div class="line">160330 15:02:18 [Note] WSREP: recv_thread() joined.</div><div class="line">160330 15:02:18 [Note] WSREP: Closing replication queue.</div><div class="line">160330 15:02:18 [Note] WSREP: Closing slave action queue.</div><div class="line">160330 15:02:18 [Note] WSREP: Service disconnected.</div><div class="line">160330 15:02:18 [Note] WSREP: rollbacker thread exiting</div><div class="line">160330 15:02:19 [Note] WSREP: Some threads may fail to exit.</div><div class="line">160330 15:02:19 [Note] /usr/sbin/mysqld: Shutdown complete</div><div class="line"></div><div class="line">Error in my_thread_global_end(): 1 threads didn&apos;t exit</div><div class="line">160330 15:02:25 mysqld_safe mysqld from pid file /var/lib/mysql/node3.pid ended</div></pre></td></tr></table></figure>
+<h5 id="第一次启动失败，再次启动实例，并查看日志："><a href="#第一次启动失败，再次启动实例，并查看日志：" class="headerlink" title="第一次启动失败，再次启动实例，并查看日志："></a>第一次启动失败，再次启动实例，并查看日志：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div></pre></td><td class="code"><pre><div class="line">160330 15:02:58 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql</div><div class="line">160330 15:02:58 mysqld_safe WSREP: Running position recovery with --log_error=&apos;/var/lib/mysql/wsrep_recovery.PfWoiQ&apos; --pid-file=&apos;/var/lib/mysql/node3-recover.pid&apos;</div><div class="line">160330 15:03:01 mysqld_safe WSREP: Recovered position 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708</div><div class="line">160330 15:03:01 [Note] WSREP: wsrep_start_position var submitted: &apos;54ebc9fd-f57f-11e5-baaa-96a1ced0928f:40708&apos;</div><div class="line">160330 15:03:01 [Note] WSREP: Read nil XID from storage engines, skipping position init</div><div class="line">160330 15:03:01 [Note] WSREP: wsrep_load(): loading provider library &apos;/usr/lib64/libgalera_smm.so&apos;</div><div class="line">160330 15:03:01 [Note] WSREP: wsrep_load(): Galera 3.14(r53b88eb) by Codership Oy &lt;info@codership.com&gt; loaded successfully.</div><div class="line">160330 15:03:01 [Note] WSREP: CRC-32C: using hardware acceleration.</div><div class="line">160330 15:03:01 [Note] WSREP: Found saved state: 00000000-0000-0000-0000-000000000000:-1</div><div class="line">160330 15:03:01 [Note] WSREP: Passing config to GCS: base_dir = /var/lib/mysql/; base_host = 192.168.42.137; base_port = 4567; cert.log_conflicts = no; debug = no; evs.auto_evict = 0; evs.delay_margin = PT1S; evs.delayed_keep_period = PT30S; evs.inactive_check_period = PT0.5S; evs.inactive_timeout = PT15S; evs.join_retrans_period = PT1S; evs.max_install_timeouts = 3; evs.send_window = 4; evs.stats_report_period = PT1M; evs.suspect_timeout = PT5S; evs.user_send_window = 2; evs.view_forget_timeout = PT24H; gcache.dir = /var/lib/mysql/; gcache.keep_pages_count = 0; gcache.keep_pages_size = 0; gcache.mem_size = 0; gcache.name = /var/lib/mysql//galera.cache; gcache.page_size = 128M; gcache.size = 128M; gcs.fc_debug = 0; gcs.fc_factor = 1.0; gcs.fc_limit = 16; gcs.fc_master_slave = no; gcs.max_packet_size = 64500; gcs.max_throttle = 0.25; gcs.recv_q_hard_limit = 9223372036854775807; gcs.recv_q_soft_limit = 0.25; gcs.sync_donor = no; gmcast.segment = 0; gmcast.version = 0; pc.announce_timeout = PT3S; pc.checksum = false; pc.ignore_quorum</div><div class="line">160330 15:03:01 [Note] WSREP: Service thread queue flushed.</div><div class="line">160330 15:03:01 [Note] WSREP: Assign initial position for certification: -1, protocol version: -1</div><div class="line">160330 15:03:01 [Note] WSREP: wsrep_sst_grab()</div><div class="line">160330 15:03:01 [Note] WSREP: Start replication</div><div class="line">160330 15:03:01 [Note] WSREP: Setting initial position to 00000000-0000-0000-0000-000000000000:-1</div><div class="line">160330 15:03:01 [Note] WSREP: protonet asio version 0</div><div class="line">160330 15:03:01 [Note] WSREP: Using CRC-32C for message checksums.</div><div class="line">160330 15:03:01 [Note] WSREP: backend: asio</div><div class="line">160330 15:03:01 [Warning] WSREP: access file(/var/lib/mysql//gvwstate.dat) failed(No such file or directory)</div><div class="line">160330 15:03:01 [Note] WSREP: restore pc from disk failed</div><div class="line">160330 15:03:01 [Note] WSREP: GMCast version 0</div><div class="line">160330 15:03:01 [Note] WSREP: (711791c3, &apos;tcp://0.0.0.0:4567&apos;) listening at tcp://0.0.0.0:4567</div><div class="line">160330 15:03:01 [Note] WSREP: (711791c3, &apos;tcp://0.0.0.0:4567&apos;) multicast: , ttl: 1</div><div class="line">160330 15:03:01 [Note] WSREP: EVS version 0</div><div class="line">160330 15:03:01 [Note] WSREP: gcomm: connecting to group &apos;Percona&apos;, peer &apos;192.168.42.135:,192.168.42.136:,192.168.42.137:&apos;</div><div class="line">160330 15:03:01 [Warning] WSREP: (711791c3, &apos;tcp://0.0.0.0:4567&apos;) address &apos;tcp://192.168.42.137:4567&apos; points to own listening address, blacklisting</div><div class="line">160330 15:03:01 [Note] WSREP: (711791c3, &apos;tcp://0.0.0.0:4567&apos;) turning message relay requesting on, nonlive peers: </div><div class="line">160330 15:03:03 [Note] WSREP: declaring 54e770a4 at tcp://192.168.42.135:4567 stable</div><div class="line">160330 15:03:03 [Note] WSREP: declaring 8ed58cb5 at tcp://192.168.42.136:4567 stable</div><div class="line">160330 15:03:03 [Note] WSREP: Node 54e770a4 state prim</div><div class="line">160330 15:03:03 [Note] WSREP: view(view_id(PRIM,54e770a4,17) memb &#123;</div><div class="line">        54e770a4,0</div><div class="line">        711791c3,0</div><div class="line">        8ed58cb5,0</div><div class="line">&#125; joined &#123;</div><div class="line">&#125; left &#123;</div><div class="line">&#125; partitioned &#123;</div><div class="line">&#125;)</div><div class="line">160330 15:03:03 [Note] WSREP: save pc into disk</div><div class="line">160330 15:03:03 [Note] WSREP: gcomm: connected</div><div class="line">160330 15:03:03 [Note] WSREP: Changing maximum packet size to 64500, resulting msg size: 32636</div><div class="line">160330 15:03:03 [Note] WSREP: Shifting CLOSED -&gt; OPEN (TO: 0)</div><div class="line">160330 15:03:03 [Note] WSREP: Opened channel &apos;Percona&apos;</div><div class="line">160330 15:03:03 [Note] WSREP: Waiting for SST to complete.</div><div class="line">160330 15:03:03 [Note] WSREP: New COMPONENT: primary = yes, bootstrap = no, my_idx = 1, memb_num = 3</div><div class="line">160330 15:03:03 [Note] WSREP: STATE EXCHANGE: Waiting for state UUID.</div><div class="line">160330 15:03:03 [Note] WSREP: STATE EXCHANGE: sent state msg: 72006bca-f645-11e5-ac84-eec46c5d6a82</div><div class="line">160330 15:03:03 [Note] WSREP: STATE EXCHANGE: got state msg: 72006bca-f645-11e5-ac84-eec46c5d6a82 from 2 (node2)</div><div class="line">160330 15:03:03 [Note] WSREP: STATE EXCHANGE: got state msg: 72006bca-f645-11e5-ac84-eec46c5d6a82 from 0 (node1)</div><div class="line">160330 15:03:03 [Note] WSREP: STATE EXCHANGE: got state msg: 72006bca-f645-11e5-ac84-eec46c5d6a82 from 1 (node3)</div><div class="line">160330 15:03:03 [Note] WSREP: Quorum results:</div><div class="line">        version    = 3,</div><div class="line">        component  = PRIMARY,</div><div class="line">        conf_id    = 11,</div><div class="line">        members    = 2/3 (joined/total),</div><div class="line">        act_id     = 53016,</div><div class="line">        last_appl. = -1,</div><div class="line">        protocols  = 0/7/3 (gcs/repl/appl),</div><div class="line">        group UUID = 54ebc9fd-f57f-11e5-baaa-96a1ced0928f</div><div class="line">160330 15:03:03 [Note] WSREP: Flow-control interval: [28, 28]</div><div class="line">160330 15:03:03 [Note] WSREP: Shifting OPEN -&gt; PRIMARY (TO: 53016)</div><div class="line">160330 15:03:03 [Note] WSREP: State transfer required: </div><div class="line">        Group state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:53016</div><div class="line">        Local state: 00000000-0000-0000-0000-000000000000:-1</div><div class="line">160330 15:03:03 [Note] WSREP: New cluster view: global state: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:53016, view# 12: Primary, number of nodes: 3, my index: 1, protocol version 3</div><div class="line">160330 15:03:03 [Warning] WSREP: Gap in state sequence. Need state transfer.</div><div class="line">160330 15:03:03 [Note] WSREP: Running: &apos;wsrep_sst_xtrabackup-v2 --role &apos;joiner&apos; --address &apos;192.168.42.137&apos; --auth &apos;sst:123456&apos; --datadir &apos;/var/lib/mysql/&apos; --defaults-file &apos;/etc/my.cnf&apos; --parent &apos;29374&apos;&apos;</div><div class="line">WSREP_SST: [INFO] Streaming with xbstream (20160330 15:03:03.892)</div><div class="line">WSREP_SST: [INFO] Using socat as streamer (20160330 15:03:03.897)</div><div class="line">WSREP_SST: [INFO] Stale sst_in_progress file: /var/lib/mysql//sst_in_progress (20160330 15:03:03.907)</div><div class="line">WSREP_SST: [INFO] Evaluating timeout -s9 100 socat -u TCP-LISTEN:4444,reuseaddr stdio | xbstream -x; RC=( $&#123;PIPESTATUS[@]&#125; ) (20160330 15:03:03.985)</div><div class="line">160330 15:03:04 [Note] WSREP: Prepared SST request: xtrabackup-v2|192.168.42.137:4444/xtrabackup_sst</div><div class="line">160330 15:03:04 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.</div><div class="line">160330 15:03:04 [Note] WSREP: REPL Protocols: 7 (3, 2)</div><div class="line">160330 15:03:04 [Note] WSREP: Service thread queue flushed.</div><div class="line">160330 15:03:04 [Note] WSREP: Assign initial position for certification: 53016, protocol version: 3</div><div class="line">160330 15:03:04 [Note] WSREP: Service thread queue flushed.</div><div class="line">160330 15:03:04 [Warning] WSREP: Failed to prepare for incremental state transfer: Local state UUID (00000000-0000-0000-0000-000000000000) does not match group state UUID (54ebc9fd-f57f-11e5-baaa-96a1ced0928f): 1 (Operation not permitted)</div><div class="line">         at galera/src/replicator_str.cpp:prepare_for_IST():489. IST will be unavailable.</div><div class="line">160330 15:03:04 [Note] WSREP: Member 1.0 (node3) requested state transfer from &apos;*any*&apos;. Selected 0.0 (node1)(SYNCED) as donor.</div><div class="line">160330 15:03:04 [Note] WSREP: Shifting PRIMARY -&gt; JOINER (TO: 53016)</div><div class="line">160330 15:03:04 [Note] WSREP: Requesting state transfer: success, donor: 0</div><div class="line">160330 15:03:05 [Note] WSREP: (711791c3, &apos;tcp://0.0.0.0:4567&apos;) turning message relay requesting off</div><div class="line">WSREP_SST: [INFO] Evaluating socat -u TCP-LISTEN:4444,reuseaddr stdio | xbstream -x; RC=( $&#123;PIPESTATUS[@]&#125; ) (20160330 15:03:05.519)</div><div class="line">WSREP_SST: [INFO] Proceeding with SST (20160330 15:03:05.538)</div><div class="line">WSREP_SST: [INFO] Cleaning the existing datadir and innodb-data/log directories (20160330 15:03:05.542)</div><div class="line">removed `/var/lib/mysql/test/db.opt&apos;</div><div class="line">removed directory: `/var/lib/mysql/test&apos;</div><div class="line">removed `/var/lib/mysql/mysql.sock&apos;</div><div class="line">removed `/var/lib/mysql/ibdata1&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/rwlock_instances.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/cond_instances.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/file_summary_by_instance.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/performance_timers.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/events_waits_current.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/setup_timers.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/setup_consumers.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/file_instances.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/mutex_instances.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/threads.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/events_waits_history_long.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/setup_instruments.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/events_waits_history.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/db.opt&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/events_waits_summary_by_instance.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/events_waits_summary_by_thread_by_event_name.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/events_waits_summary_global_by_event_name.frm&apos;</div><div class="line">removed `/var/lib/mysql/performance_schema/file_summary_by_event_name.frm&apos;</div><div class="line">removed directory: `/var/lib/mysql/performance_schema&apos;</div><div class="line">removed `/var/lib/mysql/ib_logfile1&apos;</div><div class="line">removed `/var/lib/mysql/test_pxc/test_pxc.frm&apos;</div><div class="line">removed `/var/lib/mysql/test_pxc/db.opt&apos;</div><div class="line">removed `/var/lib/mysql/test_pxc/t2.frm&apos;</div><div class="line">removed directory: `/var/lib/mysql/test_pxc&apos;</div><div class="line">removed `/var/lib/mysql/xtrabackup_info&apos;</div><div class="line">removed `/var/lib/mysql/mysql/slow_log.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/proxies_priv.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/func.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/servers.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_transition.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_transition_type.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/slow_log.CSM&apos;</div><div class="line">removed `/var/lib/mysql/mysql/user.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/ndb_binlog_index.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/db.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/columns_priv.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/ndb_binlog_index.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_transition_type.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/tables_priv.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_topic.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_keyword.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_topic.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/columns_priv.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/plugin.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/event.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_category.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_keyword.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/slow_log.CSV&apos;</div><div class="line">removed `/var/lib/mysql/mysql/procs_priv.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/columns_priv.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/ndb_binlog_index.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_name.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_keyword.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/proc.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_relation.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/procs_priv.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/func.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_leap_second.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/event.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/event.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_name.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_transition_type.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/host.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_transition.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/servers.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/user.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_relation.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_category.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/general_log.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/plugin.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_transition.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_name.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/host.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_relation.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/proc.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/general_log.CSM&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_leap_second.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/db.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone_leap_second.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/procs_priv.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/general_log.CSV&apos;</div><div class="line">removed `/var/lib/mysql/mysql/host.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/db.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/tables_priv.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/proxies_priv.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/proc.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/func.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_category.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/tables_priv.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/proxies_priv.frm&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/plugin.MYI&apos;</div><div class="line">removed `/var/lib/mysql/mysql/user.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/time_zone.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/help_topic.MYD&apos;</div><div class="line">removed `/var/lib/mysql/mysql/servers.frm&apos;</div><div class="line">removed directory: `/var/lib/mysql/mysql&apos;</div><div class="line">removed `/var/lib/mysql/ib_logfile0&apos;</div><div class="line">WSREP_SST: [INFO] Waiting for SST streaming to complete! (20160330 15:03:05.630)</div><div class="line">160330 15:03:18 [Note] WSREP: 0.0 (node1): State transfer to 1.0 (node3) complete.</div><div class="line">160330 15:03:18 [Note] WSREP: Member 0.0 (node1) synced with group.</div><div class="line">WSREP_SST: [INFO] Preparing the backup at /var/lib/mysql//.sst (20160330 15:03:19.498)</div><div class="line">WSREP_SST: [INFO] Evaluating innobackupex --no-version-check  --apply-log $rebuildcmd $&#123;DATA&#125; &amp;&gt;$&#123;DATA&#125;/innobackup.prepare.log (20160330 15:03:19.503)</div><div class="line">WSREP_SST: [INFO] Moving the backup to /var/lib/mysql/ (20160330 15:03:23.348)</div><div class="line">WSREP_SST: [INFO] Evaluating innobackupex --defaults-file=/etc/my.cnf --no-version-check   --move-back --force-non-empty-directories $&#123;DATA&#125; &amp;&gt;$&#123;DATA&#125;/innobackup.move.log (20160330 15:03:23.354)</div><div class="line">WSREP_SST: [INFO] Move successful, removing /var/lib/mysql//.sst (20160330 15:03:23.377)</div><div class="line">WSREP_SST: [INFO] Galera co-ords from recovery: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:53016 (20160330 15:03:23.416)</div><div class="line">WSREP_SST: [INFO] Total time on joiner: 0 seconds (20160330 15:03:23.423)</div><div class="line">WSREP_SST: [INFO] Removing the sst_in_progress file (20160330 15:03:23.430)</div><div class="line">160330 15:03:23 [Note] WSREP: SST complete, seqno: 53016</div><div class="line">160330 15:03:23 [Note] Plugin &apos;FEDERATED&apos; is disabled.</div><div class="line">160330 15:03:23 InnoDB: The InnoDB memory heap is disabled</div><div class="line">160330 15:03:23 InnoDB: Mutexes and rw_locks use GCC atomic builtins</div><div class="line">160330 15:03:23 InnoDB: Compressed tables use zlib 1.2.3</div><div class="line">160330 15:03:23 InnoDB: Using Linux native AIO</div><div class="line">160330 15:03:23 InnoDB: Initializing buffer pool, size = 128.0M</div><div class="line">160330 15:03:23 InnoDB: Completed initialization of buffer pool</div><div class="line">160330 15:03:23 InnoDB: highest supported file format is Barracuda.</div><div class="line">160330 15:03:23  InnoDB: Waiting for the background threads to start</div><div class="line">160330 15:03:24 Percona XtraDB (http://www.percona.com) 5.5.41-37.0 started; log sequence number 25433110</div><div class="line">160330 15:03:25 [Note] Event Scheduler: Loaded 0 events</div><div class="line">160330 15:03:25 [Note] WSREP: Signalling provider to continue.</div><div class="line">160330 15:03:25 [Note] WSREP: SST received: 54ebc9fd-f57f-11e5-baaa-96a1ced0928f:53016</div><div class="line">160330 15:03:25 [Note] /usr/sbin/mysqld: ready for connections.</div><div class="line">Version: &apos;5.5.41-37.0-55&apos;  socket: &apos;/var/lib/mysql/mysql.sock&apos;  port: 3306  Percona XtraDB Cluster (GPL), Release rel37.0, Revision 853, WSREP version 25.11, wsrep_25.11.r4027</div><div class="line">160330 15:03:25 [Note] WSREP: 1.0 (node3): State transfer from 0.0 (node1) complete.</div><div class="line">160330 15:03:25 [Note] WSREP: Shifting JOINER -&gt; JOINED (TO: 53016)</div><div class="line">160330 15:03:25 [Note] WSREP: Member 1.0 (node3) synced with group.</div><div class="line">160330 15:03:25 [Note] WSREP: Shifting JOINED -&gt; SYNCED (TO: 53016)</div><div class="line">160330 15:03:25 [Note] WSREP: Synchronized with group, ready for connections</div><div class="line">160330 15:03:25 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.</div></pre></td></tr></table></figure>
+<p><strong>使用sst进行同步后，成功加入集群，上面日志可以看出同步过程。</strong></p>
+<h4 id="4、误删除测试"><a href="#4、误删除测试" class="headerlink" title="4、误删除测试"></a>4、误删除测试</h4><h5 id="删除node3上面的数据库文件："><a href="#删除node3上面的数据库文件：" class="headerlink" title="删除node3上面的数据库文件："></a>删除<code>node3</code>上面的数据库文件：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rm -rf /var/lib/mysql/test_pxc/</div><div class="line">#tips：生产环境删除东西别用-rf这个参数</div></pre></td></tr></table></figure>
+<h5 id="查看数据库，已经没有了test-pxc这个数据库："><a href="#查看数据库，已经没有了test-pxc这个数据库：" class="headerlink" title="查看数据库，已经没有了test_pxc这个数据库："></a>查看数据库，已经没有了<code>test_pxc</code>这个数据库：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| test               |</div><div class="line">+--------------------+</div></pre></td></tr></table></figure>
+<h5 id="对node3上的数据库重启，SST恢复数据："><a href="#对node3上的数据库重启，SST恢复数据：" class="headerlink" title="对node3上的数据库重启，SST恢复数据："></a>对node3上的数据库重启，SST恢复数据：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">[root@node3 mysql]# /etc/init.d/mysql restart</div><div class="line">Shutting down MySQL (Percona XtraDB Cluster) ERROR! MySQL (Percona XtraDB Cluster) server process #30193 is not running!</div><div class="line">Starting MySQL (Percona XtraDB Cluster).......State transfer in progress, setting sleep higher</div><div class="line">... SUCCESS!</div><div class="line"></div><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| test               |</div><div class="line">| test_pxc           |</div><div class="line">+--------------------+</div><div class="line">5 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p><strong>数据恢复过程和宕机测试时的过程差不多。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PXC集群/" rel="tag"># PXC集群</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/08/HEXO+Github/" rel="next" title="HEXO+Github,搭建属于自己的博客">
+                <i class="fa fa-chevron-left"></i> HEXO+Github,搭建属于自己的博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/24/Mysql-Performance-Test/" rel="prev" title="Mysql基础性能测试">
+                Mysql基础性能测试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境情况："><span class="nav-number">1.</span> <span class="nav-text">环境情况：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、PXC的优缺点"><span class="nav-number">2.</span> <span class="nav-text">一、PXC的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点："><span class="nav-number">2.1.</span> <span class="nav-text">优点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺陷："><span class="nav-number">2.2.</span> <span class="nav-text">缺陷：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、PXC和M-S（主从同步）的对比"><span class="nav-number">3.</span> <span class="nav-text">二、PXC和M/S（主从同步）的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、PXC集群搭建"><span class="nav-number">4.</span> <span class="nav-text">三、PXC集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、关闭集群的防火墙和selinux"><span class="nav-number">4.1.</span> <span class="nav-text">1、关闭集群的防火墙和selinux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、修改主机名"><span class="nav-number">4.2.</span> <span class="nav-text">2、修改主机名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、实现3个节点之间的无密码登录"><span class="nav-number">4.3.</span> <span class="nav-text">3、实现3个节点之间的无密码登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、安装percona环境"><span class="nav-number">4.4.</span> <span class="nav-text">4、安装percona环境</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）配置yum源："><span class="nav-number">4.4.1.</span> <span class="nav-text">1）配置yum源：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）安装Percona软件："><span class="nav-number">4.4.2.</span> <span class="nav-text">2）安装Percona软件：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3）添加账号"><span class="nav-number">4.4.3.</span> <span class="nav-text">3）添加账号</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、PXC的节点配置"><span class="nav-number">4.5.</span> <span class="nav-text">5、PXC的节点配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）135："><span class="nav-number">4.5.1.</span> <span class="nav-text">1）135：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）136"><span class="nav-number">4.5.2.</span> <span class="nav-text">2）136</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3）137"><span class="nav-number">4.5.3.</span> <span class="nav-text">3）137</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4）随便进一个节点查看集群状态"><span class="nav-number">4.5.4.</span> <span class="nav-text">4）随便进一个节点查看集群状态</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、PXC集群测试"><span class="nav-number">5.</span> <span class="nav-text">四、PXC集群测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、基础测试"><span class="nav-number">5.1.</span> <span class="nav-text">1、基础测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）在135上："><span class="nav-number">5.1.1.</span> <span class="nav-text">1）在135上：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）在136上："><span class="nav-number">5.1.2.</span> <span class="nav-text">2）在136上：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3）在137上："><span class="nav-number">5.1.3.</span> <span class="nav-text">3）在137上：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、并发测试"><span class="nav-number">5.2.</span> <span class="nav-text">2、并发测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、宕机测试"><span class="nav-number">5.3.</span> <span class="nav-text">3、宕机测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#node1插入数据："><span class="nav-number">5.3.1.</span> <span class="nav-text">node1插入数据：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#node3查看是否在写入数据："><span class="nav-number">5.3.2.</span> <span class="nav-text">node3查看是否在写入数据：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#停掉node3上的percona实例："><span class="nav-number">5.3.3.</span> <span class="nav-text">停掉node3上的percona实例：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看日志："><span class="nav-number">5.3.4.</span> <span class="nav-text">查看日志：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重新启动node3实例，并查看日志："><span class="nav-number">5.3.5.</span> <span class="nav-text">重新启动node3实例，并查看日志：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#第一次启动失败，再次启动实例，并查看日志："><span class="nav-number">5.3.6.</span> <span class="nav-text">第一次启动失败，再次启动实例，并查看日志：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、误删除测试"><span class="nav-number">5.4.</span> <span class="nav-text">4、误删除测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#删除node3上面的数据库文件："><span class="nav-number">5.4.1.</span> <span class="nav-text">删除node3上面的数据库文件：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看数据库，已经没有了test-pxc这个数据库："><span class="nav-number">5.4.2.</span> <span class="nav-text">查看数据库，已经没有了test_pxc这个数据库：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对node3上的数据库重启，SST恢复数据："><span class="nav-number">5.4.3.</span> <span class="nav-text">对node3上的数据库重启，SST恢复数据：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+</body>
+</html>

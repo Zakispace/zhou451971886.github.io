@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="binlog mysqlbinlog," />
 
 
 
@@ -87,15 +87,22 @@
 
 
 
-<meta name="description" content="不忘初心，方得始终">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zaki">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="今天遇到了一个关于binlog的问题，由于业务需要，需要拉取3.30分到3.35分的binlog，在测试机进行了测试，测试语句如下：
+　　
+1mysqlbinlog --start-datetime=&amp;apos;2013-09-10 00:00:00&amp;apos; --stop-datetime=&amp;apos;2016-09-10 01:01:01&amp;apos; -d test_20160421 /">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用mysqlbinlog读取binlog问题">
+<meta property="og:url" content="http://yoursite.com/2016/04/26/Mysql-binlog-problem/index.html">
 <meta property="og:site_name" content="Zaki">
-<meta property="og:description" content="不忘初心，方得始终">
+<meta property="og:description" content="今天遇到了一个关于binlog的问题，由于业务需要，需要拉取3.30分到3.35分的binlog，在测试机进行了测试，测试语句如下：
+　　
+1mysqlbinlog --start-datetime=&amp;apos;2013-09-10 00:00:00&amp;apos; --stop-datetime=&amp;apos;2016-09-10 01:01:01&amp;apos; -d test_20160421 /">
+<meta property="og:updated_time" content="2016-05-01T04:47:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zaki">
-<meta name="twitter:description" content="不忘初心，方得始终">
+<meta name="twitter:title" content="使用mysqlbinlog读取binlog问题">
+<meta name="twitter:description" content="今天遇到了一个关于binlog的问题，由于业务需要，需要拉取3.30分到3.35分的binlog，在测试机进行了测试，测试语句如下：
+　　
+1mysqlbinlog --start-datetime=&amp;apos;2013-09-10 00:00:00&amp;apos; --stop-datetime=&amp;apos;2016-09-10 01:01:01&amp;apos; -d test_20160421 /">
 
 
 
@@ -123,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/04/26/Mysql-binlog-problem/"/>
 
 
 
 
 
-  <title> 归档 | Zaki </title>
+  <title> 使用mysqlbinlog读取binlog问题 | Zaki </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,7 +161,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-right  page-archive  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -268,403 +275,184 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 14 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/26/Mysql-binlog-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用mysqlbinlog读取binlog问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-26T16:05:05+08:00">
+                2016-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/04/26/Mysql-binlog-problem/" class="leancloud_visitors" data-flag-title="使用mysqlbinlog读取binlog问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
-      
 
+      
+        <p>　　今天遇到了一个关于<code>binlog</code>的问题，由于业务需要，需要拉取<code>3.30</code>分到<code>3.35</code>分的<code>binlog</code>，在测试机进行了测试，测试语句如下：
+　　</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqlbinlog --start-datetime=&apos;2013-09-10 00:00:00&apos; --stop-datetime=&apos;2016-09-10 01:01:01&apos; -d test_20160421 /var/lib/mysql/mysql-bin.000002</div></pre></td></tr></table></figure>
+<p>　　测试机器上没有问题，但去线上执行的时候就出现了错误，出来的内容并不是想要的内容，显示出来的都是乱码，如下所示： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">BINLOG ’ </div><div class="line">IXZqVhNIAAAALQAAAGcBAAAAAHoAAAAAAAEABHRlc3QAAno0AAEDAABUOcnY </div><div class="line">IXZqVh5IAAAAKAAAAI8BAAAAAHoAAAAAAAEAAgAB//4BAAAAcu+UpA==</div></pre></td></tr></table></figure>
+<p>　　经过<code>baidu</code>、<code>google</code>，终于发现了问题所在，是因为<code>binlog</code>的格式不一样所造成的：<br><strong>测试机A：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">MariaDB [(none)]&gt; show variables like &apos;binlog_format&apos;;</div><div class="line">+---------------+-----------+</div><div class="line">| Variable_name | Value     |</div><div class="line">+---------------+-----------+</div><div class="line">| binlog_format | STATEMENT |</div><div class="line">+---------------+-----------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p><strong>测试机B：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">MariaDB [(none)]&gt; show variables like &apos;binlog_format&apos;;</div><div class="line">+---------------+-----------+</div><div class="line">| Variable_name | Value     |</div><div class="line">+---------------+-----------+</div><div class="line">| binlog_format | Mixed     |</div><div class="line">+---------------+-----------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>在前面加一个参数，输出内容不再乱码，输出内容为准确的<code>SQL</code>语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqlbinlog --base64-output=DECODE-ROWS --start-datetime=&apos;2013-09-10 00:00:00&apos; --stop-datetime=&apos;2016-09-10 01:01:01&apos; -d test_20160421 /var/lib/mysql/mysql-bin.000002</div></pre></td></tr></table></figure>
+<h3 id="深入了解"><a href="#深入了解" class="headerlink" title="深入了解"></a>深入了解</h3><p><strong><code>mysql binlog</code>有3种格式：</strong><br><code>row,mixed,statement.</code><br><strong>解析日志工作：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqlbinlog --base64-output=DECODE-ROWS -v mysql-bin.000144 |more</div></pre></td></tr></table></figure>
+<p><strong>显示出<code>row</code>模式带来的<code>sql</code>变更：</strong><br><code>--base64-output=DECODE-ROWS</code><br><strong>显示<code>statement</code>模式带来的<code>sql</code>语句：</strong><br><code>-v</code><br><strong>显示<code>mixed</code>模式带来的<code>sql</code>语句：</strong><br><code>--base64-output=DECODE-ROWS -v</code></p>
+
+      
+    </div>
+
+    <div>
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/binlog-mysqlbinlog/" rel="tag"># binlog mysqlbinlog</a>
+          
         </div>
       
+
+      
+        
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/26/Mysql-Inception/" rel="next" title="搭建Mysql Inception">
+                <i class="fa fa-chevron-left"></i> 搭建Mysql Inception
+              </a>
+            
+          </div>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          <span class="post-nav-divider"></span>
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/29/MySQL5.7-Password-security/" itemprop="url">
-              
-                <span itemprop="name">MySQL5.7密码安全策略</span>
-              
-            </a>
-        
-      </h1>
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/29/Master-qiehuan-thing/" rel="prev" title="主库切换那些事">
+                主库切换那些事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-29T11:41:00+08:00"
-              content="2016-08-29" >
-          08-29
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
 
 
-    
-
+    <div class="post-spread">
       
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Truncate-table/" itemprop="url">
-              
-                <span itemprop="name">Truncate table命令的了解</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T14:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Create-table-as-select/" itemprop="url">
-              
-                <span itemprop="name">Create table as select 方式无法创建主键</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T11:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/24/Eclipse-with-PyDev-Windows/" itemprop="url">
-              
-                <span itemprop="name">Eclipse和PyDev搭建完美Python 开发环境（Windows篇）</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-24T15:43:00+08:00"
-              content="2016-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/23/Insert-Value-Problem/" itemprop="url">
-              
-                <span itemprop="name">写新数据时某列值总是被自动修改</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-23T17:06:04+08:00"
-              content="2016-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/13/dump-mysql-shell/" itemprop="url">
-              
-                <span itemprop="name">数据库导出问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-13T14:06:04+08:00"
-              content="2016-05-13" >
-          05-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/07/mongodb-qiehuan/" itemprop="url">
-              
-                <span itemprop="name">切换mongodb</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-07T16:05:05+08:00"
-              content="2016-05-07" >
-          05-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/03/Mar-Apr-Reports/" itemprop="url">
-              
-                <span itemprop="name">三、四月学习总结</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-03T16:54:50+08:00"
-              content="2016-05-03" >
-          05-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/29/Master-qiehuan-thing/" itemprop="url">
-              
-                <span itemprop="name">主库切换那些事</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-29T16:05:05+08:00"
-              content="2016-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/26/Mysql-binlog-problem/" itemprop="url">
-              
-                <span itemprop="name">使用mysqlbinlog读取binlog问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-26T16:05:05+08:00"
-              content="2016-04-26" >
-          04-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-
+    </div>
+  </div>
 
           
           </div>
@@ -672,6 +460,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -691,8 +483,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
@@ -745,6 +546,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#深入了解"><span class="nav-number">1.</span> <span class="nav-text">深入了解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -850,11 +667,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
 
 
   

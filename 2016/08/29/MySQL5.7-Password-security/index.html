@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Mysql,Password," />
 
 
 
@@ -87,15 +87,25 @@
 
 
 
-<meta name="description" content="不忘初心，方得始终">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zaki">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="MySQL5.7密码安全策略Hi，我是zaki，最近在玩MySQL5.7的时候，为它的密码安全策略操碎了心，下面我将简单记录一下我遇到的坑。
+初始化
+MySQL5.7使用mysql_install_db的时候会自己产生一个安全密码，会在用户根目录下创建一个.mysql_secret文件
+Mysql5.7.6以后的版本，使用mysqld --initialize代替了mysql_install_db">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL5.7密码安全策略">
+<meta property="og:url" content="http://yoursite.com/2016/08/29/MySQL5.7-Password-security/index.html">
 <meta property="og:site_name" content="Zaki">
-<meta property="og:description" content="不忘初心，方得始终">
+<meta property="og:description" content="MySQL5.7密码安全策略Hi，我是zaki，最近在玩MySQL5.7的时候，为它的密码安全策略操碎了心，下面我将简单记录一下我遇到的坑。
+初始化
+MySQL5.7使用mysql_install_db的时候会自己产生一个安全密码，会在用户根目录下创建一个.mysql_secret文件
+Mysql5.7.6以后的版本，使用mysqld --initialize代替了mysql_install_db">
+<meta property="og:updated_time" content="2016-08-29T03:41:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zaki">
-<meta name="twitter:description" content="不忘初心，方得始终">
+<meta name="twitter:title" content="MySQL5.7密码安全策略">
+<meta name="twitter:description" content="MySQL5.7密码安全策略Hi，我是zaki，最近在玩MySQL5.7的时候，为它的密码安全策略操碎了心，下面我将简单记录一下我遇到的坑。
+初始化
+MySQL5.7使用mysql_install_db的时候会自己产生一个安全密码，会在用户根目录下创建一个.mysql_secret文件
+Mysql5.7.6以后的版本，使用mysqld --initialize代替了mysql_install_db">
 
 
 
@@ -123,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/29/MySQL5.7-Password-security/"/>
 
 
 
 
 
-  <title> 归档 | Zaki </title>
+  <title> MySQL5.7密码安全策略 | Zaki </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,7 +164,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-right  page-archive  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -268,403 +278,192 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 14 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/29/MySQL5.7-Password-security/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MySQL5.7密码安全策略
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-29T11:41:00+08:00">
+                2016-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/08/29/MySQL5.7-Password-security/" class="leancloud_visitors" data-flag-title="MySQL5.7密码安全策略">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
-      
 
+      
+        <h3 id="MySQL5-7密码安全策略"><a href="#MySQL5-7密码安全策略" class="headerlink" title="MySQL5.7密码安全策略"></a>MySQL5.7密码安全策略</h3><p>Hi，我是zaki，最近在玩MySQL5.7的时候，为它的密码安全策略操碎了心，下面我将简单记录一下我遇到的坑。</p>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><ul>
+<li><code>MySQL5.7</code>使用<code>mysql_install_db</code>的时候会自己产生一个安全密码，会在用户根目录下创建一个<code>.mysql_secret</code>文件</li>
+<li><code>Mysql5.7.6</code>以后的版本，使用<code>mysqld --initialize</code>代替了<code>mysql_install_db</code>来对数据库目录进行初始化</li>
+<li>当然可以使用命令来跳过生成初始密码的步骤，使用<code>mysqld --initialize-insecure</code>命令来初始化数据库，则可以跳过</li>
+</ul>
+<h4 id="密码安全策略参数"><a href="#密码安全策略参数" class="headerlink" title="密码安全策略参数"></a>密码安全策略参数</h4><ul>
+<li><code>validate_password_dictionary_file</code> 指定密码验证的文件路径</li>
+<li><code>validate_password_length</code>  密码最小长度</li>
+<li><code>validate_password_mixed_case_count</code>  密码至少要包含的小写字母个数和大写字母个数</li>
+<li><code>validate_password_number_count</code>  密码至少要包含的数字个数</li>
+<li><code>validate_password_policy</code> 密码强度检查等级</li>
+<li><code>validate_password_special_char_count</code> 密码至少要包含的特殊字符数</li>
+</ul>
+<p><strong>Tips：在密码强度检查等级中，对应等级为：0/LOW、1/MEDIUM、2/STRONG，默认为1</strong></p>
+<ul>
+<li>0/LOW：只检查长度;</li>
+<li>1/MEDIUM：检查长度、数字、大小写、特殊字符;</li>
+<li>2/STRONG：检查长度、数字、大小写、特殊字符字典文件</li>
+</ul>
+<h4 id="导致错误"><a href="#导致错误" class="headerlink" title="导致错误"></a>导致错误</h4><ul>
+<li><strong>创建用户时报错</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; create user &apos;miner&apos;@&apos;192.168.%&apos; IDENTIFIED BY &apos;miner123&apos;;</div><div class="line">ERROR 1819 (HY000): Your password does not satisfy the current policy requirements</div><div class="line">报错原因：密码强度不够。</div></pre></td></tr></table></figure>
+<h4 id="如何降低安全策略"><a href="#如何降低安全策略" class="headerlink" title="如何降低安全策略"></a>如何降低安全策略</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 设置密码强度检查等级</div><div class="line">set global validate_password_policy=0;</div><div class="line"># 设置密码长度为最短，最短为4</div><div class="line">set global validate_password_length=4;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          
+            <a href="/tags/Password/" rel="tag"># Password</a>
+          
         </div>
       
+
+      
+        
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/26/Truncate-table/" rel="next" title="Truncate table命令的了解">
+                <i class="fa fa-chevron-left"></i> Truncate table命令的了解
+              </a>
+            
+          </div>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          <span class="post-nav-divider"></span>
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/29/MySQL5.7-Password-security/" itemprop="url">
-              
-                <span itemprop="name">MySQL5.7密码安全策略</span>
-              
-            </a>
-        
-      </h1>
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-29T11:41:00+08:00"
-              content="2016-08-29" >
-          08-29
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
 
 
-    
-
+    <div class="post-spread">
       
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Truncate-table/" itemprop="url">
-              
-                <span itemprop="name">Truncate table命令的了解</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T14:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Create-table-as-select/" itemprop="url">
-              
-                <span itemprop="name">Create table as select 方式无法创建主键</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T11:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/24/Eclipse-with-PyDev-Windows/" itemprop="url">
-              
-                <span itemprop="name">Eclipse和PyDev搭建完美Python 开发环境（Windows篇）</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-24T15:43:00+08:00"
-              content="2016-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/23/Insert-Value-Problem/" itemprop="url">
-              
-                <span itemprop="name">写新数据时某列值总是被自动修改</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-23T17:06:04+08:00"
-              content="2016-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/13/dump-mysql-shell/" itemprop="url">
-              
-                <span itemprop="name">数据库导出问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-13T14:06:04+08:00"
-              content="2016-05-13" >
-          05-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/07/mongodb-qiehuan/" itemprop="url">
-              
-                <span itemprop="name">切换mongodb</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-07T16:05:05+08:00"
-              content="2016-05-07" >
-          05-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/03/Mar-Apr-Reports/" itemprop="url">
-              
-                <span itemprop="name">三、四月学习总结</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-03T16:54:50+08:00"
-              content="2016-05-03" >
-          05-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/29/Master-qiehuan-thing/" itemprop="url">
-              
-                <span itemprop="name">主库切换那些事</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-29T16:05:05+08:00"
-              content="2016-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/26/Mysql-binlog-problem/" itemprop="url">
-              
-                <span itemprop="name">使用mysqlbinlog读取binlog问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-26T16:05:05+08:00"
-              content="2016-04-26" >
-          04-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-
+    </div>
+  </div>
 
           
           </div>
@@ -672,6 +471,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -691,8 +494,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
@@ -745,6 +557,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL5-7密码安全策略"><span class="nav-number">1.</span> <span class="nav-text">MySQL5.7密码安全策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化"><span class="nav-number">1.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#密码安全策略参数"><span class="nav-number">1.2.</span> <span class="nav-text">密码安全策略参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#导致错误"><span class="nav-number">1.3.</span> <span class="nav-text">导致错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何降低安全策略"><span class="nav-number">1.4.</span> <span class="nav-text">如何降低安全策略</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -850,11 +678,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
 
 
   

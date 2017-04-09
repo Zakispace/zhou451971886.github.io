@@ -1,0 +1,843 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Eclipse,PyDev,Python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Hi，I’m zaki，最近在进行Python的基础学习，在选择Python IDE工具的时候下了不少功夫，在使用过Vim、Emacs、PyCharm、Sublime Text这些工具后，决定使用一下Eclipse with PyDev试试手感，本文主要介绍Eclipse with PyDev在windows系统下的搭建过程。
+Python InstallPython的下载安装从网站上下载最新的版">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eclipse和PyDev搭建完美Python 开发环境（Windows篇）">
+<meta property="og:url" content="http://yoursite.com/2016/05/24/Eclipse-with-PyDev-Windows/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="Hi，I’m zaki，最近在进行Python的基础学习，在选择Python IDE工具的时候下了不少功夫，在使用过Vim、Emacs、PyCharm、Sublime Text这些工具后，决定使用一下Eclipse with PyDev试试手感，本文主要介绍Eclipse with PyDev在windows系统下的搭建过程。
+Python InstallPython的下载安装从网站上下载最新的版">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464074043113.png">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464075009642.png">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464075035899.png">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464075344407.png">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464075416756.png">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464075532408.png">
+<meta property="og:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464075550865.png">
+<meta property="og:updated_time" content="2016-05-24T07:53:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Eclipse和PyDev搭建完美Python 开发环境（Windows篇）">
+<meta name="twitter:description" content="Hi，I’m zaki，最近在进行Python的基础学习，在选择Python IDE工具的时候下了不少功夫，在使用过Vim、Emacs、PyCharm、Sublime Text这些工具后，决定使用一下Eclipse with PyDev试试手感，本文主要介绍Eclipse with PyDev在windows系统下的搭建过程。
+Python InstallPython的下载安装从网站上下载最新的版">
+<meta name="twitter:image" content="http://yoursite.com/images/Eclipse-with-PyDev-Windows/1464074043113.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/24/Eclipse-with-PyDev-Windows/"/>
+
+
+
+
+
+  <title> Eclipse和PyDev搭建完美Python 开发环境（Windows篇） | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/24/Eclipse-with-PyDev-Windows/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Eclipse和PyDev搭建完美Python 开发环境（Windows篇）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-24T15:43:00+08:00">
+                2016-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/24/Eclipse-with-PyDev-Windows/" class="leancloud_visitors" data-flag-title="Eclipse和PyDev搭建完美Python 开发环境（Windows篇）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>Hi，I’m zaki，</code>最近在进行<code>Python</code>的基础学习，在选择<code>Python IDE</code>工具的时候下了不少功夫，在使用过<code>Vim、Emacs、PyCharm、Sublime Text</code>这些工具后，决定使用一下<code>Eclipse with PyDev</code>试试手感，本文主要介绍<code>Eclipse with PyDev</code>在windows系统下的搭建过程。</p>
+<h3 id="Python-Install"><a href="#Python-Install" class="headerlink" title="Python Install"></a>Python Install</h3><h4 id="Python的下载安装"><a href="#Python的下载安装" class="headerlink" title="Python的下载安装"></a>Python的下载安装</h4><p>从网站上下载最新的版本，从<a href="http://python.org/download/" target="_blank" rel="external">Python官方网站</a>下载。安装过程与其他<code>Windows</code>软件类似。目前稳定版本为<code>Python 2.7.6</code>和<code>Python 3.3.4</code>。</p>
+<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>如果你想要从<code>Windows</code>命令行调用<code>Python</code>，那么需要先设置<code>Python</code>环境变量。<br>打开<code>DOS</code>窗口的命令提示符输入以下命令，路径为你自己的<code>Python</code>安装路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set path=%path%;E:\python34</div></pre></td></tr></table></figure></p>
+<h4 id="测试python环境变量是否设置成功"><a href="#测试python环境变量是否设置成功" class="headerlink" title="测试python环境变量是否设置成功"></a>测试python环境变量是否设置成功</h4><p><img src="/images/Eclipse-with-PyDev-Windows/1464074043113.png" alt="Alt text"><br>如果你能成功进入到<code>Python</code>命令行中去，<code>Congratulations on your success!</code></p>
+<h3 id="Eclipse-Install"><a href="#Eclipse-Install" class="headerlink" title="Eclipse Install"></a>Eclipse Install</h3><p>Eclipse的下载安装相对简单，直接进入<a href="http://www.eclipse.org/downloads/" target="_blank" rel="external">Eclipse官网</a>挑选你需要的版本进行下载。 下载完后，解压就可以直接使用，  <code>Eclipse</code>不需要安装。<br><strong>(Tips:<code>Eclipse</code>需要配置好<code>JDK</code>后才能运行)</strong></p>
+<h3 id="Pydev-Install"><a href="#Pydev-Install" class="headerlink" title="Pydev Install"></a>Pydev Install</h3><h4 id="Pydev的下载"><a href="#Pydev的下载" class="headerlink" title="Pydev的下载"></a>Pydev的下载</h4><p>选择自己需要的版本，在<a href="http://pydev.org/" target="_blank" rel="external">Pydev官网</a>进行下载,有些童鞋英语差（比如说我）找不到下载地址的，直接在<a href="https://sourceforge.net/projects/pydev/files/pydev/" target="_blank" rel="external">这里</a>下载。</p>
+<h4 id="Pydev的使用"><a href="#Pydev的使用" class="headerlink" title="Pydev的使用"></a>Pydev的使用</h4><p>解压<code>pydev</code>插件后，会发现有<code>features</code>、<code>plugins</code>两个文件夹，然后把<code>features</code>文件夹下的文件移到<code>E:\eclipse\features</code>目录下，把<code>plugins</code>文件夹下的文件移到<code>E:\eclipse\plugins</code>目录下。</p>
+<h4 id="Pydev的验证"><a href="#Pydev的验证" class="headerlink" title="Pydev的验证"></a>Pydev的验证</h4><p>重启<code>eclipse</code>，在<code>windows-&gt;preferences</code>出现<code>PyDev</code>配置项，表示<code>PyDev</code>插件安装成功。</p>
+<h4 id="Pydev的配置"><a href="#Pydev的配置" class="headerlink" title="Pydev的配置"></a>Pydev的配置</h4><p>在<code>Window</code>菜单中选<code>Preference</code>，<br><strong>1、<code>windows-&gt;preferences-&gt;PyDev-&gt;Interpreter - Python</code>，<code>New</code>一个<code>Python</code>解释器，填上解释器名字和路径，路径选相应的<code>python.exe</code>。</strong> </p>
+<p><img src="/images/Eclipse-with-PyDev-Windows/1464075009642.png" alt="Alt text"><br><img src="/images/Eclipse-with-PyDev-Windows/1464075035899.png" alt="Alt text"><br><strong>2、<code>General-&gt;Editors-&gt;Text Editors-&gt;Spelling</code>，<code>Encoding</code>改成<code>Other:UTF-8</code></strong><br><strong>3、<code>General-&gt;Workspace</code>，<code>Text file encoding</code>改成<code>Other:UTF-8</code></strong></p>
+<p>至此，<code>PyDev</code>的配置就完成了。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p><code>File-&gt;New-&gt;Project</code>，选<code>PyDev</code>下的<code>PyDev Project</code>，<code>Grammer</code>和<code>Interpreter</code>选相应的版本，<code>Finish。</code><br><img src="/images/Eclipse-with-PyDev-Windows/1464075344407.png" alt="Alt text"><br>在<code>PyDev Package Explorer</code>的项目上右键，<code>New-&gt;PyDev Module</code>，随便写个名字，<code>Finish。</code><br>然后随便写几行代码，<code>Run</code>在弹出的对话框中选择<code>Python Run，OK</code> </p>
+<p><img src="/images/Eclipse-with-PyDev-Windows/1464075416756.png" alt="Alt text"><br><img src="/images/Eclipse-with-PyDev-Windows/1464075532408.png" alt="Alt text"><br><img src="/images/Eclipse-with-PyDev-Windows/1464075550865.png" alt="Alt text"></p>
+<p>到这里，<code>Eclipse with PyDev</code>就搭建完毕了，有问题的地方还请大家在后面给我指出。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Eclipse/" rel="tag"># Eclipse</a>
+          
+            <a href="/tags/PyDev/" rel="tag"># PyDev</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/23/Insert-Value-Problem/" rel="next" title="写新数据时某列值总是被自动修改">
+                <i class="fa fa-chevron-left"></i> 写新数据时某列值总是被自动修改
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/26/Create-table-as-select/" rel="prev" title="Create table as select 方式无法创建主键">
+                Create table as select 方式无法创建主键 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-Install"><span class="nav-number">1.</span> <span class="nav-text">Python Install</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Python的下载安装"><span class="nav-number">1.1.</span> <span class="nav-text">Python的下载安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#环境变量"><span class="nav-number">1.2.</span> <span class="nav-text">环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试python环境变量是否设置成功"><span class="nav-number">1.3.</span> <span class="nav-text">测试python环境变量是否设置成功</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Eclipse-Install"><span class="nav-number">2.</span> <span class="nav-text">Eclipse Install</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pydev-Install"><span class="nav-number">3.</span> <span class="nav-text">Pydev Install</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Pydev的下载"><span class="nav-number">3.1.</span> <span class="nav-text">Pydev的下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pydev的使用"><span class="nav-number">3.2.</span> <span class="nav-text">Pydev的使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pydev的验证"><span class="nav-number">3.3.</span> <span class="nav-text">Pydev的验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pydev的配置"><span class="nav-number">3.4.</span> <span class="nav-text">Pydev的配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+</body>
+</html>

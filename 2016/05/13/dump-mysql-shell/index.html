@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="mysql,shell,mysqldump," />
 
 
 
@@ -87,15 +87,16 @@
 
 
 
-<meta name="description" content="不忘初心，方得始终">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zaki">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="Hi，我是zaki，最近由于业务要求，需要导出一个数据库的表结构，但是导出的时候导出了一些不必要的数据（例如mysql这个数据库），并且在执行的时候覆盖了原有的表，弄得蛋疼不已。所有，专门写了下面的脚本来进行数据库的各种数据导出，当然只写了一小部分，以后还会慢慢添加。1234567891011121314151617181920212223242526272829303132333435363">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库导出问题">
+<meta property="og:url" content="http://yoursite.com/2016/05/13/dump-mysql-shell/index.html">
 <meta property="og:site_name" content="Zaki">
-<meta property="og:description" content="不忘初心，方得始终">
+<meta property="og:description" content="Hi，我是zaki，最近由于业务要求，需要导出一个数据库的表结构，但是导出的时候导出了一些不必要的数据（例如mysql这个数据库），并且在执行的时候覆盖了原有的表，弄得蛋疼不已。所有，专门写了下面的脚本来进行数据库的各种数据导出，当然只写了一小部分，以后还会慢慢添加。1234567891011121314151617181920212223242526272829303132333435363">
+<meta property="og:updated_time" content="2016-05-13T11:34:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zaki">
-<meta name="twitter:description" content="不忘初心，方得始终">
+<meta name="twitter:title" content="数据库导出问题">
+<meta name="twitter:description" content="Hi，我是zaki，最近由于业务要求，需要导出一个数据库的表结构，但是导出的时候导出了一些不必要的数据（例如mysql这个数据库），并且在执行的时候覆盖了原有的表，弄得蛋疼不已。所有，专门写了下面的脚本来进行数据库的各种数据导出，当然只写了一小部分，以后还会慢慢添加。1234567891011121314151617181920212223242526272829303132333435363">
 
 
 
@@ -123,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/05/13/dump-mysql-shell/"/>
 
 
 
 
 
-  <title> 归档 | Zaki </title>
+  <title> 数据库导出问题 | Zaki </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,7 +155,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-right  page-archive  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -268,403 +269,175 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 14 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/13/dump-mysql-shell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                数据库导出问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-13T14:06:04+08:00">
+                2016-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/13/dump-mysql-shell/" class="leancloud_visitors" data-flag-title="数据库导出问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
-      
 
+      
+        <p>　　<strong>Hi，我是zaki，最近由于业务要求，需要导出一个数据库的表结构，但是导出的时候导出了一些不必要的数据（例如mysql这个数据库），并且在执行的时候覆盖了原有的表，弄得蛋疼不已。所有，专门写了下面的脚本来进行数据库的各种数据导出，当然只写了一小部分，以后还会慢慢添加。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash - </div><div class="line">#===============================================================================</div><div class="line">#</div><div class="line">#          FILE:  dump_mysql.sh</div><div class="line"># </div><div class="line">#         USAGE:  ./dump_mysql.sh </div><div class="line"># </div><div class="line">#   DESCRIPTION:  </div><div class="line"># </div><div class="line">#       OPTIONS:  ---</div><div class="line">#  REQUIREMENTS:  ---</div><div class="line">#          BUGS:  ---</div><div class="line">#         NOTES:  ---</div><div class="line">#        AUTHOR: Zaki ^_^ (), 451971886@qq.com</div><div class="line">#       COMPANY: </div><div class="line">#       CREATED: 04/23/2016 04:02:30 PM CST</div><div class="line">#      REVISION:  ---</div><div class="line">#===============================================================================</div><div class="line"></div><div class="line">set -o nounset                              # Treat unset variables as an error</div><div class="line"></div><div class="line">Myuser=&quot;root&quot;</div><div class="line">Mypasswd=&quot;123456&quot;</div><div class="line">MySQL=&quot;mysql&quot;</div><div class="line">SQL_DIR=&quot;/zxh/sql&quot;</div><div class="line">LOG_DIR=&quot;/zxh/log&quot;</div><div class="line"># 过滤掉不想导出的数据库</div><div class="line">Igonre_DB=&quot;|information_schema|mysql|performance_schema&quot;</div><div class="line">MyDBName=`$MySQL -e &quot;show databases;&quot; -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; 2&gt;/dev/null | grep -Ev &quot;Database$&#123;Igonre_DB&#125;&quot;`</div><div class="line"></div><div class="line"># 只导出表结构，不使用drop table</div><div class="line">Dump_Str()&#123;</div><div class="line">    mysqldump -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; -d --databases $MyDBName --skip-add-drop-table &gt; $SQL_DIR/dump_str.sql</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 导出所有数据和表结构,并压缩</div><div class="line">Dump_All()&#123;</div><div class="line">    mysqldump -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; --databases $MyDBName 2&gt;/dev/null | gzip &gt; $SQL_DIR/dump_all.sql.gz</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 解压并导入所有数据，报错直接跳过</div><div class="line"></div><div class="line">In_ALL()&#123;</div><div class="line">    cat $SQL_DIR/dump_all.sql.gz | gunzip | mysql -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; -f 2&gt; $LOG_DIR/In_all.log</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 导入表结构，报错直接跳过</div><div class="line">In_Str()&#123;</div><div class="line">   cat $SQL_DIR/dump_str.sql |  mysql -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; -f 2&gt; $LOG_DIR/In_str.log</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+            <a href="/tags/mysqldump/" rel="tag"># mysqldump</a>
+          
         </div>
       
+
+      
+        
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/07/mongodb-qiehuan/" rel="next" title="切换mongodb">
+                <i class="fa fa-chevron-left"></i> 切换mongodb
+              </a>
+            
+          </div>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          <span class="post-nav-divider"></span>
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/29/MySQL5.7-Password-security/" itemprop="url">
-              
-                <span itemprop="name">MySQL5.7密码安全策略</span>
-              
-            </a>
-        
-      </h1>
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/23/Insert-Value-Problem/" rel="prev" title="写新数据时某列值总是被自动修改">
+                写新数据时某列值总是被自动修改 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-29T11:41:00+08:00"
-              content="2016-08-29" >
-          08-29
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
 
 
-    
-
+    <div class="post-spread">
       
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Truncate-table/" itemprop="url">
-              
-                <span itemprop="name">Truncate table命令的了解</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T14:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Create-table-as-select/" itemprop="url">
-              
-                <span itemprop="name">Create table as select 方式无法创建主键</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T11:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/24/Eclipse-with-PyDev-Windows/" itemprop="url">
-              
-                <span itemprop="name">Eclipse和PyDev搭建完美Python 开发环境（Windows篇）</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-24T15:43:00+08:00"
-              content="2016-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/23/Insert-Value-Problem/" itemprop="url">
-              
-                <span itemprop="name">写新数据时某列值总是被自动修改</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-23T17:06:04+08:00"
-              content="2016-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/13/dump-mysql-shell/" itemprop="url">
-              
-                <span itemprop="name">数据库导出问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-13T14:06:04+08:00"
-              content="2016-05-13" >
-          05-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/07/mongodb-qiehuan/" itemprop="url">
-              
-                <span itemprop="name">切换mongodb</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-07T16:05:05+08:00"
-              content="2016-05-07" >
-          05-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/03/Mar-Apr-Reports/" itemprop="url">
-              
-                <span itemprop="name">三、四月学习总结</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-03T16:54:50+08:00"
-              content="2016-05-03" >
-          05-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/29/Master-qiehuan-thing/" itemprop="url">
-              
-                <span itemprop="name">主库切换那些事</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-29T16:05:05+08:00"
-              content="2016-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/26/Mysql-binlog-problem/" itemprop="url">
-              
-                <span itemprop="name">使用mysqlbinlog读取binlog问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-26T16:05:05+08:00"
-              content="2016-04-26" >
-          04-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-
+    </div>
+  </div>
 
           
           </div>
@@ -672,6 +445,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -850,11 +627,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
 
 
   

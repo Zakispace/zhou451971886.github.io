@@ -280,7 +280,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/19/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/29/MySQL5.7-Password-security/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -302,8 +302,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/03/19/hello-world/" itemprop="url">
-                  Hello World
+                <a class="post-title-link" href="/2016/08/29/MySQL5.7-Password-security/" itemprop="url">
+                  MySQL5.7密码安全策略
                 </a>
               
             
@@ -319,8 +319,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-19T11:25:56+08:00">
-                2017-03-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-29T11:41:00+08:00">
+                2016-08-29
               </time>
             
 
@@ -337,7 +337,7 @@
 
           
           
-             <span id="/2017/03/19/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+             <span id="/2016/08/29/MySQL5.7-Password-security/" class="leancloud_visitors" data-flag-title="MySQL5.7密码安全策略">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -368,15 +368,1297 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+            <h3 id="MySQL5-7密码安全策略"><a href="#MySQL5-7密码安全策略" class="headerlink" title="MySQL5.7密码安全策略"></a>MySQL5.7密码安全策略</h3><p>Hi，我是zaki，最近在玩MySQL5.7的时候，为它的密码安全策略操碎了心，下面我将简单记录一下我遇到的坑。</p>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><ul>
+<li><code>MySQL5.7</code>使用<code>mysql_install_db</code>的时候会自己产生一个安全密码，会在用户根目录下创建一个<code>.mysql_secret</code>文件</li>
+<li><code>Mysql5.7.6</code>以后的版本，使用<code>mysqld --initialize</code>代替了<code>mysql_install_db</code>来对数据库目录进行初始化</li>
+<li>当然可以使用命令来跳过生成初始密码的步骤，使用<code>mysqld --initialize-insecure</code>命令来初始化数据库，则可以跳过</li>
+</ul>
+<h4 id="密码安全策略参数"><a href="#密码安全策略参数" class="headerlink" title="密码安全策略参数"></a>密码安全策略参数</h4><ul>
+<li><code>validate_password_dictionary_file</code> 指定密码验证的文件路径</li>
+<li><code>validate_password_length</code>  密码最小长度</li>
+<li><code>validate_password_mixed_case_count</code>  密码至少要包含的小写字母个数和大写字母个数</li>
+<li><code>validate_password_number_count</code>  密码至少要包含的数字个数</li>
+<li><code>validate_password_policy</code> 密码强度检查等级</li>
+<li><code>validate_password_special_char_count</code> 密码至少要包含的特殊字符数</li>
+</ul>
+<p><strong>Tips：在密码强度检查等级中，对应等级为：0/LOW、1/MEDIUM、2/STRONG，默认为1</strong></p>
+<ul>
+<li>0/LOW：只检查长度;</li>
+<li>1/MEDIUM：检查长度、数字、大小写、特殊字符;</li>
+<li>2/STRONG：检查长度、数字、大小写、特殊字符字典文件</li>
+</ul>
+<h4 id="导致错误"><a href="#导致错误" class="headerlink" title="导致错误"></a>导致错误</h4><ul>
+<li><strong>创建用户时报错</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; create user &apos;miner&apos;@&apos;192.168.%&apos; IDENTIFIED BY &apos;miner123&apos;;</div><div class="line">ERROR 1819 (HY000): Your password does not satisfy the current policy requirements</div><div class="line">报错原因：密码强度不够。</div></pre></td></tr></table></figure>
+<h4 id="如何降低安全策略"><a href="#如何降低安全策略" class="headerlink" title="如何降低安全策略"></a>如何降低安全策略</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 设置密码强度检查等级</div><div class="line">set global validate_password_policy=0;</div><div class="line"># 设置密码长度为最短，最短为4</div><div class="line">set global validate_password_length=4;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/26/Truncate-table/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/26/Truncate-table/" itemprop="url">
+                  Truncate table命令的了解
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-26T14:11:05+08:00">
+                2016-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/26/Truncate-table/" class="leancloud_visitors" data-flag-title="Truncate table命令的了解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h4><p>　・<code>DML</code>语言<br>　・可以回退<br>　・可以有条件的删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DELETE FROM 表名 WHERE 条件</div></pre></td></tr></table></figure>
+<h4 id="TRUNCATE-TABLE"><a href="#TRUNCATE-TABLE" class="headerlink" title="TRUNCATE TABLE"></a>TRUNCATE TABLE</h4><p>　・<code>DDL</code>语言<br>　・无法回退<br>　・默认所有的表内容都删除<br>　・删除速度比<code>delete</code>快。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TRUNCATE TABLE 表名</div></pre></td></tr></table></figure>
+<h4 id="DROP-TABLE"><a href="#DROP-TABLE" class="headerlink" title="DROP TABLE"></a>DROP TABLE</h4><p>　・<code>DDL</code>语言<br>　・无法回退<br>　・默认所有的表内容都删除<br>　・删除速度比<code>truncate</code>快。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DROP TABLE 表名</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/26/Create-table-as-select/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/26/Create-table-as-select/" itemprop="url">
+                  Create table as select 方式无法创建主键
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-26T11:11:05+08:00">
+                2016-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/26/Create-table-as-select/" class="leancloud_visitors" data-flag-title="Create table as select 方式无法创建主键">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　　<code>Hi，I‘m Zaki，</code>今天，在做数据变更，使用<code>Create table as select</code>的方式进行备份，最后还原回来的时候，发现整个表都没有了主键，然后进行了如下小实验来测试。</p>
+<h4 id="建一个测试表"><a href="#建一个测试表" class="headerlink" title="建一个测试表"></a>建一个测试表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `yq_ad` (</div><div class="line">  `ad_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;广告id&apos;,</div><div class="line">  `ad_group_id` int(10) unsigned NOT NULL COMMENT &apos;城市广告组id&apos;,</div><div class="line">  `title` varchar(50) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;标题&apos;,</div><div class="line">  `ad_describe` varchar(200) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;描述&apos;,</div><div class="line">  `pic_url` varchar(100) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;图片&apos;,</div><div class="line">  `ad_url` varchar(100) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;链接&apos;,</div><div class="line">  `sort_num` tinyint(1) unsigned NOT NULL DEFAULT &apos;1&apos; COMMENT &apos;显示排序&apos;,</div><div class="line">  `is_delete` tinyint(1) NOT NULL DEFAULT &apos;0&apos; COMMENT &apos;是否被删除&apos;,</div><div class="line">  `linkid` varchar(255) NOT NULL DEFAULT &apos;&apos;,</div><div class="line">  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</div><div class="line">  `create_date` date NOT NULL DEFAULT &apos;1970-01-01&apos; COMMENT &apos;创建日期&apos;,</div><div class="line">  PRIMARY KEY (`ad_id`),</div><div class="line">  KEY `idx_adgroupid` (`ad_group_id`),</div><div class="line">  KEY `idx_createdate` (`create_date`)</div><div class="line">) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT=&apos;广告表&apos;</div></pre></td></tr></table></figure>
+<h4 id="进行备份"><a href="#进行备份" class="headerlink" title="进行备份"></a>进行备份</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create table yq_ad20160526 as select * from yq_ad;</div></pre></td></tr></table></figure>
+<h4 id="查看备份表"><a href="#查看备份表" class="headerlink" title="查看备份表"></a>查看备份表</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">mysql &gt; show create table yq_ad20160526;</div><div class="line">CREATE TABLE `yq_ad20160526` (</div><div class="line">  `ad_id` int(10) unsigned NOT NULL DEFAULT &apos;0&apos; COMMENT &apos;广告id&apos;,</div><div class="line">  `ad_group_id` int(10) unsigned NOT NULL COMMENT &apos;城市广告组id&apos;,</div><div class="line">  `title` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;标题&apos;,</div><div class="line">  `ad_describe` varchar(200) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;描述&apos;,</div><div class="line">  `pic_url` varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;图片&apos;,</div><div class="line">  `ad_url` varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos; COMMENT &apos;链接&apos;,</div><div class="line">  `sort_num` tinyint(1) unsigned NOT NULL DEFAULT &apos;1&apos; COMMENT &apos;显示排序&apos;,</div><div class="line">  `is_delete` tinyint(1) NOT NULL DEFAULT &apos;0&apos; COMMENT &apos;是否被删除&apos;,</div><div class="line">  `linkid` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT &apos;&apos;,</div><div class="line">  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</div><div class="line">  `create_date` date NOT NULL DEFAULT &apos;1970-01-01&apos; COMMENT &apos;创建日期&apos;</div><div class="line">) ENGINE=InnoDB DEFAULT CHARSET=latin1</div></pre></td></tr></table></figure>
+<h4 id="得出结论"><a href="#得出结论" class="headerlink" title="得出结论"></a>得出结论</h4><p>　　果然主键和索引都消失了，所以通过这个方式来备份的只有表的结构和数据，并没有约束条件。</p>
+<h4 id="Create-table-as-select性能简介"><a href="#Create-table-as-select性能简介" class="headerlink" title="Create table as select性能简介"></a>Create table as select性能简介</h4><p>　　<strong>在数据库中移动数据最快的方法是将其从一个表移动到别一个表，而不是需要进入操作系统将数据从一个表移动到别一个表，有一些常见的方法可用于提高数据迁移的性能：</strong><br><strong>1．</strong>调整表的结构（删除索引和触发器）<br><strong>2．</strong>在数据迁移期间禁用约束<br><strong>3．</strong>使用提示和选项来改进事务性能</p>
+<p>　　第一个技巧是调整表的结构，它涉及禁用目标表上面的任何触发器或索引。例如，如果在目标表上有行级触发器，则插入到表中的每一行都会执行触发器。如果可能的话，最好在数据插入之前将目标表的触发器禁用；如果应该为每个插入的行执行该触发器，则可以在批量插入完成以后再创建此触发器，而不应该在批量插入期间每插入一条数据重复执行触发器。<br>　　除了禁用触发器，应该在启动数据加载之前删除目标表上面的索引，然后在数据加载完毕后再重新创建索引。<br>　　<strong>注意：删除索引和禁用触发器可以解决大多数数和大型表与表之间数据迁移中遇到的性能问题。</strong><br>　　除了禁用索引，还要考虑到表上的约束。如果源数据已经在数据库的表中，在将数据加载到目标表之前，可以检查该数据了解它的相关约束（例如外键或<code>check</code>约束），一旦加载数据完成就可以重新启用这些约束。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/24/Eclipse-with-PyDev-Windows/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/24/Eclipse-with-PyDev-Windows/" itemprop="url">
+                  Eclipse和PyDev搭建完美Python 开发环境（Windows篇）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-24T15:43:00+08:00">
+                2016-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/24/Eclipse-with-PyDev-Windows/" class="leancloud_visitors" data-flag-title="Eclipse和PyDev搭建完美Python 开发环境（Windows篇）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><code>Hi，I’m zaki，</code>最近在进行<code>Python</code>的基础学习，在选择<code>Python IDE</code>工具的时候下了不少功夫，在使用过<code>Vim、Emacs、PyCharm、Sublime Text</code>这些工具后，决定使用一下<code>Eclipse with PyDev</code>试试手感，本文主要介绍<code>Eclipse with PyDev</code>在windows系统下的搭建过程。</p>
+<h3 id="Python-Install"><a href="#Python-Install" class="headerlink" title="Python Install"></a>Python Install</h3><h4 id="Python的下载安装"><a href="#Python的下载安装" class="headerlink" title="Python的下载安装"></a>Python的下载安装</h4><p>从网站上下载最新的版本，从<a href="http://python.org/download/" target="_blank" rel="external">Python官方网站</a>下载。安装过程与其他<code>Windows</code>软件类似。目前稳定版本为<code>Python 2.7.6</code>和<code>Python 3.3.4</code>。</p>
+<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>如果你想要从<code>Windows</code>命令行调用<code>Python</code>，那么需要先设置<code>Python</code>环境变量。<br>打开<code>DOS</code>窗口的命令提示符输入以下命令，路径为你自己的<code>Python</code>安装路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set path=%path%;E:\python34</div></pre></td></tr></table></figure></p>
+<h4 id="测试python环境变量是否设置成功"><a href="#测试python环境变量是否设置成功" class="headerlink" title="测试python环境变量是否设置成功"></a>测试python环境变量是否设置成功</h4><p><img src="/images/Eclipse-with-PyDev-Windows/1464074043113.png" alt="Alt text"><br>如果你能成功进入到<code>Python</code>命令行中去，<code>Congratulations on your success!</code></p>
+<h3 id="Eclipse-Install"><a href="#Eclipse-Install" class="headerlink" title="Eclipse Install"></a>Eclipse Install</h3><p>Eclipse的下载安装相对简单，直接进入<a href="http://www.eclipse.org/downloads/" target="_blank" rel="external">Eclipse官网</a>挑选你需要的版本进行下载。 下载完后，解压就可以直接使用，  <code>Eclipse</code>不需要安装。<br><strong>(Tips:<code>Eclipse</code>需要配置好<code>JDK</code>后才能运行)</strong></p>
+<h3 id="Pydev-Install"><a href="#Pydev-Install" class="headerlink" title="Pydev Install"></a>Pydev Install</h3><h4 id="Pydev的下载"><a href="#Pydev的下载" class="headerlink" title="Pydev的下载"></a>Pydev的下载</h4><p>选择自己需要的版本，在<a href="http://pydev.org/" target="_blank" rel="external">Pydev官网</a>进行下载,有些童鞋英语差（比如说我）找不到下载地址的，直接在<a href="https://sourceforge.net/projects/pydev/files/pydev/" target="_blank" rel="external">这里</a>下载。</p>
+<h4 id="Pydev的使用"><a href="#Pydev的使用" class="headerlink" title="Pydev的使用"></a>Pydev的使用</h4><p>解压<code>pydev</code>插件后，会发现有<code>features</code>、<code>plugins</code>两个文件夹，然后把<code>features</code>文件夹下的文件移到<code>E:\eclipse\features</code>目录下，把<code>plugins</code>文件夹下的文件移到<code>E:\eclipse\plugins</code>目录下。</p>
+<h4 id="Pydev的验证"><a href="#Pydev的验证" class="headerlink" title="Pydev的验证"></a>Pydev的验证</h4><p>重启<code>eclipse</code>，在<code>windows-&gt;preferences</code>出现<code>PyDev</code>配置项，表示<code>PyDev</code>插件安装成功。</p>
+<h4 id="Pydev的配置"><a href="#Pydev的配置" class="headerlink" title="Pydev的配置"></a>Pydev的配置</h4><p>在<code>Window</code>菜单中选<code>Preference</code>，<br><strong>1、<code>windows-&gt;preferences-&gt;PyDev-&gt;Interpreter - Python</code>，<code>New</code>一个<code>Python</code>解释器，填上解释器名字和路径，路径选相应的<code>python.exe</code>。</strong> </p>
+<p><img src="/images/Eclipse-with-PyDev-Windows/1464075009642.png" alt="Alt text"><br><img src="/images/Eclipse-with-PyDev-Windows/1464075035899.png" alt="Alt text"><br><strong>2、<code>General-&gt;Editors-&gt;Text Editors-&gt;Spelling</code>，<code>Encoding</code>改成<code>Other:UTF-8</code></strong><br><strong>3、<code>General-&gt;Workspace</code>，<code>Text file encoding</code>改成<code>Other:UTF-8</code></strong></p>
+<p>至此，<code>PyDev</code>的配置就完成了。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p><code>File-&gt;New-&gt;Project</code>，选<code>PyDev</code>下的<code>PyDev Project</code>，<code>Grammer</code>和<code>Interpreter</code>选相应的版本，<code>Finish。</code><br><img src="/images/Eclipse-with-PyDev-Windows/1464075344407.png" alt="Alt text"><br>在<code>PyDev Package Explorer</code>的项目上右键，<code>New-&gt;PyDev Module</code>，随便写个名字，<code>Finish。</code><br>然后随便写几行代码，<code>Run</code>在弹出的对话框中选择<code>Python Run，OK</code> </p>
+<p><img src="/images/Eclipse-with-PyDev-Windows/1464075416756.png" alt="Alt text"><br><img src="/images/Eclipse-with-PyDev-Windows/1464075532408.png" alt="Alt text"><br><img src="/images/Eclipse-with-PyDev-Windows/1464075550865.png" alt="Alt text"></p>
+<p>到这里，<code>Eclipse with PyDev</code>就搭建完毕了，有问题的地方还请大家在后面给我指出。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/23/Insert-Value-Problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/23/Insert-Value-Problem/" itemprop="url">
+                  写新数据时某列值总是被自动修改
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-23T17:06:04+08:00">
+                2016-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/23/Insert-Value-Problem/" class="leancloud_visitors" data-flag-title="写新数据时某列值总是被自动修改">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Hi，我是Zaki，今天我给大家带来一篇有意思的文章，是在<a href="http://imysql.com/" target="_blank" rel="external">Mysql中文网</a>里面看到的，解密了平时我执行SQL的时候碰到的问题。</p>
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>某朋友的线上数据库，怀疑被侵入了。具体表象是：INSERT的时候，某列值总被自动改成一个固定值。</p>
+<p>他们先自查了 TRIGGER 和 EVENT，都是空的，确定不是因为这两种原因引起，实在想不出是哪里被动了手脚。</p>
+<p>问题的现象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">MariaDB [information_schema]&gt; use bbs9;</div><div class="line"></div><div class="line">Reading table information for completion of table and column names</div><div class="line"></div><div class="line">You can turn off this feature to get a quicker startup with -A</div><div class="line"></div><div class="line">Database changed</div><div class="line"></div><div class="line">MariaDB [bbs9]&gt; INSERT INTO cdb_mythreads_latest (uid,username,tid,fid,subject,special,dateline) VALUES (‘1239009‘,’yayv’,’13482713‘,’815′,’bbs5 …………….’,’0′,’1459569279′);</div><div class="line"></div><div class="line">ERROR 1062 (23000): Duplicate entry ‘1239009-8388607’ for key ‘PRIMARY’</div></pre></td></tr></table></figure>
+<p>可以看到，tid列的值被从 13482713(原始值) 自动替换成了 8388607(篡改值)。</p>
+<p>更让人奇怪的是，这条SQL在mysql client端手动执行手，也会报告同样的错误。究竟是什么黑客这么牛逼呢，百思不得其解~~~</p>
+<h3 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h3><p>单从现象来看，好像还真是被黑了的意思。</p>
+<p><code>but</code>，但是，可是，你如果足够细心，就会发现端倪。</p>
+<p>为什么这么说呢，因为 8388607 这个数值是不是看起来挺眼熟的？嗯，没错，你才对了，这个值是 <code>MEDIUMINT</code> 类型的最大值，而 <code>MEDIUMINT UNSIGNED</code> 的最大值是 16777215。</p>
+<p>当然了，你再认真看一眼表的名字是什么：<code>cdb_mythreads_latest</code>，我又要呵呵了，你懂得的。</p>
+<h3 id="其他建议"><a href="#其他建议" class="headerlink" title="其他建议"></a>其他建议</h3><p>既然原因已经清楚了，那么解决起来也就简单了，只需要把<code>tid</code>列类型改成<code>INT UNSIGNED</code>，甚至<code>BIGINT UNSIGNED</code>都行。</p>
+<p><code>MEDIUMINT</code>和<code>INT</code>两种类型，也只是差了1个字节，何必呢。与其在这个地方节约1个字节，还不如在别的<code>CHAR/VARCHAR/TEXT</code>列调整下，其优化效果要好的多得多。</p>
+<h3 id="相关案例"><a href="#相关案例" class="headerlink" title="相关案例"></a>相关案例</h3><p><a href="http://imysql.com/2016/03/02/mysql-faq-why-add-autoinc-pkcol-failed.shtml" target="_blank" rel="external">FAQ系列 | 添加自增列失败</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/13/dump-mysql-shell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/13/dump-mysql-shell/" itemprop="url">
+                  数据库导出问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-13T14:06:04+08:00">
+                2016-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/13/dump-mysql-shell/" class="leancloud_visitors" data-flag-title="数据库导出问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　　<strong>Hi，我是zaki，最近由于业务要求，需要导出一个数据库的表结构，但是导出的时候导出了一些不必要的数据（例如mysql这个数据库），并且在执行的时候覆盖了原有的表，弄得蛋疼不已。所有，专门写了下面的脚本来进行数据库的各种数据导出，当然只写了一小部分，以后还会慢慢添加。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash - </div><div class="line">#===============================================================================</div><div class="line">#</div><div class="line">#          FILE:  dump_mysql.sh</div><div class="line"># </div><div class="line">#         USAGE:  ./dump_mysql.sh </div><div class="line"># </div><div class="line">#   DESCRIPTION:  </div><div class="line"># </div><div class="line">#       OPTIONS:  ---</div><div class="line">#  REQUIREMENTS:  ---</div><div class="line">#          BUGS:  ---</div><div class="line">#         NOTES:  ---</div><div class="line">#        AUTHOR: Zaki ^_^ (), 451971886@qq.com</div><div class="line">#       COMPANY: </div><div class="line">#       CREATED: 04/23/2016 04:02:30 PM CST</div><div class="line">#      REVISION:  ---</div><div class="line">#===============================================================================</div><div class="line"></div><div class="line">set -o nounset                              # Treat unset variables as an error</div><div class="line"></div><div class="line">Myuser=&quot;root&quot;</div><div class="line">Mypasswd=&quot;123456&quot;</div><div class="line">MySQL=&quot;mysql&quot;</div><div class="line">SQL_DIR=&quot;/zxh/sql&quot;</div><div class="line">LOG_DIR=&quot;/zxh/log&quot;</div><div class="line"># 过滤掉不想导出的数据库</div><div class="line">Igonre_DB=&quot;|information_schema|mysql|performance_schema&quot;</div><div class="line">MyDBName=`$MySQL -e &quot;show databases;&quot; -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; 2&gt;/dev/null | grep -Ev &quot;Database$&#123;Igonre_DB&#125;&quot;`</div><div class="line"></div><div class="line"># 只导出表结构，不使用drop table</div><div class="line">Dump_Str()&#123;</div><div class="line">    mysqldump -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; -d --databases $MyDBName --skip-add-drop-table &gt; $SQL_DIR/dump_str.sql</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 导出所有数据和表结构,并压缩</div><div class="line">Dump_All()&#123;</div><div class="line">    mysqldump -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; --databases $MyDBName 2&gt;/dev/null | gzip &gt; $SQL_DIR/dump_all.sql.gz</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 解压并导入所有数据，报错直接跳过</div><div class="line"></div><div class="line">In_ALL()&#123;</div><div class="line">    cat $SQL_DIR/dump_all.sql.gz | gunzip | mysql -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; -f 2&gt; $LOG_DIR/In_all.log</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 导入表结构，报错直接跳过</div><div class="line">In_Str()&#123;</div><div class="line">   cat $SQL_DIR/dump_str.sql |  mysql -u$&#123;Myuser&#125; -p$&#123;Mypasswd&#125; -f 2&gt; $LOG_DIR/In_str.log</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/07/mongodb-qiehuan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/07/mongodb-qiehuan/" itemprop="url">
+                  切换mongodb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-07T16:05:05+08:00">
+                2016-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/07/mongodb-qiehuan/" class="leancloud_visitors" data-flag-title="切换mongodb">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="从A机器切换到B机器"><a href="#从A机器切换到B机器" class="headerlink" title="从A机器切换到B机器"></a>从A机器切换到B机器</h5><p><strong>A机器：</strong><br>查看<code>mongodb</code>版本<br>主要使用命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongon</div></pre></td></tr></table></figure>
+<p><strong>B机器：</strong><br>安装相同版本的<code>mongodb</code></p>
+<p><strong>一定要使用脚本启动，<code>yum</code>安装的尽量使用脚本启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/mongod start</div><div class="line">/etc/init.d/mongod stop</div><div class="line">/etc/init.d/mongod restart</div></pre></td></tr></table></figure>
+<p><strong>确定能启动后，停掉线上服务器的<code>mongodb</code>，导出数据。（使用nc命令导数据）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 接收端</div><div class="line">nc -l 6666 | tar -C /data/mongodb2/ -xf -</div><div class="line"></div><div class="line"># 发送端</div><div class="line">tar cf - ./mongodb | nc 192.168.1.1 6666</div></pre></td></tr></table></figure>
+<p><strong>（Tips：先在接收端启动端口，再在发送端发送数据）</strong></p>
+<p><strong>更改为<code>mongodb</code>的<code>datadir</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mv /data/mongodb /data/mongodb20160505</div><div class="line">mv /data/mongodb2/mongodb /data/mongodb</div></pre></td></tr></table></figure>
+<p><strong>启动脚本拷贝</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 接收端</div><div class="line">nc -l 6666 &gt; /etc/init.d/mongodb</div><div class="line"></div><div class="line"># 发送端</div><div class="line">nc 192.168.1.1 6666 &lt; /etc/init.d/mongodb</div></pre></td></tr></table></figure></p>
+<p><strong>B机器启动<code>mongodb</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/mongodb start</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/03/Mar-Apr-Reports/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/05/03/Mar-Apr-Reports/" itemprop="url">
+                  三、四月学习总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-03T16:54:50+08:00">
+                2016-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/03/Mar-Apr-Reports/" class="leancloud_visitors" data-flag-title="三、四月学习总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　　<code>Hi</code>，我是<code>Zaki</code>，一名即将毕业的实习僧，实习的工作是运维工程师。3月1号来到公司，进行了一个月的实习培训，然后在4月份的样子跟着<code>OutMan</code>学习了一个月，整个过程中学习到了不少的东西，自己也能感觉到自己成长了不少，但每当别人问到我:”这两个你具体学习到了什么呢？”，我却一下子说不上来，这种感觉就像是：你发现你忙了一天，然而并说不出做了什么一样。因此我在这里写一个总结来记录这两个月的点点滴滴。</p>
+<h4 id="运维的基础知识学习"><a href="#运维的基础知识学习" class="headerlink" title="运维的基础知识学习"></a>运维的基础知识学习</h4><p>1、安装<code>CentOS</code>系统和内核版本升级<br>2、安装了最基础的架构<code>LAMP</code><br>3、安装<code>discuz</code>论坛软件<br>4、学习域名解析<br>5、学习<code>svn</code>和<code>git</code>的使用管理<br>6、安装一套<code>mysql</code>，使其运行为多实例模式，开两个实例端口<br>7、设置两个<code>mysql</code>为主从模式，并进行自动同步<br>8、安装配置<code>phpmyadmin</code><br>9、设置<code>phpmyadmin</code>可以分别连接管理两个<code>mysql</code><br>10、安装配置<code>pupet</code>，写一个配置，并对其他机器进行管理。<br>11、<code>Nginx</code>源码安装和使用<br>12、<code>Zabbix</code>的安装配置和基础功能使用<br>13、安装<code>tengine</code><br>14、了解公司服务器的基础架构<br>（从最基础的<code>Linux</code>的安装，到各种软件的安装，相对于我这个运维小白来说，确实在学习的过程中学习到了很多东西，学习到了很多<code>linux</code>相关的基础命令）</p>
+<h4 id="数据库运维知识学习"><a href="#数据库运维知识学习" class="headerlink" title="数据库运维知识学习"></a>数据库运维知识学习</h4><p>1、安装使用中间件<code>Atlas</code>，实现主从的读写分离<br>2、<code>ManagerHA</code>的安装配置和使用，实现主库的高可用<br>3、<code>Keepalived</code>的安装配置和使用，实现<code>MHA</code>的高可用<br>4、学习了最基础的数据库架构，如下图：<br><img src="/images/1461727492819.png" alt="Alt text"><br>5、学习<code>shell</code>脚本，编写自动备份<code>Mysql</code>的脚本<br>6、学习使用<code>Percona</code>数据库，搭建了<code>PXC</code>集群，并进行了简单测试（<a href="http://www.zakichina.cn/2016/04/08/PXC/" target="_blank" rel="external">PXC集群搭建</a>）<br>7、了解了<code>Mysql</code>独占式架构<br>8、学习了<code>Mysql</code>需要监控的关键指标和监控的层次<br>9、<code>Mysql</code>的主要参数的获取方法和每个参数的作用<br>10、进行了<code>Mysql</code>性能测试，学习了各种操作对一些重要参数的影响（<a href="http://www.zakichina.cn/2016/04/24/Mysql-Performance-Test/" target="_blank" rel="external">Mysql性能测试</a>）<br>11、学习并了解<code>DDL、DML、DCL</code><br>12、学习了<code>OSX</code>变更的基础用法<br>13、了解了优化访问速度的方法之一，使用各种缓存，使用缓存的图如下：<br><img src="/images/1462200955474.png" alt="Alt text"><br>14、了解并使用<code>SQL</code>审核工具<code>Inception</code></p>
+<h4 id="方法和效率的学习"><a href="#方法和效率的学习" class="headerlink" title="方法和效率的学习"></a>方法和效率的学习</h4><p>1、学习使用<code>to do list</code>工具进行事情管理（我主要使用<a href="https://www.wunderlist.com" target="_blank" rel="external">wunderlist</a>，可以帮助我们记住我们做过什么，还有什么没做）<br>2、使用思维导图对事情进行分解和对未来做出计划（主要使用<a href="http://www.xmindchina.net/" target="_blank" rel="external">Xmind</a>、<a href="https://www.processon.com" target="_blank" rel="external">ProcessOn</a>）<br>3、使用<code>Blog</code>记录点点滴滴（主要使用<a href="http://www.zakichina.cn/2016/04/08/HEXO+Github/" target="_blank" rel="external">Hexo+Github+markdown</a>进行搭建）<br>4、熟练使用<code>vim</code>的快捷操作<br>5、学习使用另一个<code>shell</code>（主要使用了<code>zsh</code>）<br>6、每周写一篇技术文档（这样以后回来看的时候就会发现自己的成长轨迹）<br>7、使用<code>awk</code>和<code>sed</code>进行筛选和写入</p>
+<h4 id="未来一个月的学习计划"><a href="#未来一个月的学习计划" class="headerlink" title="未来一个月的学习计划"></a>未来一个月的学习计划</h4><p>1、学习<code>Python</code>脚本，了解<code>Python</code>的<code>flask</code>框架<br>2、深入了解使用<code>Mysql Inception</code>和<code>Inception Web</code>，对<code>Inception Web</code>的源码进行理解分析<br>3、学习使用<code>PHPAdmin</code><br>4、每天看25分钟的书<br>5、工作上的知识学习</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/29/Master-qiehuan-thing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/29/Master-qiehuan-thing/" itemprop="url">
+                  主库切换那些事
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-29T16:05:05+08:00">
+                2016-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/04/29/Master-qiehuan-thing/" class="leancloud_visitors" data-flag-title="主库切换那些事">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　　本周进行了主库切换的学习，第一次参与线上主库切换，回想起来，虽然过程很短，但是整个过程都是胆颤心经，现在想想还是有点小刺激。</p>
+<h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>这次切主库需要完成的任务是，将主库切换到北京主库上，然后将统计库指向北京主库，整个过程是在维护的情况下去弄的，后面我会去研究一下如何做到在业务不中断的情况下进行主库切换。</p>
+<p><strong>①.天津主库</strong><br><strong>②.北京主库</strong><br><strong>③.统计库</strong><br><img src="/images/1461910041782.png" alt="Alt text"></p>
+<h3 id="切库过程"><a href="#切库过程" class="headerlink" title="切库过程"></a>切库过程</h3><p> <strong>1、确定没有流量进入之后，对①进行锁表</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">show processlist \G;</div><div class="line">flush tables with read lock;</div></pre></td></tr></table></figure>
+<p><strong>2、在①、②上查看<code>master</code>、<code>slave</code>的进程，确保数据都已经写入<code>binlog</code>中，并同步到了<code>slave</code>中,确保<code>I/O Thred</code> 和 <code>SQL Thred</code>都已经没有在同步数据。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">show processlist \G</div><div class="line">show master status \G</div><div class="line">show slave status \G</div></pre></td></tr></table></figure>
+<p><strong>3、在②上面停止并重置slave，新建一个同步账号用于同步</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">stop slave;</div><div class="line">reset slave all;</div></pre></td></tr></table></figure>
+<p><strong>4、将③指向②，②master③slave</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># 查看③的流量和状态，看是否还有数据写入，position是否变化</div><div class="line">show processlist;</div><div class="line">show slave status;</div><div class="line"></div><div class="line"># 重新设置slave</div><div class="line">stop slave;</div><div class="line">reset slave all;</div><div class="line"></div><div class="line">CHANGE MASTER TO</div><div class="line">MASTER_HOST=&apos;192.168.1.3&apos;,</div><div class="line">MASTER_PORT=3326,</div><div class="line">MASTER_USER=&apos;xxxx&apos;,</div><div class="line">MASTER_PASSWORD=&apos;xxxxx&apos;,</div><div class="line">MASTER_LOG_FILE=&apos;mysql-bin.xxxx&apos;,</div><div class="line">MASTER_LOG_POS=312;</div><div class="line"></div><div class="line">start slave;</div><div class="line">show slave status\G</div></pre></td></tr></table></figure>
+<p><strong>5、为了保险，将①指向②，①<code>slave</code>②<code>master</code>，先要在①上开启<code>log_slave_updates</code>（这一步特别重要），解除②的只读状态</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">①上面操作</div><div class="line">unlock tables;</div><div class="line">set global read_only=on;</div><div class="line"></div><div class="line">CHANGE MASTER TO</div><div class="line">MASTER_HOST=&apos;192.168.1.3&apos;,</div><div class="line">MASTER_PORT=3326,</div><div class="line">MASTER_USER=&apos;xxxx&apos;,</div><div class="line">MASTER_PASSWORD=&apos;xxxxx&apos;,</div><div class="line">MASTER_LOG_FILE=&apos;mysql-bin.xxxx&apos;,</div><div class="line">MASTER_LOG_POS=312;</div><div class="line"></div><div class="line">start slave;</div><div class="line">show slave status\G</div><div class="line"></div><div class="line">②上面操作</div><div class="line">set global read_only=off;</div></pre></td></tr></table></figure>
+<p><strong>6、修改HAproxy配置</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/26/Mysql-binlog-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/26/Mysql-binlog-problem/" itemprop="url">
+                  使用mysqlbinlog读取binlog问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-26T16:05:05+08:00">
+                2016-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/04/26/Mysql-binlog-problem/" class="leancloud_visitors" data-flag-title="使用mysqlbinlog读取binlog问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　　今天遇到了一个关于<code>binlog</code>的问题，由于业务需要，需要拉取<code>3.30</code>分到<code>3.35</code>分的<code>binlog</code>，在测试机进行了测试，测试语句如下：
+　　</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqlbinlog --start-datetime=&apos;2013-09-10 00:00:00&apos; --stop-datetime=&apos;2016-09-10 01:01:01&apos; -d test_20160421 /var/lib/mysql/mysql-bin.000002</div></pre></td></tr></table></figure>
+<p>　　测试机器上没有问题，但去线上执行的时候就出现了错误，出来的内容并不是想要的内容，显示出来的都是乱码，如下所示： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">BINLOG ’ </div><div class="line">IXZqVhNIAAAALQAAAGcBAAAAAHoAAAAAAAEABHRlc3QAAno0AAEDAABUOcnY </div><div class="line">IXZqVh5IAAAAKAAAAI8BAAAAAHoAAAAAAAEAAgAB//4BAAAAcu+UpA==</div></pre></td></tr></table></figure>
+<p>　　经过<code>baidu</code>、<code>google</code>，终于发现了问题所在，是因为<code>binlog</code>的格式不一样所造成的：<br><strong>测试机A：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">MariaDB [(none)]&gt; show variables like &apos;binlog_format&apos;;</div><div class="line">+---------------+-----------+</div><div class="line">| Variable_name | Value     |</div><div class="line">+---------------+-----------+</div><div class="line">| binlog_format | STATEMENT |</div><div class="line">+---------------+-----------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p><strong>测试机B：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">MariaDB [(none)]&gt; show variables like &apos;binlog_format&apos;;</div><div class="line">+---------------+-----------+</div><div class="line">| Variable_name | Value     |</div><div class="line">+---------------+-----------+</div><div class="line">| binlog_format | Mixed     |</div><div class="line">+---------------+-----------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>在前面加一个参数，输出内容不再乱码，输出内容为准确的<code>SQL</code>语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqlbinlog --base64-output=DECODE-ROWS --start-datetime=&apos;2013-09-10 00:00:00&apos; --stop-datetime=&apos;2016-09-10 01:01:01&apos; -d test_20160421 /var/lib/mysql/mysql-bin.000002</div></pre></td></tr></table></figure>
+<h3 id="深入了解"><a href="#深入了解" class="headerlink" title="深入了解"></a>深入了解</h3><p><strong><code>mysql binlog</code>有3种格式：</strong><br><code>row,mixed,statement.</code><br><strong>解析日志工作：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqlbinlog --base64-output=DECODE-ROWS -v mysql-bin.000144 |more</div></pre></td></tr></table></figure>
+<p><strong>显示出<code>row</code>模式带来的<code>sql</code>变更：</strong><br><code>--base64-output=DECODE-ROWS</code><br><strong>显示<code>statement</code>模式带来的<code>sql</code>语句：</strong><br><code>-v</code><br><strong>显示<code>mixed</code>模式带来的<code>sql</code>语句：</strong><br><code>--base64-output=DECODE-ROWS -v</code></p>
 
           
         
@@ -414,6 +1696,10 @@
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
           
           </div>
@@ -456,7 +1742,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -464,6 +1750,15 @@
 
           
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
           
 
         </nav>

@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="DDL,Mysql,Truncate," />
 
 
 
@@ -87,15 +87,31 @@
 
 
 
-<meta name="description" content="不忘初心，方得始终">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zaki">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="DELETE　・DML语言　・可以回退　・可以有条件的删除
+1DELETE FROM 表名 WHERE 条件
+TRUNCATE TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比delete快。
+1TRUNCATE TABLE 表名
+DROP TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比truncate快。
+1DROP TABLE 表名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Truncate table命令的了解">
+<meta property="og:url" content="http://yoursite.com/2016/05/26/Truncate-table/index.html">
 <meta property="og:site_name" content="Zaki">
-<meta property="og:description" content="不忘初心，方得始终">
+<meta property="og:description" content="DELETE　・DML语言　・可以回退　・可以有条件的删除
+1DELETE FROM 表名 WHERE 条件
+TRUNCATE TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比delete快。
+1TRUNCATE TABLE 表名
+DROP TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比truncate快。
+1DROP TABLE 表名">
+<meta property="og:updated_time" content="2016-05-26T06:13:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zaki">
-<meta name="twitter:description" content="不忘初心，方得始终">
+<meta name="twitter:title" content="Truncate table命令的了解">
+<meta name="twitter:description" content="DELETE　・DML语言　・可以回退　・可以有条件的删除
+1DELETE FROM 表名 WHERE 条件
+TRUNCATE TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比delete快。
+1TRUNCATE TABLE 表名
+DROP TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比truncate快。
+1DROP TABLE 表名">
 
 
 
@@ -123,13 +139,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/05/26/Truncate-table/"/>
 
 
 
 
 
-  <title> 归档 | Zaki </title>
+  <title> Truncate table命令的了解 | Zaki </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,7 +170,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-right  page-archive  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -268,403 +284,180 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 14 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/26/Truncate-table/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Truncate table命令的了解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-26T14:11:05+08:00">
+                2016-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/26/Truncate-table/" class="leancloud_visitors" data-flag-title="Truncate table命令的了解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
-      
 
+      
+        <h4 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h4><p>　・<code>DML</code>语言<br>　・可以回退<br>　・可以有条件的删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DELETE FROM 表名 WHERE 条件</div></pre></td></tr></table></figure>
+<h4 id="TRUNCATE-TABLE"><a href="#TRUNCATE-TABLE" class="headerlink" title="TRUNCATE TABLE"></a>TRUNCATE TABLE</h4><p>　・<code>DDL</code>语言<br>　・无法回退<br>　・默认所有的表内容都删除<br>　・删除速度比<code>delete</code>快。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TRUNCATE TABLE 表名</div></pre></td></tr></table></figure>
+<h4 id="DROP-TABLE"><a href="#DROP-TABLE" class="headerlink" title="DROP TABLE"></a>DROP TABLE</h4><p>　・<code>DDL</code>语言<br>　・无法回退<br>　・默认所有的表内容都删除<br>　・删除速度比<code>truncate</code>快。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DROP TABLE 表名</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDL/" rel="tag"># DDL</a>
+          
+            <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          
+            <a href="/tags/Truncate/" rel="tag"># Truncate</a>
+          
         </div>
       
+
+      
+        
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/26/Create-table-as-select/" rel="next" title="Create table as select 方式无法创建主键">
+                <i class="fa fa-chevron-left"></i> Create table as select 方式无法创建主键
+              </a>
+            
+          </div>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          <span class="post-nav-divider"></span>
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/29/MySQL5.7-Password-security/" itemprop="url">
-              
-                <span itemprop="name">MySQL5.7密码安全策略</span>
-              
-            </a>
-        
-      </h1>
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/29/MySQL5.7-Password-security/" rel="prev" title="MySQL5.7密码安全策略">
+                MySQL5.7密码安全策略 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-29T11:41:00+08:00"
-              content="2016-08-29" >
-          08-29
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
 
 
-    
-
+    <div class="post-spread">
       
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Truncate-table/" itemprop="url">
-              
-                <span itemprop="name">Truncate table命令的了解</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T14:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/26/Create-table-as-select/" itemprop="url">
-              
-                <span itemprop="name">Create table as select 方式无法创建主键</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-26T11:11:05+08:00"
-              content="2016-05-26" >
-          05-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/24/Eclipse-with-PyDev-Windows/" itemprop="url">
-              
-                <span itemprop="name">Eclipse和PyDev搭建完美Python 开发环境（Windows篇）</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-24T15:43:00+08:00"
-              content="2016-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/23/Insert-Value-Problem/" itemprop="url">
-              
-                <span itemprop="name">写新数据时某列值总是被自动修改</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-23T17:06:04+08:00"
-              content="2016-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/13/dump-mysql-shell/" itemprop="url">
-              
-                <span itemprop="name">数据库导出问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-13T14:06:04+08:00"
-              content="2016-05-13" >
-          05-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/07/mongodb-qiehuan/" itemprop="url">
-              
-                <span itemprop="name">切换mongodb</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-07T16:05:05+08:00"
-              content="2016-05-07" >
-          05-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/03/Mar-Apr-Reports/" itemprop="url">
-              
-                <span itemprop="name">三、四月学习总结</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-03T16:54:50+08:00"
-              content="2016-05-03" >
-          05-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/29/Master-qiehuan-thing/" itemprop="url">
-              
-                <span itemprop="name">主库切换那些事</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-29T16:05:05+08:00"
-              content="2016-04-29" >
-          04-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/26/Mysql-binlog-problem/" itemprop="url">
-              
-                <span itemprop="name">使用mysqlbinlog读取binlog问题</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-26T16:05:05+08:00"
-              content="2016-04-26" >
-          04-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-
+    </div>
+  </div>
 
           
           </div>
@@ -672,6 +465,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -691,8 +488,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
@@ -745,6 +551,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#DELETE"><span class="nav-number">1.</span> <span class="nav-text">DELETE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TRUNCATE-TABLE"><span class="nav-number">2.</span> <span class="nav-text">TRUNCATE TABLE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DROP-TABLE"><span class="nav-number">3.</span> <span class="nav-text">DROP TABLE</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -850,11 +672,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
 
 
   

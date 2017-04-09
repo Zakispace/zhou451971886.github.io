@@ -1,0 +1,898 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Mysql Inception," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="以下测试是由Mysql数据库的初学者进行了一系列操作测试，可能会有很多数据上的误差，请各位Mysql大牛看见了勿喷，有哪些错误的地方可以帮我指出，我可以进行改正。
+插入数据　　使用脚本bigtab-in.sh插入数据，生成小表和大表。主数据库QPS：TPS：
+CPU load：IO wait
+从数据库QPS：TPS：CPU load：IO waitSeconds_Behind_Master
+具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql基础性能测试">
+<meta property="og:url" content="http://yoursite.com/2016/04/24/Mysql-Performance-Test/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="以下测试是由Mysql数据库的初学者进行了一系列操作测试，可能会有很多数据上的误差，请各位Mysql大牛看见了勿喷，有哪些错误的地方可以帮我指出，我可以进行改正。
+插入数据　　使用脚本bigtab-in.sh插入数据，生成小表和大表。主数据库QPS：TPS：
+CPU load：IO wait
+从数据库QPS：TPS：CPU load：IO waitSeconds_Behind_Master
+具">
+<meta property="og:image" content="http://yoursite.com/images/1461207519678.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207696634.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207624009.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207714894.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207760151.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207480796.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207783675.png">
+<meta property="og:image" content="http://yoursite.com/images/1461207795402.png">
+<meta property="og:image" content="http://yoursite.com/images/1461208160742.png">
+<meta property="og:image" content="http://yoursite.com/images/1461219108244.png">
+<meta property="og:image" content="http://yoursite.com/images/1461222070278.png">
+<meta property="og:image" content="http://yoursite.com/images/1461220178411.png">
+<meta property="og:image" content="http://yoursite.com/images/1461226653253.png">
+<meta property="og:image" content="http://yoursite.com/images/1461227721260.png">
+<meta property="og:image" content="http://yoursite.com/images/1461234760212.png">
+<meta property="og:image" content="http://yoursite.com/images/1461239357277.png">
+<meta property="og:image" content="http://yoursite.com/images/1461242852929.png">
+<meta property="og:image" content="http://yoursite.com/images/1461242906692.png">
+<meta property="og:updated_time" content="2016-05-01T05:15:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql基础性能测试">
+<meta name="twitter:description" content="以下测试是由Mysql数据库的初学者进行了一系列操作测试，可能会有很多数据上的误差，请各位Mysql大牛看见了勿喷，有哪些错误的地方可以帮我指出，我可以进行改正。
+插入数据　　使用脚本bigtab-in.sh插入数据，生成小表和大表。主数据库QPS：TPS：
+CPU load：IO wait
+从数据库QPS：TPS：CPU load：IO waitSeconds_Behind_Master
+具">
+<meta name="twitter:image" content="http://yoursite.com/images/1461207519678.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/04/24/Mysql-Performance-Test/"/>
+
+
+
+
+
+  <title> Mysql基础性能测试 | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/24/Mysql-Performance-Test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Mysql基础性能测试
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-24T18:11:05+08:00">
+                2016-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/04/24/Mysql-Performance-Test/" class="leancloud_visitors" data-flag-title="Mysql基础性能测试">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　以下测试是由<code>Mysql</code>数据库的初学者进行了一系列操作测试，可能会有很多数据上的误差，请各位<code>Mysql</code>大牛看见了勿喷，有哪些错误的地方可以帮我指出，我可以进行改正。</p>
+<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><p>　　使用脚本<code>bigtab-in.sh</code>插入数据，生成小表和大表。<br><strong>主数据库</strong><br><strong>QPS：</strong><br><img src="/images/1461207519678.png" alt="Alt text"><br><strong>TPS：</strong><br><img src="/images/1461207696634.png" alt="Alt text"></p>
+<p><strong>CPU load：</strong><br><img src="/images/1461207624009.png" alt="Alt text"><br><strong>IO wait</strong><br><img src="/images/1461207714894.png" alt="Alt text"></p>
+<p><strong>从数据库</strong><br><strong>QPS：</strong><br><img src="/images/1461207760151.png" alt="Alt text"><br><strong>TPS：</strong><br><img src="/images/1461207480796.png" alt="Alt text"><br><strong>CPU load：</strong><br><img src="/images/1461207783675.png" alt="Alt text"><br><strong>IO wait</strong><br><img src="/images/1461207795402.png" alt="Alt text"><br><strong>Seconds_Behind_Master</strong><br><img src="/images/1461208160742.png" alt="Alt text"></p>
+<p><strong>具体描述：</strong><br>从<code>10:18</code>分进行数据插入，<code>10:56</code>数据插入结束，创建了一个大表<code>(test_table_b)</code>一个小表<code>（test_table_a）</code>，小表通过一句一句的随机插入创建，大表通过复制小表创建，中途<code>（10:42-10:45）</code>的时候出现创建大表脚本错误，找到问题，重新执行了一下。<br><strong>发现问题：</strong><br><strong>1、</strong>主数据库没有<code>TPS</code>，从数据库没有<code>QPS</code>（怀疑：因为是主数据库做插入数据，所以属于<code>Queries</code>操作；而从数据库是使用<code>slave</code>进行同步，所以属于事务操作。）<br><strong>2、</strong><code>Seconds_Behind_Master</code>一直是<code>0</code>？（看了脚本执行，最开始确实有错，修改了之后也能出来具体的数值，但是在<code>zabbix</code>上面监控的数据就是<code>0</code>，怀疑是<code>zabbix</code>的配置问题）<br><strong>3、</strong>为什么<code>QPS</code>一直是<code>1</code>？(发现因为每次<code>zabbix</code>调用脚本去<code>show</code>出<code>queries</code>的时候都要加<code>3</code>)</p>
+<h3 id="进行测试"><a href="#进行测试" class="headerlink" title="进行测试"></a>进行测试</h3><h4 id="1、添加索引（一句添加一个）"><a href="#1、添加索引（一句添加一个）" class="headerlink" title="1、添加索引（一句添加一个）"></a><strong>1、添加索引（一句添加一个）</strong></h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ALTER TABLE `test_table_b` ADD INDEX(createtime);</div><div class="line"># 测试结果</div><div class="line">Query OK, 0 rows affected (5 min 19.05 sec)         </div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>iowait：<br><img src="/images/1461219108244.png" alt="Alt text"><br>大概7分钟左右。</p>
+<h4 id="2、添加索引（多句修改多个）"><a href="#2、添加索引（多句修改多个）" class="headerlink" title="2、添加索引（多句修改多个）"></a>2、添加索引（多句修改多个）</h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ALTER TABLE `test_table_b` ADD INDEX(createtime);</div><div class="line">ALTER TABLE `test_table_b` ADD INDEX(name);</div><div class="line">ALTER TABLE `test_table_b` ADD INDEX(age);</div><div class="line"># 测试结果</div><div class="line">Query OK, 0 rows affected (5 min 17.07 sec)         </div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div><div class="line">Query OK, 0 rows affected (5 min 51.08 sec)         </div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div><div class="line">Query OK, 0 rows affected (5 min 39.38 sec)         </div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>iowait：<br><img src="/images/1461222070278.png" alt="Alt text"><br>大概19分钟左右。</p>
+<h4 id="3、添加索引（一句修改多个）"><a href="#3、添加索引（一句修改多个）" class="headerlink" title="3、添加索引（一句修改多个）"></a>3、添加索引（一句修改多个）</h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ALTER TABLE `test_table_b` ADD INDEX(createtime),ADD INDEX(name),ADD INDEX(age);</div><div class="line"># 测试结果</div><div class="line">Query OK, 0 rows affected (7 min 55.30 sec)         </div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>iowait：<br><img src="/images/1461220178411.png" alt="Alt text"></p>
+<h4 id="4、添加索引（OSC变更）"><a href="#4、添加索引（OSC变更）" class="headerlink" title="4、添加索引（OSC变更）"></a>4、添加索引（OSC变更）</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">pt-online-schema-change --user=root --password=warren --host=127.0.0.1  --alter &quot;ADD INDEX idx_name(name)&quot; D=test_20160421,t=test_table_b --no-check-alter --no-check-replication-filters --recursion-method=none --print --execute</div><div class="line"># 测试结果</div><div class="line">2016-04-21T15:01:55 Created triggers OK.</div><div class="line">2016-04-21T15:01:55 Copying approximately 5839363 rows...</div><div class="line">2016-04-21T16:07:28 Copied rows OK.</div><div class="line">2016-04-21T16:07:28 Analyzing new table...</div><div class="line">2016-04-21T16:07:33 Swapping tables...</div><div class="line">RENAME TABLE `test_20160421`.`test_table_b` TO `test_20160421`.`_test_table_b_old`, `test_20160421`.`_test_table_b_new` TO `test_20160421`.`test_table_b`</div><div class="line">2016-04-21T16:07:37 Swapped original and new tables OK.</div><div class="line">2016-04-21T16:07:37 Dropping old table...</div><div class="line">DROP TABLE IF EXISTS `test_20160421`.`_test_table_b_old`</div><div class="line">2016-04-21T16:07:40 Dropped old table `test_20160421`.`_test_table_b_old` OK.</div><div class="line">2016-04-21T16:07:40 Dropping triggers...</div></pre></td></tr></table></figure>
+<p>大约用时：1小时6分钟<br><strong>从库：</strong><br>TPS:<br><img src="/images/1461226653253.png" alt="Alt text"><br>大约用时：1小时6分钟</p>
+<h4 id="5、删除索引（一句添加一个）"><a href="#5、删除索引（一句添加一个）" class="headerlink" title="5、删除索引（一句添加一个）"></a>5、删除索引（一句添加一个）</h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">DROP INDEX createtime ON test_table_b;</div><div class="line"># 测试结果</div><div class="line">Query OK, 0 rows affected (0.10 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>iowait：</p>
+<p>大约0.1秒</p>
+<h4 id="6、删除索引（多句修改多个）"><a href="#6、删除索引（多句修改多个）" class="headerlink" title="6、删除索引（多句修改多个）"></a>6、删除索引（多句修改多个）</h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ALTER TABLE `test_table_b` DROP INDEX createtime;</div><div class="line">ALTER TABLE `test_table_b` DROP INDEX name;</div><div class="line">ALTER TABLE `test_table_b` DROP INDEX age;</div><div class="line"># 测试结果</div><div class="line">Query OK, 0 rows affected (0.69 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div><div class="line">Query OK, 0 rows affected (3.00 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div><div class="line">Query OK, 0 rows affected (0.12 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>大约3.81秒</p>
+<h4 id="7、删除索引（一句修改多个）"><a href="#7、删除索引（一句修改多个）" class="headerlink" title="7、删除索引（一句修改多个）"></a>7、删除索引（一句修改多个）</h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ALTER TABLE `test_table_b` DROP INDEX createtime,DROP INDEX name,DROP INDEX age;</div><div class="line"># 测试结果</div><div class="line">Query OK, 0 rows affected (0.31 sec)</div><div class="line">Records: 0  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>大约0.31秒</p>
+<h4 id="8、删除索引（OSC变更）"><a href="#8、删除索引（OSC变更）" class="headerlink" title="8、删除索引（OSC变更）"></a>8、删除索引（OSC变更）</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">pt-online-schema-change --user=root --password=warren --host=127.0.0.1 --alter &quot;DROP INDEX idx_name&quot; D=test_20160421,t=test_table_b --no-check-alter --no-check-replication-filters --recursion-method=none --print --execute</div><div class="line"># 测试结果</div><div class="line">2016-04-21T20:06:15 Creating triggers...</div><div class="line">2016-04-21T20:17:42 Dropped triggers OK.</div><div class="line">2016-04-21T20:17:42 Dropping new table...</div></pre></td></tr></table></figure>
+<p>使用时间：11分钟27秒=687秒<br><strong>从库：</strong><br>无法取得准确数据</p>
+<h4 id="9、update大量数据-用主键"><a href="#9、update大量数据-用主键" class="headerlink" title="9、update大量数据(用主键)"></a>9、update大量数据(用主键)</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># 查询数据条数</div><div class="line">select count(*) from test_table_b where id&gt;2000 and id&lt;3000000; </div><div class="line">+----------+</div><div class="line">| count(*) |</div><div class="line">+----------+</div><div class="line">|  1836202 |</div><div class="line">+----------+</div><div class="line">1 row in set (26.55 sec)</div><div class="line"></div><div class="line"># 更新数据</div><div class="line">update test_table_b set age=50 where id&gt;2000 and id&lt;3000000; </div><div class="line"># 测试结果</div><div class="line">Query OK, 1836202 rows affected (3 min 45.09 sec)</div><div class="line">Rows matched: 1836202  Changed: 1836202  Warnings: 0</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br>无法取得准确数据</p>
+<h4 id="10、update大量数据-非主键-非索引"><a href="#10、update大量数据-非主键-非索引" class="headerlink" title="10、update大量数据(非主键 非索引)"></a>10、update大量数据(非主键 非索引)</h4><p><strong>主库：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># 查询数据条数</div><div class="line">select count(*) from test_table_b where createtime&lt;&quot;2016-04-21 10:35:23&quot; and createtime&gt;&quot;2016-04-21 10:20:23&quot;; </div><div class="line">+----------+</div><div class="line">| count(*) |</div><div class="line">+----------+</div><div class="line">|  4080752 |</div><div class="line">+----------+</div><div class="line">1 row in set (4 min 27.36 sec)</div><div class="line"></div><div class="line"># 更新数据</div><div class="line">update test_table_b set age=30 where createtime&lt;&quot;2016-04-21 10:35:23&quot; and createtime&gt;&quot;2016-04-21 10:20:23&quot;; </div><div class="line"># 测试结果</div><div class="line">Query OK, 4080752 rows affected (5 min 38.14 sec)</div><div class="line">Rows matched: 4080752  Changed: 4080752  Warnings: 0</div></pre></td></tr></table></figure></p>
+<p><strong>从库：</strong><br>iowait:<br><img src="/images/1461227721260.png" alt="Alt text"><br>大约7分钟</p>
+<h4 id="11、update大量数据-非主键-有索引"><a href="#11、update大量数据-非主键-有索引" class="headerlink" title="11、update大量数据(非主键 有索引)"></a>11、update大量数据(非主键 有索引)</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># 查询数据条数</div><div class="line">select count(*) from test_table_b where name&lt;&quot;用户20000&quot; and createtime&gt;&quot;用户2000&quot;; </div><div class="line">+----------+</div><div class="line">| count(*) |</div><div class="line">+----------+</div><div class="line">|  2029612 |</div><div class="line">+----------+</div><div class="line">1 row in set, 1 warning (1 min 45.53 sec)</div><div class="line"></div><div class="line"># 更新数据</div><div class="line">update test_table_b set age=40 where name&lt;&quot;用户20000&quot; and createtime&gt;&quot;用户2000&quot;;</div><div class="line"># 测试结果</div><div class="line">Query OK, 2029612 rows affected, 1 warning (6 min 27.09 sec)</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br>iowait：<br>无法取得准确数据</p>
+<h4 id="12、连表查询"><a href="#12、连表查询" class="headerlink" title="12、连表查询"></a>12、连表查询</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">select * from test_table_b left join test_table_a on test_table_b.id=test_table_a.id where test_table_b.id &lt; 50000;</div><div class="line"># 测试结果</div><div class="line">37232 rows in set (1.02 sec)</div></pre></td></tr></table></figure>
+<h4 id="13、排序查询"><a href="#13、排序查询" class="headerlink" title="13、排序查询"></a>13、排序查询</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">select * from test_table_b where id &lt; 2000000 order by createtime DESC;</div><div class="line"># 测试结果</div></pre></td></tr></table></figure>
+<h4 id="14、修改表结构（一句修改一个）"><a href="#14、修改表结构（一句修改一个）" class="headerlink" title="14、修改表结构（一句修改一个）"></a>14、修改表结构（一句修改一个）</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">alter table test_table_b modify name varchar(70);</div><div class="line"># 测试结果</div><div class="line">Query OK, 5980000 rows affected (22 min 51.15 sec)     </div><div class="line">Records: 5980000  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br>IOwait:<br><img src="/images/1461234760212.png" alt="Alt text"></p>
+<h4 id="15、修改表结构（多句修改多个）"><a href="#15、修改表结构（多句修改多个）" class="headerlink" title="15、修改表结构（多句修改多个）"></a>15、修改表结构（多句修改多个）</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">alter table test_table_b modify name varchar(30);</div><div class="line">alter table test_table_b drop column test;</div><div class="line">alter table test_table_b add test2 int(20);</div><div class="line"># 测试结果&amp;</div><div class="line">Query OK, 6360000 rows affected (39 min 43.42 sec)     </div><div class="line">Records: 6360000  Duplicates: 0  Warnings: 0</div><div class="line">Query OK, 6360000 rows affected (36 min 36.42 sec)     </div><div class="line">Records: 6360000  Duplicates: 0  Warnings: 0</div><div class="line">Query OK, 6360000 rows affected (37 min 21.26 sec)     </div><div class="line">Records: 6360000  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br>无法取得准确数据</p>
+<h4 id="16、修改表结构（一句修改多个）"><a href="#16、修改表结构（一句修改多个）" class="headerlink" title="16、修改表结构（一句修改多个）"></a>16、修改表结构（一句修改多个）</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">alter table test_table_b modify name varchar(50),add test int(20),modify age int(20);</div><div class="line"># 测试数据</div><div class="line">Query OK, 6020000 rows affected (43 min 27.49 sec)     </div><div class="line">Records: 6020000  Duplicates: 0  Warnings: 0</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br><img src="/images/1461239357277.png" alt="Alt text"></p>
+<h4 id="17、修改表结构（OSC变更）"><a href="#17、修改表结构（OSC变更）" class="headerlink" title="17、修改表结构（OSC变更）"></a>17、修改表结构（OSC变更）</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pt-online-schema-change --user=root --password=warren --host=127.0.0.1  --alter &quot;CHANGE COLUMN age AGE int(30)&quot; D=test_20160421,t=test_table_b --no-check-alter --no-check-replication-filters --recursion-method=none --quiet --execut</div><div class="line"></div><div class="line"># 测试结果</div><div class="line">出现异常报错</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br>无法获取数据</p>
+<h4 id="18、detele大量数据-用主键"><a href="#18、detele大量数据-用主键" class="headerlink" title="18、detele大量数据(用主键)"></a>18、detele大量数据(用主键)</h4><p><strong>主库：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">delete from test_table_a where id &lt; 3054793</div></pre></td></tr></table></figure>
+<p><strong>从库：</strong><br>无法获取数据</p>
+<h3 id="数据汇总"><a href="#数据汇总" class="headerlink" title="数据汇总"></a>数据汇总</h3><p>（以下数据可能存在很多错误）<br><strong>主库测试数据：</strong><br><img src="/images/1461242852929.png" alt="Alt text"><br><strong>从库测试数据：</strong><br>（由于能力的问题，不能很好的取到Slave同步所用的时间）<br><img src="/images/1461242906692.png" alt="Alt text"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过本次<code>mysql</code>的性能测试，学习到的以下的东西：<br><strong>1）</strong>在进行<code>insert、update、delete、select</code>操作的时候会影响<code>Mysql</code>的<code>QPS</code>。<br><strong>2）</strong><code>slave</code>同步<code>master</code>的时候，会影响<code>Mysql</code>的<code>TPS</code>。<br><strong>3）</strong>在进行添加删除索引和字段的时候会锁表，只能查询<code>Mysql</code>，不能写入<code>Mysql</code>。<br><strong>4）</strong><code>master</code>进行删除添加索引和字段完成后，<code>slave</code>才会去同步，两者是异步进行的，而且<code>slave</code>同步过程中还会造成<code>Seconds_Behind_Master</code>值变得很高（这里有个问题，通过<code>zabbix</code>监控的<code>Seconds_Behind_Master</code>值会在一瞬间就降到零）<br><strong>5）</strong>使用<code>percona</code>的<code>OSC</code>变更工具进行添加删除索引和字段的时候，不会锁表，可以边变更边插入数据。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mysql-Inception/" rel="tag"># Mysql Inception</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/08/PXC/" rel="next" title="PXC集群搭建">
+                <i class="fa fa-chevron-left"></i> PXC集群搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/26/Mysql-Inception/" rel="prev" title="搭建Mysql Inception">
+                搭建Mysql Inception <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#插入数据"><span class="nav-number">1.</span> <span class="nav-text">插入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进行测试"><span class="nav-number">2.</span> <span class="nav-text">进行测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、添加索引（一句添加一个）"><span class="nav-number">2.1.</span> <span class="nav-text">1、添加索引（一句添加一个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、添加索引（多句修改多个）"><span class="nav-number">2.2.</span> <span class="nav-text">2、添加索引（多句修改多个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、添加索引（一句修改多个）"><span class="nav-number">2.3.</span> <span class="nav-text">3、添加索引（一句修改多个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、添加索引（OSC变更）"><span class="nav-number">2.4.</span> <span class="nav-text">4、添加索引（OSC变更）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、删除索引（一句添加一个）"><span class="nav-number">2.5.</span> <span class="nav-text">5、删除索引（一句添加一个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6、删除索引（多句修改多个）"><span class="nav-number">2.6.</span> <span class="nav-text">6、删除索引（多句修改多个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7、删除索引（一句修改多个）"><span class="nav-number">2.7.</span> <span class="nav-text">7、删除索引（一句修改多个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8、删除索引（OSC变更）"><span class="nav-number">2.8.</span> <span class="nav-text">8、删除索引（OSC变更）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9、update大量数据-用主键"><span class="nav-number">2.9.</span> <span class="nav-text">9、update大量数据(用主键)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10、update大量数据-非主键-非索引"><span class="nav-number">2.10.</span> <span class="nav-text">10、update大量数据(非主键 非索引)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11、update大量数据-非主键-有索引"><span class="nav-number">2.11.</span> <span class="nav-text">11、update大量数据(非主键 有索引)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12、连表查询"><span class="nav-number">2.12.</span> <span class="nav-text">12、连表查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13、排序查询"><span class="nav-number">2.13.</span> <span class="nav-text">13、排序查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14、修改表结构（一句修改一个）"><span class="nav-number">2.14.</span> <span class="nav-text">14、修改表结构（一句修改一个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15、修改表结构（多句修改多个）"><span class="nav-number">2.15.</span> <span class="nav-text">15、修改表结构（多句修改多个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#16、修改表结构（一句修改多个）"><span class="nav-number">2.16.</span> <span class="nav-text">16、修改表结构（一句修改多个）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#17、修改表结构（OSC变更）"><span class="nav-number">2.17.</span> <span class="nav-text">17、修改表结构（OSC变更）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#18、detele大量数据-用主键"><span class="nav-number">2.18.</span> <span class="nav-text">18、detele大量数据(用主键)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据汇总"><span class="nav-number">3.</span> <span class="nav-text">数据汇总</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+</body>
+</html>
