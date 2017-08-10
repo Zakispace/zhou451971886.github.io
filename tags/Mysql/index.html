@@ -90,7 +90,7 @@
 <meta name="description" content="不忘初心，方得始终">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Zaki">
-<meta property="og:url" content="http://yoursite.com/tags/mysql/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/MySQL/index.html">
 <meta property="og:site_name" content="Zaki">
 <meta property="og:description" content="不忘初心，方得始终">
 <meta name="twitter:card" content="summary">
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/mysql/"/>
+  <link rel="canonical" href="http://yoursite.com/tags/MySQL/"/>
 
 
 
 
 
-  <title> 标签: mysql | Zaki </title>
+  <title> 标签: MySQL | Zaki </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -271,7 +271,7 @@
   <div id="posts" class="posts-collapse">
     <div class="collection-title">
       <h2 >
-        mysql
+        MySQL
         <small>标签</small>
       </h2>
     </div>
@@ -284,9 +284,9 @@
 
       <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/05/13/dump-mysql-shell/" itemprop="url">
+            <a class="post-title-link" href="/2017/03/17/information-schema-use/" itemprop="url">
               
-                <span itemprop="name">数据库导出问题</span>
+                <span itemprop="name">mysql系统表使用</span>
               
             </a>
         
@@ -294,9 +294,65 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-13T14:06:04+08:00"
-              content="2016-05-13" >
-          05-13
+              datetime="2017-03-17T11:05:05+08:00"
+              content="2017-03-17" >
+          03-17
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2017/03/07/Deadlock-Generation-Resolution/" itemprop="url">
+              
+                <span itemprop="name">死锁的产生与解决</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-03-07T17:01:05+08:00"
+              content="2017-03-07" >
+          03-07
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2016/11/30/ibd-file-too-big/" itemprop="url">
+              
+                <span itemprop="name">ibd文件太大</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-11-30T16:13:05+08:00"
+              content="2016-11-30" >
+          11-30
         </time>
       </div>
 
@@ -350,7 +406,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -363,7 +419,7 @@
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
@@ -621,6 +677,59 @@
               error: function(counter, error) {
                 console.log('Failed to save Visitor num, with error message: ' + error.message);
               }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+  
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>
             });
           } else {
             var newcounter = new Counter();
