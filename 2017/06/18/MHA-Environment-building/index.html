@@ -1,0 +1,1035 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL,MHA,高可用," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="环境信息
+
+
+角色
+ip
+主机名
+
+
+
+
+MHA  Monitor
+172.26.4.214
+manager.mha
+
+
+Master
+172.26.4.211
+master.mha
+
+
+Candicate master
+172.26.4.212
+master.backup.mha
+
+
+Slave
+172.26.4.213
+slave.mha
+
+
+
+MHA相关资料和下载MHA下载地址
+
+manag">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MHA环境搭建">
+<meta property="og:url" content="http://yoursite.com/2017/06/18/MHA-Environment-building/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="环境信息
+
+
+角色
+ip
+主机名
+
+
+
+
+MHA  Monitor
+172.26.4.214
+manager.mha
+
+
+Master
+172.26.4.211
+master.mha
+
+
+Candicate master
+172.26.4.212
+master.backup.mha
+
+
+Slave
+172.26.4.213
+slave.mha
+
+
+
+MHA相关资料和下载MHA下载地址
+
+manag">
+<meta property="og:updated_time" content="2017-08-09T08:11:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MHA环境搭建">
+<meta name="twitter:description" content="环境信息
+
+
+角色
+ip
+主机名
+
+
+
+
+MHA  Monitor
+172.26.4.214
+manager.mha
+
+
+Master
+172.26.4.211
+master.mha
+
+
+Candicate master
+172.26.4.212
+master.backup.mha
+
+
+Slave
+172.26.4.213
+slave.mha
+
+
+
+MHA相关资料和下载MHA下载地址
+
+manag">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/18/MHA-Environment-building/"/>
+
+
+
+
+
+  <title> MHA环境搭建 | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/18/MHA-Environment-building/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MHA环境搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-18T16:29:05+08:00">
+                2017-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/18/MHA-Environment-building/" class="leancloud_visitors" data-flag-title="MHA环境搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h5 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h5><table>
+<thead>
+<tr>
+<th style="text-align:center">角色</th>
+<th style="text-align:center">ip</th>
+<th style="text-align:center">主机名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">MHA  Monitor</td>
+<td style="text-align:center">172.26.4.214</td>
+<td style="text-align:center">manager.mha</td>
+</tr>
+<tr>
+<td style="text-align:center">Master</td>
+<td style="text-align:center">172.26.4.211</td>
+<td style="text-align:center">master.mha</td>
+</tr>
+<tr>
+<td style="text-align:center">Candicate master</td>
+<td style="text-align:center">172.26.4.212</td>
+<td style="text-align:center">master.backup.mha</td>
+</tr>
+<tr>
+<td style="text-align:center">Slave</td>
+<td style="text-align:center">172.26.4.213</td>
+<td style="text-align:center">slave.mha</td>
+</tr>
+</tbody>
+</table>
+<h5 id="MHA相关资料和下载"><a href="#MHA相关资料和下载" class="headerlink" title="MHA相关资料和下载"></a>MHA相关资料和下载</h5><p><a href="https://code.google.com/archive/p/mysql-master-ha/downloads?page=1" target="_blank" rel="external">MHA下载地址</a></p>
+<ul>
+<li>manager</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mysql-master-ha/mha4mysql-manager-0.55-0.el6.noarch.rpm</div></pre></td></tr></table></figure>
+<ul>
+<li>node</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mysql-master-ha/mha4mysql-node-0.54-0.el6.noarch.rpm</div></pre></td></tr></table></figure>
+<h5 id="依赖安装"><a href="#依赖安装" class="headerlink" title="依赖安装"></a>依赖安装</h5><p>perl模块安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install -y perl-DBD-MySQL</div><div class="line">yum install -y perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker perl-CPAN</div></pre></td></tr></table></figure>
+<h5 id="安装MHA-Node"><a href="#安装MHA-Node" class="headerlink" title="安装MHA Node"></a>安装MHA Node</h5><p>使用源码进行安装，这里选用的mha0.57版本，自行下载</p>
+<p>（注意：最开始使用的0.55版本，发现对mysql5.7不支持，不能完成切换）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd mha4mysql-node-0.57</div><div class="line">perl Makefile.PL</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p><strong>安装MHA Manager</strong></p>
+<p>MHA Manager中主要包括了几个管理员的命令行工具，例如master_manger，master_master_switch等。MHA Manger也依赖于perl模块，具体如下:</p>
+<p>1）安装MHA Node软件包之前需要安装依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install perl-DBD-MySQL perl-Config-Tiny perl-Log-Dispatch perl-Parallel-ForkManager perl-Time-HiRes</div></pre></td></tr></table></figure>
+<p>2）安装MHA Manager</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd mha4mysql-manager-0.57</div><div class="line">perl Makefile.PL</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<p>因为MHA Manager的安装是依赖MHA Node的，所以我们需要在所有节点安装MHA Node。</p>
+<h5 id="修改系统环境变量"><a href="#修改系统环境变量" class="headerlink" title="修改系统环境变量"></a>修改系统环境变量</h5><p>因为安装之后的可执行文件都在/usr/local/bin，所以我们需要把这个目录加到系统环境变量里面，方便执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 环境变量配置文件最后一行添加</div><div class="line">sed &apos;$a export PATH=$PATH:/usr/local/bin&apos; /etc/profile</div><div class="line"></div><div class="line"># 重新加载环境变量</div><div class="line">source /etc/profile</div></pre></td></tr></table></figure>
+<p><strong>配置SSH登录无密码验证</strong></p>
+<p>网上自行搜索教程配置</p>
+<p><strong>搭建主从复制环境</strong></p>
+<ul>
+<li>不同的server-id和uuid</li>
+<li>主库授权账号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grant replication slave on *.* to &apos;mha_slave&apos;@&apos;172.26.%.%&apos; identified by &apos;i2bZggRMK3TKfrSY&apos;;</div></pre></td></tr></table></figure>
+<ul>
+<li>从库change master</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CHANGE MASTER TO MASTER_HOST=&apos;172.26.4.211&apos;,MASTER_PORT=3316,MASTER_USER=&apos;mha_slave&apos;,MASTER_PASSWORD=&apos;i2bZggRMK3TKfrSY&apos;,MASTER_LOG_FILE=&apos;mysql-bin.000003&apos;,MASTER_LOG_POS=439;</div></pre></td></tr></table></figure>
+<ul>
+<li>设置从库和备用主库read_only=1</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set global read_only=1;</div></pre></td></tr></table></figure>
+<ul>
+<li>创建MHA监控用户（主库执行）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grant all privileges on *.* to &apos;mha_check&apos;@&apos;%&apos; identified by &apos;123456&apos;;</div></pre></td></tr></table></figure>
+<h5 id="配置MHA"><a href="#配置MHA" class="headerlink" title="配置MHA"></a>配置MHA</h5><p>1）manager节点配置，没有的文件夹自行创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">dev] [root@manager-172.26.4.208 mha]# cat /etc/mha/app1.cnf</div><div class="line">[server default]</div><div class="line">manager_workdir=/var/log/mha/app1.log              //设置manager的工作目录</div><div class="line">manager_log=/var/log/mha/manager.log          //设置manager的日志</div><div class="line">master_binlog_dir=/var/log/mysql-1                         //设置master 保存binlog的位置，以便MHA可以找到master的日志，我这里的也就是mysql的数据目录</div><div class="line">master_ip_failover_script= /usr/local/bin/master_ip_failover    //设置自动failover时候的切换脚本</div><div class="line">master_ip_online_change_script= /usr/local/bin/master_ip_online_change  //设置手动切换时候的切换脚本</div><div class="line">password=123456         //设置监控用户密码</div><div class="line">user=mha_check          //设置监控用户用户名</div><div class="line">#ping_interval=1         //设置监控主库，发送ping包的时间间隔，默认是3秒，尝试三次没有回应的时候自动进行railover</div><div class="line">remote_workdir=/var/log/mysql-1    //设置远端mysql在发生切换时binlog的保存位置</div><div class="line">repl_password=i2bZggRMK3TKfrSY    //设置复制用户的密码</div><div class="line">repl_user=mha_slave          //设置复制环境中的复制用户名</div><div class="line">report_script=/usr/local/send_report    //设置发生切换后发送的报警的脚本</div><div class="line">secondary_check_script= /usr/local/bin/masterha_secondary_check -s server03 -s server02</div><div class="line">shutdown_script=&quot;&quot;      //设置故障发生后关闭故障主机脚本（该脚本的主要作用是关闭主机放在发生脑裂,这里没有使用）</div><div class="line">ssh_user=root</div><div class="line"></div><div class="line">[server1]</div><div class="line">hostname=172.26.4.211</div><div class="line">port=3316</div><div class="line"></div><div class="line">[server2]</div><div class="line">hostname=172.26.4.212</div><div class="line">port=3316</div><div class="line">candidate_master=1   //设置为候选master，如果设置该参数以后，发生主从切换以后将会将此从库提升为主库，即使这个主库不是集群中事件最新的slave</div><div class="line">check_repl_delay=0   //默认情况下如果一个slave落后master 100M的relay logs的话，MHA将不会选择该slave作为一个新的master，因为对于这个slave的恢复需要花费很长时间，通过设置check_repl_delay=0,MHA触发切换在选择一个新的master的时候将会忽略复制延时，这个参数对于设置了candidate_master=1的主机非常有用，因为这个候选主在切换的过程中一定是新的master</div><div class="line"></div><div class="line">[server3]</div><div class="line">hostname=172.26.4.213</div><div class="line">port=3316</div></pre></td></tr></table></figure>
+<p>2）设置relay log的清除方式（在每个slave节点上）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set global relay_log_purge=0;</div></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<p>MHA在发生切换的过程中，从库的恢复过程中依赖于relay log的相关信息，所以这里要将relay log的自动清除设置为OFF，采用手动清除relay log的方式。在默认情况下，从服务器上的中继日志会在SQL线程执行完毕后被自动删除。但是在MHA环境中，这些中继日志在恢复其他从服务器时可能会被用到，因此需要禁用中继日志的自动删除功能。定期清除中继日志需要考虑到复制延时的问题。在ext3的文件系统下，删除大的文件需要一定的时间，会导致严重的复制延时。为了避免复制延时，需要暂时为中继日志创建硬链接，因为在linux系统中通过硬链接删除大文件速度会很快。（在mysql数据库中，删除大表时，通常也采用建立硬链接的方式）</p>
+<p><strong>检查SSH配置</strong></p>
+<p>通过使用masterha_check_ssh进行ssh免密登陆检查</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">[dev] [root@manager-172.26.4.208 mha]# masterha_check_ssh --conf=/etc/mha/app1.cnf</div><div class="line">Wed Jun 14 18:25:07 2017 - [warning] Global configuration file /etc/masterha_default.cnf not found. Skipping.</div><div class="line">Wed Jun 14 18:25:07 2017 - [info] Reading application default configurations from /etc/mha/app1.cnf..</div><div class="line">Wed Jun 14 18:25:07 2017 - [info] Reading server configurations from /etc/mha/app1.cnf..</div><div class="line">Wed Jun 14 18:25:07 2017 - [info] Starting SSH connection tests..</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]</div><div class="line">Wed Jun 14 18:25:07 2017 - [debug]  Connecting via SSH from root@172.26.4.211(172.26.4.211:22) to root@172.26.4.212(172.26.4.212:22)..</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]   ok.</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]  Connecting via SSH from root@172.26.4.211(172.26.4.211:22) to root@172.26.4.213(172.26.4.213:22)..</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]   ok.</div><div class="line">Wed Jun 14 18:25:09 2017 - [debug]</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]  Connecting via SSH from root@172.26.4.212(172.26.4.212:22) to root@172.26.4.211(172.26.4.211:22)..</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]   ok.</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]  Connecting via SSH from root@172.26.4.212(172.26.4.212:22) to root@172.26.4.213(172.26.4.213:22)..</div><div class="line">Wed Jun 14 18:25:09 2017 - [debug]   ok.</div><div class="line">Wed Jun 14 18:25:09 2017 - [debug]</div><div class="line">Wed Jun 14 18:25:08 2017 - [debug]  Connecting via SSH from root@172.26.4.213(172.26.4.213:22) to root@172.26.4.211(172.26.4.211:22)..</div><div class="line">Wed Jun 14 18:25:09 2017 - [debug]   ok.</div><div class="line">Wed Jun 14 18:25:09 2017 - [debug]  Connecting via SSH from root@172.26.4.213(172.26.4.213:22) to root@172.26.4.212(172.26.4.212:22)..</div><div class="line">Wed Jun 14 18:25:09 2017 - [debug]   ok.</div><div class="line">Wed Jun 14 18:25:09 2017 - [info] All SSH connection tests passed successfully.</div></pre></td></tr></table></figure>
+<h5 id="检查各节点之间的同步状态"><a href="#检查各节点之间的同步状态" class="headerlink" title="检查各节点之间的同步状态"></a>检查各节点之间的同步状态</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">[dev] [root@mha-db-172.26.4.214 log]# masterha_check_repl --conf=/etc/mha/app1.cnf</div><div class="line">Thu Jun 15 11:42:13 2017 - [warning] Global configuration file /etc/masterha_default.cnf not found. Skipping.</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Reading application default configurations from /etc/mha/app1.cnf..</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Reading server configurations from /etc/mha/app1.cnf..</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] MHA::MasterMonitor version 0.55.</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Dead Servers:</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Alive Servers:</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]   172.26.4.211(172.26.4.211:3316)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]   172.26.4.212(172.26.4.212:3316)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]   172.26.4.213(172.26.4.213:3316)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Alive Slaves:</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]   172.26.4.212(172.26.4.212:3316)  Version=5.7.13-6-log (oldest major version between slaves) log-bin:enabled</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]     Replicating from 172.26.4.211(172.26.4.211:3316)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]     Primary candidate for the new Master (candidate_master is set)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]   172.26.4.213(172.26.4.213:3316)  Version=5.7.13-6-log (oldest major version between slaves) log-bin:enabled</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]     Replicating from 172.26.4.211(172.26.4.211:3316)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Current Alive Master: 172.26.4.211(172.26.4.211:3316)</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Checking slave configurations..</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Checking replication filtering settings..</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]  binlog_do_db= , binlog_ignore_db=</div><div class="line">Thu Jun 15 11:42:13 2017 - [info]  Replication filtering check ok.</div><div class="line">Thu Jun 15 11:42:13 2017 - [info] Starting SSH connection tests..</div><div class="line">Thu Jun 15 11:42:14 2017 - [info] All SSH connection tests passed successfully.</div><div class="line">Thu Jun 15 11:42:14 2017 - [info] Checking MHA Node version..</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]  Version check ok.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Checking SSH publickey authentication settings on the current master..</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] HealthCheck: SSH to 172.26.4.211 is reachable.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Master MHA Node version is 0.54.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Checking recovery script configurations on the current master..</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]   Executing command: save_binary_logs --command=test --start_pos=4 --binlog_dir=/var/log/mysql-1 --output_file=/var/log/mysql-1/save_binary_logs_test --manager_version=0.55 --start_file=mysql-bin.000004</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]   Connecting to root@172.26.4.211(172.26.4.211)..</div><div class="line">  Creating /var/log/mysql-1 if not exists..    ok.</div><div class="line">  Checking output directory is accessible or not..</div><div class="line">   ok.</div><div class="line">  Binlog found at /var/log/mysql-1, up to mysql-bin.000004</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Master setting check done.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Checking SSH publickey authentication and checking recovery script configurations on all alive slave servers..</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]   Executing command : apply_diff_relay_logs --command=test --slave_user=&apos;mha_check&apos; --slave_host=172.26.4.212 --slave_ip=172.26.4.212 --slave_port=3316 --workdir=/var/log/mysql-1 --target_version=5.7.13-6-log --manager_version=0.55 --relay_log_info=/data/mysql-1/relay-log.info  --relay_dir=/data/mysql-1/  --slave_pass=xxx</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]   Connecting to root@172.26.4.212(172.26.4.212:22)..</div><div class="line">  Checking slave recovery environment settings..</div><div class="line">    Opening /data/mysql-1/relay-log.info ... ok.</div><div class="line">    Relay log found at /var/log/mysql-1/relaylog, up to relaylog-bin.000003</div><div class="line">    Temporary relay log file is /var/log/mysql-1/relaylog/relaylog-bin.000003</div><div class="line">    Testing mysql connection and privileges..Warning: Using a password on the command line interface can be insecure.</div><div class="line"> done.</div><div class="line">    Testing mysqlbinlog output.. done.</div><div class="line">    Cleaning up test file(s).. done.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]   Executing command : apply_diff_relay_logs --command=test --slave_user=&apos;mha_check&apos; --slave_host=172.26.4.213 --slave_ip=172.26.4.213 --slave_port=3316 --workdir=/var/log/mysql-1 --target_version=5.7.13-6-log --manager_version=0.55 --relay_log_info=/data/mysql-1/relay-log.info  --relay_dir=/data/mysql-1/  --slave_pass=xxx</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]   Connecting to root@172.26.4.213(172.26.4.213:22)..</div><div class="line">  Checking slave recovery environment settings..</div><div class="line">    Opening /data/mysql-1/relay-log.info ... ok.</div><div class="line">    Relay log found at /var/log/mysql-1/relaylog, up to relaylog-bin.000003</div><div class="line">    Temporary relay log file is /var/log/mysql-1/relaylog/relaylog-bin.000003</div><div class="line">    Testing mysql connection and privileges..Warning: Using a password on the command line interface can be insecure.</div><div class="line"> done.</div><div class="line">    Testing mysqlbinlog output.. done.</div><div class="line">    Cleaning up test file(s).. done.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Slaves settings check done.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]</div><div class="line">172.26.4.211 (current master)</div><div class="line"> +--172.26.4.212</div><div class="line"> +--172.26.4.213</div><div class="line"></div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Checking replication health on 172.26.4.212..</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]  ok.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Checking replication health on 172.26.4.213..</div><div class="line">Thu Jun 15 11:42:15 2017 - [info]  ok.</div><div class="line">Thu Jun 15 11:42:15 2017 - [warning] master_ip_failover_script is not defined.</div><div class="line">Thu Jun 15 11:42:15 2017 - [warning] shutdown_script is not defined.</div><div class="line">Thu Jun 15 11:42:15 2017 - [info] Got exit code 0 (Not master dead).</div><div class="line"></div><div class="line">MySQL Replication Health is OK.</div></pre></td></tr></table></figure>
+<p><strong>检查MHA Manager的状态</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[dev] [root@mha-db-172.26.4.214 log]#  masterha_check_status --conf=/etc/mha/app1.cnf</div><div class="line">app1 is stopped(2:NOT_RUNNING).</div></pre></td></tr></table></figure>
+<p><strong>开启MHA Manager监控</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup masterha_manager --conf=/etc/mha/app1.cnf --remove_dead_master_conf --ignore_last_failover  &lt; /dev/null &gt; /var/log/mha/manager.log 2&gt;&amp;1 &amp;</div></pre></td></tr></table></figure>
+<p>–remove_dead_master_conf      该参数代表当发生主从切换后，老的主库的ip将会从配置文件中移除。</p>
+<p>–manger_log                            日志存放位置</p>
+<p>–ignore_last_failover                 在缺省情况下，如果MHA检测到连续发生宕机，且两次宕机间隔不足8小时的话，则不会进行Failover，之所以这样限制是为了避免ping-pong效应。<strong>该参数代表忽略上次MHA触发切换产生的文件</strong>，默认情况下，MHA发生切换后会在日志目录，也就是上面我设置的/data产生app1.failover.complete文件，下次再次切换的时候如果发现该目录下存在该文件将不允许触发切换，除非在第一次切换后收到删除该文件，为了方便，这里设置为–ignore_last_failover。</p>
+<h5 id="查看MHA-Manager监控是否正常"><a href="#查看MHA-Manager监控是否正常" class="headerlink" title="查看MHA Manager监控是否正常"></a>查看MHA Manager监控是否正常</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[dev] [root@mha-db-172.26.4.214 log]# masterha_check_status --conf=/etc/mha/app1.cnf</div><div class="line">app1 (pid:7554) is running(0:PING_OK), master:172.26.4.211</div></pre></td></tr></table></figure>
+<p>日志查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">[dev] [root@mha-db-172.26.4.214 log]# tail -n20  /var/log/mha/manager.log</div><div class="line">    Cleaning up test file(s).. done.</div><div class="line">Thu Jun 15 11:48:30 2017 - [info] Slaves settings check done.</div><div class="line">Thu Jun 15 11:48:30 2017 - [info]</div><div class="line">172.26.4.211 (current master)</div><div class="line"> +--172.26.4.212</div><div class="line"> +--172.26.4.213</div><div class="line"></div><div class="line">Thu Jun 15 11:48:30 2017 - [warning] master_ip_failover_script is not defined.</div><div class="line">Thu Jun 15 11:48:30 2017 - [warning] shutdown_script is not defined.</div><div class="line">Thu Jun 15 11:48:30 2017 - [info] Set master ping interval 1 seconds.</div><div class="line">Thu Jun 15 11:48:30 2017 - [info] Set secondary check script: /usr/local/bin/masterha_secondary_check -s server03 -s server02</div><div class="line">Thu Jun 15 11:48:30 2017 - [info] Starting ping health check on 172.26.4.211(172.26.4.211:3316)..</div><div class="line">Thu Jun 15 11:48:31 2017 - [info] Ping(SELECT) succeeded, waiting until MySQL doesn&apos;t respond..</div><div class="line">Thu Jun 15 12:03:05 2017 - [warning] Got error on MySQL select ping: 2006 (MySQL server has gone away)</div><div class="line">Thu Jun 15 12:03:05 2017 - [info] Executing seconary network check script: /usr/local/bin/masterha_secondary_check -s server03 -s server02  --user=root  --master_host=172.26.4.211  --master_ip=172.26.4.211  --master_port=3316</div><div class="line">Thu Jun 15 12:03:05 2017 - [info] Executing SSH check script: save_binary_logs --command=test --start_pos=4 --binlog_dir=/var/log/mysql-1 --output_file=/var/log/mysql-1/save_binary_logs_test --manager_version=0.55 --binlog_prefix=mysql-bin</div><div class="line">sh: /usr/local/bin/masterha_secondary_check: No such file or directory</div><div class="line">Thu Jun 15 12:03:05 2017 - [error][/usr/share/perl5/vendor_perl/MHA/HealthCheck.pm, ln365] Got unknown error from /usr/local/bin/masterha_secondary_check -s server03 -s server02  --user=root  --master_host=172.26.4.211  --master_ip=172.26.4.211  --master_port=3316. exit.</div><div class="line">Thu Jun 15 12:03:07 2017 - [info] HealthCheck: SSH to 172.26.4.211 is reachable.</div><div class="line">Thu Jun 15 12:03:08 2017 - [info] Ping(SELECT) succeeded, waiting until MySQL doesn&apos;t respond..</div></pre></td></tr></table></figure>
+<p>其中”Ping(SELECT) succeeded, waiting until MySQL doesn’t respond..”说明整个系统已经开始监控了。</p>
+<h5 id="关闭MHA监控"><a href="#关闭MHA监控" class="headerlink" title="关闭MHA监控"></a>关闭MHA监控</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[dev] [root@mha-db-172.26.4.214 log]# masterha_stop --conf=/etc/mha/app1.cnf</div><div class="line">Stopped app1 successfully.</div><div class="line">[1]+  Exit 1                  nohup masterha_manager --conf=/etc/mha/app1.cnf --remove_dead_master_conf --ignore_last_failover &lt; /dev/null &gt; /var/log/mha/manager.log 2&gt;&amp;1</div></pre></td></tr></table></figure>
+<h5 id="问题点"><a href="#问题点" class="headerlink" title="问题点"></a>问题点</h5><p>1、主库访问如何切换？</p>
+<p>2、每次切换完成之后mha进程就会关闭掉，配置文件也会把down的机器剔除</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/MHA/" rel="tag"># MHA</a>
+          
+            <a href="/tags/高可用/" rel="tag"># 高可用</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/17/MySQL5.7-Zabbix-BUG/" rel="next" title="Zabbix碰见mysql5.7怪现象(ICP优化器)">
+                <i class="fa fa-chevron-left"></i> Zabbix碰见mysql5.7怪现象(ICP优化器)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/20/MHA-Parameter-details/" rel="prev" title="MHA 参数列表详解(转载)">
+                MHA 参数列表详解(转载) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#环境信息"><span class="nav-number">1.</span> <span class="nav-text">环境信息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MHA相关资料和下载"><span class="nav-number">2.</span> <span class="nav-text">MHA相关资料和下载</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#依赖安装"><span class="nav-number">3.</span> <span class="nav-text">依赖安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装MHA-Node"><span class="nav-number">4.</span> <span class="nav-text">安装MHA Node</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改系统环境变量"><span class="nav-number">5.</span> <span class="nav-text">修改系统环境变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置MHA"><span class="nav-number">6.</span> <span class="nav-text">配置MHA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#检查各节点之间的同步状态"><span class="nav-number">7.</span> <span class="nav-text">检查各节点之间的同步状态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看MHA-Manager监控是否正常"><span class="nav-number">8.</span> <span class="nav-text">查看MHA Manager监控是否正常</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关闭MHA监控"><span class="nav-number">9.</span> <span class="nav-text">关闭MHA监控</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#问题点"><span class="nav-number">10.</span> <span class="nav-text">问题点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  Zaki
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+  
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,1708 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL,MHA," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="MHA 参数列表Local ：　指每一个配置块内部。　Local功能的参数需要放置在[server_xxx] 块下面
+App ：　参数作用于master/slave，　这些参数需要配置在[server_default]块的下面
+hostname配置MySQL服务器的机器名或是IP地址，这个配置项是必须的，而且只能配置在[server_xxx]这个块下面。如：
+
+
+
+参数名
+是否必须
+作用域
+默认值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MHA 参数列表详解(转载)">
+<meta property="og:url" content="http://yoursite.com/2017/06/20/MHA-Parameter-details/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="MHA 参数列表Local ：　指每一个配置块内部。　Local功能的参数需要放置在[server_xxx] 块下面
+App ：　参数作用于master/slave，　这些参数需要配置在[server_default]块的下面
+hostname配置MySQL服务器的机器名或是IP地址，这个配置项是必须的，而且只能配置在[server_xxx]这个块下面。如：
+
+
+
+参数名
+是否必须
+作用域
+默认值">
+<meta property="og:updated_time" content="2017-08-09T08:19:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MHA 参数列表详解(转载)">
+<meta name="twitter:description" content="MHA 参数列表Local ：　指每一个配置块内部。　Local功能的参数需要放置在[server_xxx] 块下面
+App ：　参数作用于master/slave，　这些参数需要配置在[server_default]块的下面
+hostname配置MySQL服务器的机器名或是IP地址，这个配置项是必须的，而且只能配置在[server_xxx]这个块下面。如：
+
+
+
+参数名
+是否必须
+作用域
+默认值">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/20/MHA-Parameter-details/"/>
+
+
+
+
+
+  <title> MHA 参数列表详解(转载) | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/20/MHA-Parameter-details/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MHA 参数列表详解(转载)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-20T15:17:05+08:00">
+                2017-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/20/MHA-Parameter-details/" class="leancloud_visitors" data-flag-title="MHA 参数列表详解(转载)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="MHA-参数列表"><a href="#MHA-参数列表" class="headerlink" title="MHA 参数列表"></a>MHA 参数列表</h4><p>Local ：　指每一个配置块内部。　Local功能的参数需要放置在[server_xxx] 块下面</p>
+<p>App ：　参数作用于master/slave，　这些参数需要配置在[server_default]块的下面</p>
+<h5 id="hostname"><a href="#hostname" class="headerlink" title="hostname"></a>hostname</h5><p>配置MySQL服务器的机器名或是IP地址，这个配置项是必须的，而且只能配置在[server_xxx]这个块下面。<br>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hostname</td>
+<td>Yes</td>
+<td>Local Only</td>
+<td>–</td>
+<td>hostname=mysql_server1, hostname=192.168.0.1, etc</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ip"><a href="#ip" class="headerlink" title="ip"></a>ip</h5><p>MySQL服务器的ip地址。　默认从gethostname($hostname)中获得。　默认不用配置这个参数，MHA可以通过hostname自动获取，MHA通过IP地址连接MySQL服务器及SSH连接。<br>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th style="text-align:center">默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ip</td>
+<td>No</td>
+<td>Local Only</td>
+<td style="text-align:center">通过gethostbyname($hostname)获得</td>
+<td>ip=192.168.1.3</td>
+</tr>
+</tbody>
+</table>
+<h5 id="port"><a href="#port" class="headerlink" title="port"></a>port</h5><p>MySQL运行的端口号。　默认是3306. MHA使用IP和端口号连接MySQL<br>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>port</td>
+<td>No</td>
+<td>Local/App/Glbal</td>
+<td>3306</td>
+<td>port=3306</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ssh-host"><a href="#ssh-host" class="headerlink" title="ssh_host"></a>ssh_host</h5><p>(从MHA 0.53后开始支持） MHA要ssh上MySQL目标服务器使用hostname　或是ip地址。这个参数主要用于在使用多个VLAN的环境中。为了安全原因ssh默认不允许。默认这个参数和hostname相同。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ssh_host</td>
+<td>No</td>
+<td>Local Only</td>
+<td>和hostname相同</td>
+<td>ssh_host=mysql_server1, ssh_host=192.168.0.1, etc</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ssh-ip"><a href="#ssh-ip" class="headerlink" title="ssh_ip"></a>ssh_ip</h5><p>(从MHA 0.53后开始支持） 和ssh_host作用相同。　默认是gethostname($ssh_host)获得。　</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ssh_ip</td>
+<td>No</td>
+<td>Local Only</td>
+<td>gethostbyname($ssh_host)</td>
+<td>ssh_ip=192.168.1.3</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ssh-port"><a href="#ssh-port" class="headerlink" title="ssh_port"></a>ssh_port</h5><p>(从MHA 0.53后开始支持）　SSH使用的端口号，默认是22.<br>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ssh_port</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>22</td>
+<td>ssh_port=22</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ssh-connection-timeout"><a href="#ssh-connection-timeout" class="headerlink" title="ssh_connection_timeout"></a>ssh_connection_timeout</h5><p>(从MHA 0.54后支持)默认是5秒。在没添加这个参数之前ssh超时时间是写死的。<br>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ssh_connection_timeout</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>5</td>
+<td>ssh_connect_timeout=5</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ssh-options"><a href="#ssh-options" class="headerlink" title="ssh_options"></a>ssh_options</h5><p>(从MHA 0.53后支持）　添加ssh命令行的支持参数，例如加上特别文件名的key的支持等。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ssh_options</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>“” 空的</td>
+<td>ssh_options=”-i /root/.ssh/id_dsa2″</td>
+</tr>
+</tbody>
+</table>
+<h5 id="candidate-master"><a href="#candidate-master" class="headerlink" title="candidate_master"></a>candidate_master</h5><p>你可能对于同一组slave中有着不同的规划，有的其望在Master故障时，提升为新的Master(如：　Raid1的slave比Raid0的slave更适合做Master)</p>
+<p>这个参数的作用是当设计candidate_master = 1时，这个服务器有较高的优先级提升为新的master(还要具备：　开启binlog, 复制没有延迟)。　所以当设置了candidate_master = 1的机器在master故障时必然成为新的master. 但这是很有用的设置优先级的一个参数。</p>
+<p>如果设置了多台机器的caddidate_master = 1 , 优先策略依赖于块名字([server_xxx]). [server_1] 优衔权高于[server_2].</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>candidate_master</td>
+<td>No</td>
+<td>Local Only</td>
+<td>0</td>
+<td>candidate_mast＝1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="no-master"><a href="#no-master" class="headerlink" title="no_master"></a>no_master</h5><p>当设置了no_master =　1的服务器，这个服务器永远不会提升为新的master. 这个参数据对于永远不期望成为master的机器很有用。　如：　你可能需要在使用raid0的机器上设置no_master = 1 或是你希望在远程的idc里运行一个slave. 注意：　当没有可以成为新master的机器是MHA就直接退出来了同时停止监控和master故障切换。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>no_master</td>
+<td>No</td>
+<td>Local Only</td>
+<td>0</td>
+<td>no_master=1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ignore-fail"><a href="#ignore-fail" class="headerlink" title="ignore_fail"></a>ignore_fail</h5><p>在默认情况下，MHA　manager不会在slave存在故障的情况下（已经不能通过SSH/MySQL进行连接，或是SQL Thread已经停止出错，其它原因）的情况下进行Master的故障切换（当不存在slave时MHA manager也会退出）。　但有些情况下你期望在slave存在问题的情况下，也进行故障切换。　所以当设置了ignore_fail = 1时，MHA会在所有的机器有问题的时间也会进行故障切换。　默认是0.</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ignore_fail</td>
+<td>No</td>
+<td>Local Only</td>
+<td>0</td>
+<td>ignore_fail=1</td>
+</tr>
+</tbody>
+</table>
+<p>#skip_init_ssh_check#<br>在MHA　manager启动时跳过ssh检查。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skip_init_ssh_check</td>
+<td>No</td>
+<td>Local Only</td>
+<td>0</td>
+<td>skip_init_ssh_check=1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="skip-reset-slave"><a href="#skip-reset-slave" class="headerlink" title="skip_reset_slave"></a>skip_reset_slave</h5><p>(从MHA 0.56开始支持)　Master故障切换后新的master上执行RESET SLAVE(ALL).</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skip_reset_slave</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>0</td>
+<td>skip_reset_slave=1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="user"><a href="#user" class="headerlink" title="user"></a>user</h5><p>用于管理MySQL的用户名。这个最后需要root用户，因为它需要执行：stop slave; change master to , reset slave. 默认: root</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>root</td>
+<td>user=mysql_root</td>
+</tr>
+</tbody>
+</table>
+<h5 id="password"><a href="#password" class="headerlink" title="password"></a>password</h5><p>MySQL的管理用户的密码。　默认是空的</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>password</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>空的</td>
+<td>password=rootpass</td>
+</tr>
+</tbody>
+</table>
+<h5 id="repl-user"><a href="#repl-user" class="headerlink" title="repl_user"></a>repl_user</h5><p>MySQL用于复制的用户，也是用于生成CHANGE MASTER TO 每个slave使用的用户。　这个用户必须有REPLICATION SLAVE权限在新的Master上。默认情况下　repl_user会在将来成为master的机器上运行show slave status获取到。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repl_user</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>从show slave status</td>
+<td>repl_user=repl</td>
+</tr>
+</tbody>
+</table>
+<h5 id="repl-password"><a href="#repl-password" class="headerlink" title="repl_password"></a>repl_password</h5><p>MySQL中repl_user用户的密码。　默认是当前复制用的密码。　　当你使用online_master_switch时，当使用–orig_master_is_new_slave(原来的Master成为新Master的一个slave)时，如果没有repl_password 开启同步就会失败了。因为当前master上用于复制的用户名和密码都是空的（MHA在原来的Master上执行change master to 时没有带复制的密码，虽然其它slave上设置了复制的密码）</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repl_password</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>当前复制用的密码</td>
+<td>repl_password=replpas</td>
+</tr>
+</tbody>
+</table>
+<h5 id="disable-log-bin"><a href="#disable-log-bin" class="headerlink" title="disable_log_bin"></a>disable_log_bin</h5><p>当设置了这个参数，在slave应用差异的relay log时不会产生二进制日志。　内部实现通过mysqlbinlog的disable-log-bin实现。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>disable_log_bin</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>0</td>
+<td>disable_log_bin=1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="master-pid-file"><a href="#master-pid-file" class="headerlink" title="master_pid_file"></a>master_pid_file</h5><p>指定MySQL的pid文件。　这个参数在一台服务器上运行多个MySQL服务进程时非常有用。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master_pid_file</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>–</td>
+<td>master_pid_file=/var/lib/mysql/master1.pid</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ssh-user"><a href="#ssh-user" class="headerlink" title="ssh_user"></a>ssh_user</h5><p>MHA Mananger, MHA node系统上的用户。　这个帐号需要在远程机器上有执行权限(Manager-&gt;MySQL),在slave成员之间复制差异的relay-log（MySQL-&gt;MySQL）</p>
+<p>这个用户必须有读取MySQL的binary/relay日志和relay_log.info的权限，还需要对远程MySQL上remote_workdir目录的写权限。</p>
+<p>这个用户还必须可以直接ssh到远程机顺上，　推荐使用ssh pbulic key . 一般使用的ssh_user也是运行manager那个那个用户。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ssh_user</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>当前使用的系统用户</td>
+<td>ssh_user=root</td>
+</tr>
+</tbody>
+</table>
+<h5 id="remote-workdir"><a href="#remote-workdir" class="headerlink" title="remote_workdir"></a>remote_workdir</h5><p>MHA node上工作目录的全路径名。如果不存在，MHA node会自动创建，如果不允许创建，MHA Node自动异常退出。　需要注意MHA manager 或是MHA node上需要检查空间是否可用，所以需要注意检查这个。　一般默认, remote_workdir是的”/var/tmp”</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>remote_workdir</td>
+<td>No</td>
+<td>Local/App/Global</td>
+<td>/var/tmp</td>
+<td>remote_workdir=/var/log/masterha/app1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="master-binlog-dir"><a href="#master-binlog-dir" class="headerlink" title="master_binlog_dir"></a>master_binlog_dir</h5><p>master上用于存储binary日志的全路径。这个参数用于当master上mysql死掉后，通过ssh连到mysql服务器上，找到需要binary日志事件。这个参数可以帮助用于无法找到master进程死掉后binary日志存储位置。</p>
+<p>一般: master_binlog_dir是”/var/lib/mysql/, /var/log/mysql”. “/var/lib/mysql/”是大多数系统发行版本的存放位置，”/var/log/mysql”是ubuntu发行版本的存放位置。 你也可以设置多个存放位置用逗号隔开。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master_binlog_dir</td>
+<td>No</td>
+<td>Local/App/Gobal</td>
+<td>/var/lib/mysql</td>
+<td>master_binlog_dir=/data/mysql1,/data/mysql2</td>
+</tr>
+</tbody>
+</table>
+<h5 id="log-level"><a href="#log-level" class="headerlink" title="log_level"></a>log_level</h5><p>设置MHA manager记录LOG的级别。 默认是info级别而且大多数情况也是比较适合。 同样可以设置为: debug/info/warning/error.</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>log_level</td>
+<td>No</td>
+<td>App/Global</td>
+<td>info</td>
+<td>log_level=debug</td>
+</tr>
+</tbody>
+</table>
+<h5 id="manager-workdir"><a href="#manager-workdir" class="headerlink" title="manager_workdir"></a>manager_workdir</h5><p>用于指定mha manager产生相关状态文件全路径。 如果没设置 默认是/var/tmp</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>manager_workdir</td>
+<td>No</td>
+<td>App</td>
+<td>/var/tmp</td>
+<td>manager_workdir=/var/log/masterha</td>
+</tr>
+</tbody>
+</table>
+<h5 id="manager-log"><a href="#manager-log" class="headerlink" title="manager_log"></a>manager_log</h5><p>指定mha manager的绝对路径的文件名日志文件。 如果没设置MHA Manager将打印到STDOUT/STDERR。 当手工执行故障切换（交互模式切换），MHA Manager会忽略manager_log设置直接将日志输出到STDOUT/STDERR.</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>manager_log</td>
+<td>No</td>
+<td>App</td>
+<td>STDERR</td>
+<td>manager_log=/var/log/masterha/app1.log</td>
+</tr>
+</tbody>
+</table>
+<h5 id="check-repl-delay"><a href="#check-repl-delay" class="headerlink" title="check_repl_delay"></a>check_repl_delay</h5><p>在默认情况下，当一个slave同步延迟超过100M relay log(需要应用超过100M relay log), MHA在做故障切换时不会选择这个slave做为新的master,因为恢复需要经过很长时间.当设置了check_repl_delay = 0, MHA将忽略被选择的slave上的同步延迟。　这个选项在设置了candidate_master = 1特声明的期望这台机器成为master的情况下特别有用。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>check_repl_delay</td>
+<td>No</td>
+<td>App/Golbal</td>
+<td>1</td>
+<td>check_repl_delay=0</td>
+</tr>
+</tbody>
+</table>
+<h5 id="check-repl-filter"><a href="#check-repl-filter" class="headerlink" title="check_repl_filter"></a>check_repl_filter</h5><p>在默认下情况，当master和slave设置了不同了binary log/replication 过滤规则时，MHA直接报错不会进行监控和故障切换。　这些将会导致出现一些异想不到的错误”Table not exists”。如果你100%确认不同的过滤规则不会导致恢复中的错误，设置check_repl_filter=0。　需要注意：　当使用了check_repl_filter = 0时，MHA不会检查过滤规则在应用差异的relay日志，所以有可能会出现”Table not exists”的错误。当你设置了这个参数请小心处理。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>check_repl_filter</td>
+<td>No</td>
+<td>App/Global</td>
+<td>1</td>
+<td>check_repl_filter=0</td>
+</tr>
+</tbody>
+</table>
+<h5 id="latest-priority"><a href="#latest-priority" class="headerlink" title="latest_priority"></a>latest_priority</h5><p>在默认情况下，和Master最接近的slave(一个slave从Master上获得了最一个binlog事件)是最有优先权成为新的master。　如果你想控制一下切换的策略（如: 先选择host2，如果不行，选host3；host3不行，选host4…） 那么设置latest_priority = 0 就可以了。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>latest_priority</td>
+<td>No</td>
+<td>App/Global</td>
+<td>1</td>
+<td>latest_priority=0</td>
+</tr>
+</tbody>
+</table>
+<h5 id="multi-tier-slave"><a href="#multi-tier-slave" class="headerlink" title="multi_tier_slave"></a>multi_tier_slave</h5><p>从MHA 0.52开始, 多层复制可以支持了。在默认情况下，不支持三层或是更多层的复制配置。　如果：　host2从host1上复制，host3从host2上复制。　在默认配置的情况下不支持写host{1,2,3}，因为这是一个三层的复制，MHA Manager会停止报错。　当设置了multi_tier_slave, MHA Manager就不会在三层复制报错停止。　但是会忽略第三层的机器。也就是如果host1挂了，host2将会成为新的master，host3还是从host2上进行复制。</p>
+<p>这个参数在MHA Manager 0.52后的版开始支持。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>muli_tier_slave</td>
+<td>No</td>
+<td>App/Global</td>
+<td>0</td>
+<td>multi_tier_slave=1</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ping-interval"><a href="#ping-interval" class="headerlink" title="ping_interval"></a>ping_interval</h5><p>这个参数设置MHA Manager多长时间去ping一下master(执行一些SQL语句）. 当失去和master三次偿试，MHA Manager会认为MySQL Master死掉了。也就是说，最大的故障切换时间是４次ping_interval的时间，默认是3秒。</p>
+<p>如果MHA Manager在和MySQL创建连接时都收到多连接错误或是认证错误，这个就不做重试就会认为master已经挂掉。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ping_interval</td>
+<td>No</td>
+<td>App/Global</td>
+<td>3</td>
+<td>ping_interval=5</td>
+</tr>
+</tbody>
+</table>
+<h5 id="ping-type"><a href="#ping-type" class="headerlink" title="ping_type"></a>ping_type</h5><p>(从MHA 0.53后开始支持)　在默认情况下，　MHA　manager和MySQL创建一个连接执行”select 1″（ping_type=select）用于检查master是否健康。　但有一些情况：　每次检测都连接/然后断开会比较好一点，这样对于tcp方面的错误感知更快一点。设置ping_type=CONNECT 就行了。从MHA 0.56后pint_type=INSERT也被添加。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ping_type</td>
+<td>No</td>
+<td>App/Global</td>
+<td>SELECT</td>
+<td>ping_type=CONNECT</td>
+</tr>
+</tbody>
+</table>
+<h5 id="secondary-check-script"><a href="#secondary-check-script" class="headerlink" title="secondary_check_script"></a>secondary_check_script</h5><p>一般来讲，　非常推荐使用更多网络上机器是不同路由策略上的机器来检查MySQL　Master是否存活。　默认情况下，只有MHA Manager通过一个路由来检查Master是否存活。这个也是不推荐的。MHA可以通过外部secondary_check_script配置的脚本来做到从多个路由策略下进行检查。</p>
+<blockquote>
+<p>secondary_check_script = masterha_secondary_check -s remote_host1 -s remote_host2</p>
+</blockquote>
+<p>secondary_check_script包含在MHA Manager发行包中。　MHA中内置的secondary_check_script在大多数情况下工作良好，但并不是任何地都可以使用这个脚本。</p>
+<p>在上面的例子中，　MHA Manager通过Manager-&gt;(A)-&gt;remote_host1-&gt;(B)-&gt;master_host 和Manager-&gt;(A)-remote_host2-&gt;(B)-&gt;master<em>host来检查MySQL master是否存活。如果在连接过程中通过A可以都成功，通过Ｂ是都失败，secondary</em>\check_\script返回０，而且认为master已经死掉，进行故障切换。如果通过A成功，但返回代码为: 2,则MHA　manager有会认为是网络问题，则不会进行故障切换。如果Ａ成功，Ｂ也成功，masterha_secondary_check　退出返回:3 则MHA Manager就为认为MySQL Master为存活状态，　则不会进行故障切换。</p>
+<p>一般来讲，　remote_host1和remote_host2是和MHA Manager及MySQL Server位于不同的网段中。</p>
+<p>MHA会调用secondary_check_script声明的脚本并自动带上一些参数。　masterha_secondary_check在很多场景都是适用的，但是你也可以自已实现这个程序带有更多的功能。</p>
+<p>–user=(在远程机器上使用的SSH用户名。　ssh_user的值将被使用)</p>
+<p>–master_host = (master的hostname)</p>
+<p>–master_ip = (master的ip地址)</p>
+<p><strong>注意：</strong>　内置的masterha_secondary_check脚本依赖于的Perl的IO::Socket::INET(Perl 5.6.0中是默认支持包含这个模块)。　masterha_secondary_check需要通过ssh连接到远程的机器上，所以需要manager到远程机器上建立public key信任。另外masterha_secondary_check是通过和Master建立TCP的连接测试Master是否存活，所以mysql设置的max_connections不起作用。　但每次TCP连接成功后，MySQL的Aborted_connects 值都会加1。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>secondary_check_script</td>
+<td>No</td>
+<td>App/Global</td>
+<td>null</td>
+<td>secondary_check_script= masterha_secondary_check -s remote_dc1 -s remote_dc2</td>
+</tr>
+</tbody>
+</table>
+<h5 id="master-ip-failover-script"><a href="#master-ip-failover-script" class="headerlink" title="master_ip_failover_script"></a>master_ip_failover_script</h5><p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master_ip_failover_script</td>
+<td>No</td>
+<td>App/Global</td>
+<td>null</td>
+<td>master_ip_failover_script=/usr/local/custom_script/master_ip_failover</td>
+</tr>
+</tbody>
+</table>
+<h5 id="master-ip-online-changes-script"><a href="#master-ip-online-changes-script" class="headerlink" title="master_ip_online_changes_script"></a>master_ip_online_changes_script</h5><p>这个参数有点类似于master_ip_failover_script,但这个参数不用于master　故障转意，只使用到master在线的切换。</p>
+<blockquote>
+<p>–command=stop or stopssh<br>–orig_master_host = (当前master的主机名）<br>–orig_master_ip = (当前master的ip地址)<br>–orig_master_port = (当前master的port端口号)<br>–orig_master_user = (当前master的用户)<br>–orig_master_password = (当前master的用户名)<br>–orig_master_ssh_user = (从0.56支持,当前master的ssh的用户名)<br>–orig_master_is_new_slave = 　(从 0.56 ,是否把原Master更改为新的slave)</p>
+<p>–command=start<br>–orig_master_host = ( 原master的机器名 )<br>–orig_master_ip = ( 原master的ip )<br>–orig_master_port = ( 原master的端口号 )<br>–new_master_host = (新master的机器名)<br>–new_master_ip = (新master的ip)<br>–new_master_port = (新master的端口号)<br>–new_master_user = (新master上的用户名)<br>–new_master_password = (新master上的用户名及密码)<br>–new_master_ssh_user = (从0.56支持，　新master上的ssh用户)</p>
+</blockquote>
+<p>MHA在冻结写的切换过程中会在Master上执行FlUSH TABLES WITH READ LOCK,在这个优雅的切换过程不会有任何写入的。在新的Ｍaster在开始授权写的过程中，你可以做和master_ip_failover_script一样的事情。　例如：　创建用户及权限，　执行set global read_only=0, 更新数据库路由表竺。　如果脚本执行退出码不是0 或是10, MHA　Manager异常退出并发不会继续进行master切换。</p>
+<p>默认这个参数是空的，所以MHA Manager在默认情况下什么也不做。</p>
+<p>可以在(MHA Manager package)/samples/scripts/master_ip_online_change。里找到例子脚本。例子脚本包含于MHA Manager源文件或是GitHub的分支中。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master_ip_online_change_script</td>
+<td>No</td>
+<td>App/Global</td>
+<td>null</td>
+<td>master_ip_online_change_script= /usr/local/custom_script/master_ip_online_change</td>
+</tr>
+</tbody>
+</table>
+<h5 id="shutdown-script"><a href="#shutdown-script" class="headerlink" title="shutdown_script"></a>shutdown_script</h5><p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shutdown_script</td>
+<td>No</td>
+<td>App/Global</td>
+<td>null</td>
+<td>shutdown_script= /usr/local/custom_script/master_shutdown</td>
+</tr>
+</tbody>
+</table>
+<h5 id="report-script"><a href="#report-script" class="headerlink" title="report_script"></a>report_script</h5><p>在Master故障完毕后，也许想发一个送一个报告（如email）报告一下切换完毕或是发生的错误。report_script可以完成这个工作。MHA Manager可以通过以下参数使用：</p>
+<p>–orig_master_host = (死掉master机器名)</p>
+<p>–new_master_host　= (新的master机器名)</p>
+<p>–new_slave_hosts = (新的slave机器名列表，用逗号隔开)</p>
+<p>–subject = (邮件名)</p>
+<p>默认这些参数是空的。　所以默认MHA Manager什么事情也不做。</p>
+<p>可以在(MHA Manager package)/samples/scripts/send_report里找到例子脚本。例子脚本包含于MHA Manager源文件或是GitHub的分支中。</p>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>report_script</td>
+<td>No</td>
+<td>App/Global</td>
+<td>null</td>
+<td>report_script= /usr/local/custom_script/report</td>
+</tr>
+</tbody>
+</table>
+<h5 id="init-conf-load-script"><a href="#init-conf-load-script" class="headerlink" title="init_conf_load_script"></a>init_conf_load_script</h5><p>这个参数用于不想设置明文在配置文件中（如：密码相关）。　只用返回”name=value”这样的值。　这个可以用来复盖global配置中的一些值。一个例子脚本如下。</p>
+<blockquote>
+<p>#!/usr/bin/perl</p>
+<p>print “password=$ROOT_PASS\n”;</p>
+<p>print “repl_password=$REPL_PASS\n”;</p>
+</blockquote>
+<p>如：</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>是否必须</th>
+<th>作用域</th>
+<th>默认值</th>
+<th>例子及说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>init_conf_load_script</td>
+<td>No</td>
+<td>App/Global</td>
+<td>null</td>
+<td>report_script= /usr/local/custom_script/init_conf_loader</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/MHA/" rel="tag"># MHA</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/18/MHA-Environment-building/" rel="next" title="MHA环境搭建">
+                <i class="fa fa-chevron-left"></i> MHA环境搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/28/MHA-Testing/" rel="prev" title="MHA各种场景测试结果">
+                MHA各种场景测试结果 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#MHA-参数列表"><span class="nav-number">1.</span> <span class="nav-text">MHA 参数列表</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#hostname"><span class="nav-number">1.1.</span> <span class="nav-text">hostname</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ip"><span class="nav-number">1.2.</span> <span class="nav-text">ip</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#port"><span class="nav-number">1.3.</span> <span class="nav-text">port</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ssh-host"><span class="nav-number">1.4.</span> <span class="nav-text">ssh_host</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ssh-ip"><span class="nav-number">1.5.</span> <span class="nav-text">ssh_ip</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ssh-port"><span class="nav-number">1.6.</span> <span class="nav-text">ssh_port</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ssh-connection-timeout"><span class="nav-number">1.7.</span> <span class="nav-text">ssh_connection_timeout</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ssh-options"><span class="nav-number">1.8.</span> <span class="nav-text">ssh_options</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#candidate-master"><span class="nav-number">1.9.</span> <span class="nav-text">candidate_master</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#no-master"><span class="nav-number">1.10.</span> <span class="nav-text">no_master</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ignore-fail"><span class="nav-number">1.11.</span> <span class="nav-text">ignore_fail</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#skip-reset-slave"><span class="nav-number">1.12.</span> <span class="nav-text">skip_reset_slave</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#user"><span class="nav-number">1.13.</span> <span class="nav-text">user</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#password"><span class="nav-number">1.14.</span> <span class="nav-text">password</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#repl-user"><span class="nav-number">1.15.</span> <span class="nav-text">repl_user</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#repl-password"><span class="nav-number">1.16.</span> <span class="nav-text">repl_password</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#disable-log-bin"><span class="nav-number">1.17.</span> <span class="nav-text">disable_log_bin</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#master-pid-file"><span class="nav-number">1.18.</span> <span class="nav-text">master_pid_file</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ssh-user"><span class="nav-number">1.19.</span> <span class="nav-text">ssh_user</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#remote-workdir"><span class="nav-number">1.20.</span> <span class="nav-text">remote_workdir</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#master-binlog-dir"><span class="nav-number">1.21.</span> <span class="nav-text">master_binlog_dir</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#log-level"><span class="nav-number">1.22.</span> <span class="nav-text">log_level</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#manager-workdir"><span class="nav-number">1.23.</span> <span class="nav-text">manager_workdir</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#manager-log"><span class="nav-number">1.24.</span> <span class="nav-text">manager_log</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#check-repl-delay"><span class="nav-number">1.25.</span> <span class="nav-text">check_repl_delay</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#check-repl-filter"><span class="nav-number">1.26.</span> <span class="nav-text">check_repl_filter</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#latest-priority"><span class="nav-number">1.27.</span> <span class="nav-text">latest_priority</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#multi-tier-slave"><span class="nav-number">1.28.</span> <span class="nav-text">multi_tier_slave</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ping-interval"><span class="nav-number">1.29.</span> <span class="nav-text">ping_interval</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ping-type"><span class="nav-number">1.30.</span> <span class="nav-text">ping_type</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#secondary-check-script"><span class="nav-number">1.31.</span> <span class="nav-text">secondary_check_script</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#master-ip-failover-script"><span class="nav-number">1.32.</span> <span class="nav-text">master_ip_failover_script</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#master-ip-online-changes-script"><span class="nav-number">1.33.</span> <span class="nav-text">master_ip_online_changes_script</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shutdown-script"><span class="nav-number">1.34.</span> <span class="nav-text">shutdown_script</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#report-script"><span class="nav-number">1.35.</span> <span class="nav-text">report_script</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#init-conf-load-script"><span class="nav-number">1.36.</span> <span class="nav-text">init_conf_load_script</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  Zaki
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+  
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>

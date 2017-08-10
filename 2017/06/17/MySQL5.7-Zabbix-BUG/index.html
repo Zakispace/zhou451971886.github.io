@@ -1,0 +1,869 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL,Zabbix,ICP," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Hi，I,m Zaki，此刻已经凌晨1点45了，虽然明天已经约好了要早上8点起床去重邮玩耍，但是现在完全没有睡意，一个困扰我长时间的问题终于解决了，开心~
+由于现网换数据库的版本，将之前的mariadb5.5升级到了percona5.7，虽然percona这个数据用的人不多，但是我也斗胆的尝试了一下，将现网都业务都换成了percona5.7。数据库升级迁移工作异常顺利，但是在迁移线上zabbix业">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix碰见mysql5.7怪现象(ICP优化器)">
+<meta property="og:url" content="http://yoursite.com/2017/06/17/MySQL5.7-Zabbix-BUG/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="Hi，I,m Zaki，此刻已经凌晨1点45了，虽然明天已经约好了要早上8点起床去重邮玩耍，但是现在完全没有睡意，一个困扰我长时间的问题终于解决了，开心~
+由于现网换数据库的版本，将之前的mariadb5.5升级到了percona5.7，虽然percona这个数据用的人不多，但是我也斗胆的尝试了一下，将现网都业务都换成了percona5.7。数据库升级迁移工作异常顺利，但是在迁移线上zabbix业">
+<meta property="og:updated_time" content="2017-08-09T07:52:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zabbix碰见mysql5.7怪现象(ICP优化器)">
+<meta name="twitter:description" content="Hi，I,m Zaki，此刻已经凌晨1点45了，虽然明天已经约好了要早上8点起床去重邮玩耍，但是现在完全没有睡意，一个困扰我长时间的问题终于解决了，开心~
+由于现网换数据库的版本，将之前的mariadb5.5升级到了percona5.7，虽然percona这个数据用的人不多，但是我也斗胆的尝试了一下，将现网都业务都换成了percona5.7。数据库升级迁移工作异常顺利，但是在迁移线上zabbix业">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/17/MySQL5.7-Zabbix-BUG/"/>
+
+
+
+
+
+  <title> Zabbix碰见mysql5.7怪现象(ICP优化器) | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/17/MySQL5.7-Zabbix-BUG/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Zabbix碰见mysql5.7怪现象(ICP优化器)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-17T01:45:09+08:00">
+                2017-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/17/MySQL5.7-Zabbix-BUG/" class="leancloud_visitors" data-flag-title="Zabbix碰见mysql5.7怪现象(ICP优化器)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>Hi，I,m Zaki</code>，此刻已经凌晨1点45了，虽然明天已经约好了要早上8点起床去重邮玩耍，但是现在完全没有睡意，一个困扰我长时间的问题终于解决了，开心~</p>
+<p>由于现网换数据库的版本，将之前的<code>mariadb5.5</code>升级到了<code>percona5.7</code>，虽然<code>percona</code>这个数据用的人不多，但是我也斗胆的尝试了一下，将现网都业务都换成了<code>percona5.7</code>。数据库升级迁移工作异常顺利，但是在迁移线上<code>zabbix</code>业务到新数据库的时候，发现大量<code>SQL</code>被卡住，无法执行，类似这样的SQL：<code>select clock,ns,value from history_uint where itemid=2831178 and clock&gt;1484822156 and clock&lt;=1484822336 order by clock desc limit 1;</code></p>
+<p>看了一下应该是去查询出一个时间段最后一个值，为什么这样一个SQL迁移到新版本会执行几十秒，而在老版本数据库里面只需要0.01s呢？性能差距接近千倍，升级数据库版本不会造成这么大的问题吧。</p>
+<p>我们一起来一探究竟~</p>
+<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><p>先使用<code>explain</code>在<code>percona5.7</code>上对该<code>sql</code>进行分析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; explain select clock,ns,value from history_uint where itemid=2831178 and clock&gt;1484822156 and clock&lt;=1484822336 order by clock desc limit 1;</div><div class="line">+----+-------------+--------------+---------------+-------+----------------------+----------------+---------+------+------+----------+-----------------------+</div><div class="line">| id | select_type | table        | partitions    | type  | possible_keys        | key            | key_len | ref  | rows | filtered | Extra                 |</div><div class="line">+----+-------------+--------------+---------------+-------+----------------------+----------------+---------+------+------+----------+-----------------------+</div><div class="line">|  1 | SIMPLE      | history_uint | p201701190000 | range | history_uint_1,clock | history_uint_1 | 12      | NULL |    1 |   100.00 | Using index condition |</div><div class="line">+----+-------------+--------------+---------------+-------+----------------------+----------------+---------+------+------+----------+-----------------------+</div><div class="line">1 row in set, 1 warning (0.00 sec)</div></pre></td></tr></table></figure>
+<p>通过索引查询到一行上，应该是一个很快的<code>SQL</code>才对，为什么就这么慢了呢？</p>
+<p>我们在<code>mariadb5.5</code>上对该sql再次进行分析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; explain select clock,ns,value from history_uint where itemid=2831178 and clock&gt;1484822156 and clock&lt;=1484822336 order by clock desc limit 1;</div><div class="line">+------+-------------+--------------+-------+----------------------+----------------+---------+------+------+-------------+</div><div class="line">| id   | select_type | table        | type  | possible_keys        | key            | key_len | ref  | rows | Extra       |</div><div class="line">+------+-------------+--------------+-------+----------------------+----------------+---------+------+------+-------------+</div><div class="line">|    1 | SIMPLE      | history_uint | range | history_uint_1,clock | history_uint_1 | 12      | NULL |    1 | Using where |</div><div class="line">+------+-------------+--------------+-------+----------------------+----------------+---------+------+------+-------------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>也是通过了索引直接查询到该数据</p>
+<p><strong>仔细对比之后，发现一个问题：两个版本的Extra内容不一样，<code>mariadb5.5</code>是 <code>Using where</code>，而<code>percona5.7</code>是<code>Using index condition</code>，难道是这个地方出现了问题？</strong></p>
+<p>通过查阅资料得知，<code>ICP</code> 开启时的执行计划 含有 <code>Using index condition</code> 标示 ，表示优化器使用了<code>ICP</code>对数据访问进行优化。</p>
+<h4 id="那么，ICP是什么？"><a href="#那么，ICP是什么？" class="headerlink" title="那么，ICP是什么？"></a><strong>那么，ICP是什么？</strong></h4><p><code>Index Condition Pushdown (ICP)</code>是<code>MySQL 5.6</code> 版本中的新特性,是一种在存储引擎层使用索引过滤数据的一种优化方式。<br>1）当关闭<code>ICP</code>时,<code>index</code> 仅仅是<code>data access</code> 的一种访问方式，存储引擎通过索引回表获取的数据会传递到<code>MySQL Server</code> 层进行<code>where</code>条件过滤。<br>2）当打开<code>ICP</code>时,如果部分<code>where</code>条件能使用索引中的字段,<code>MySQL Server</code> 会把这部分下推到引擎层,可以利用<code>index</code>过滤的<code>where</code>条件在存储引擎层进行数据过滤,而非将所有通过<code>index access</code>的结果传递到<code>MySQL server</code>层进行<code>where</code>过滤.<br>优化效果：<code>ICP</code>能减少引擎层访问基表的次数和<code>MySQL Server</code> 访问存储引擎的次数,减少io次数，提高查询语句性能。</p>
+<h4 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h4><p>原来我们查询的表history_uint是一个分区表，我们看看现在表的结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `history_uint` (</div><div class="line">  `itemid` bigint(20) unsigned NOT NULL,</div><div class="line">  `clock` int(11) NOT NULL DEFAULT &apos;0&apos;,</div><div class="line">  `value` bigint(20) unsigned NOT NULL DEFAULT &apos;0&apos;,</div><div class="line">  `ns` int(11) NOT NULL DEFAULT &apos;0&apos;,</div><div class="line">  KEY `history_uint_1` (`itemid`,`clock`),</div><div class="line">  KEY `clock` (`clock`),</div><div class="line">  KEY `idx_all` (`itemid`,`clock`,`ns`,`value`)</div><div class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8</div><div class="line">/*!50100 PARTITION BY RANGE (`clock`)</div><div class="line">(PARTITION p201701120000 VALUES LESS THAN (1484236800) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701130000 VALUES LESS THAN (1484323200) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701140000 VALUES LESS THAN (1484409600) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701150000 VALUES LESS THAN (1484496000) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701160000 VALUES LESS THAN (1484582400) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701170000 VALUES LESS THAN (1484668800) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701180000 VALUES LESS THAN (1484755200) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701190000 VALUES LESS THAN (1484841600) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701200000 VALUES LESS THAN (1484928000) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701210000 VALUES LESS THAN (1485014400) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701220000 VALUES LESS THAN (1485100800) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701230000 VALUES LESS THAN (1485187200) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701240000 VALUES LESS THAN (1485273600) ENGINE = InnoDB,</div><div class="line"> PARTITION p201701250000 VALUES LESS THAN (1485360000) ENGINE = InnoDB) */;</div></pre></td></tr></table></figure>
+<p><strong>在MySQL5.7中，ICP有一个bugs，ICP不能正常的在有索引的分区表下进行工作。</strong></p>
+<p><strong>Partitioning</strong>: Index condition pushdown did not work with partitioned tables. (Bug #17306882, Bug #70001)</p>
+<h4 id="ICP的关闭与开启"><a href="#ICP的关闭与开启" class="headerlink" title="ICP的关闭与开启"></a>ICP的关闭与开启</h4><p><code>my.cnf</code>配置文件里面添加：</p>
+<p><code>optimizer_switch=index_condition_pushdown=off</code></p>
+<p>当然这个参数也支持在线修改：</p>
+<p><code>SET [GLOBAL] optimizer_switch=&#39;index_condition_pushdown=off&#39;</code>.</p>
+<h4 id="处理结果"><a href="#处理结果" class="headerlink" title="处理结果"></a>处理结果</h4><p>关闭了<code>ICP</code>优化器之后，发现查询瞬间到了毫秒级，我们再次使用<code>explain</code>进行分析看看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; explain select clock,ns,value from history_uint where itemid=3279183 and clock&gt;1484822990 and clock&lt;=1484823170 order by clock desc limit 1;</div><div class="line">+----+-------------+--------------+---------------+-------+----------------------+----------------+---------+------+------+----------+-------------+</div><div class="line">| id | select_type | table        | partitions    | type  | possible_keys        | key            | key_len | ref  | rows | filtered | Extra       |</div><div class="line">+----+-------------+--------------+---------------+-------+----------------------+----------------+---------+------+------+----------+-------------+</div><div class="line">|  1 | SIMPLE      | history_uint | p201701190000 | range | history_uint_1,clock | history_uint_1 | 12      | NULL |    1 |   100.00 | Using where |</div><div class="line">+----+-------------+--------------+---------------+-------+----------------------+----------------+---------+------+------+----------+-------------+</div><div class="line">1 row in set, 1 warning (0.00 sec)</div></pre></td></tr></table></figure>
+<p>使用的Extra变成了Using where，这样问题就解决了，终于可以升级zabbix的数据库到percona5.7。</p>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://dev.mysql.com/doc/refman/5.7/en/index-condition-pushdown-optimization.html" target="_blank" rel="external">MySQL5.7 ICP 官网详解</a></p>
+<p><a href="http://mysql.taobao.org/monthly/2015/12/08/" target="_blank" rel="external">MySQL · 特性分析 · Index Condition Pushdown (ICP)</a></p>
+<p><a href="https://support.zabbix.com/browse/ZBX-10652" target="_blank" rel="external">Zabbix连接Mysql5.7进行查询使用到ICP导致查询缓慢bug</a></p>
+<p><a href="https://stackoverflow.com/questions/39023651/mysql-5-7-strange-perfomance-reduction-with-order-by-asc-desc-on-partitioned-tab" target="_blank" rel="external">MySQL5.7 在分区表上进行查询排序导致性能问题解决方法</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/Zabbix/" rel="tag"># Zabbix</a>
+          
+            <a href="/tags/ICP/" rel="tag"># ICP</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/06/MySQL5.7-Online-DDL/" rel="next" title="MySQL5.7自生Online DDL详解">
+                <i class="fa fa-chevron-left"></i> MySQL5.7自生Online DDL详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/18/MHA-Environment-building/" rel="prev" title="MHA环境搭建">
+                MHA环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#问题分析"><span class="nav-number">1.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#那么，ICP是什么？"><span class="nav-number">2.</span> <span class="nav-text">那么，ICP是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#问题原因"><span class="nav-number">3.</span> <span class="nav-text">问题原因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ICP的关闭与开启"><span class="nav-number">4.</span> <span class="nav-text">ICP的关闭与开启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#处理结果"><span class="nav-number">5.</span> <span class="nav-text">处理结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  Zaki
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+  
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>

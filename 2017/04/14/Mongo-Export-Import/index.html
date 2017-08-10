@@ -1,0 +1,906 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Mongo," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="HI，I‘m Zaki，一名努力向高级DBA奋斗的童鞋。
+今天，繁忙的处理了问题之后，老板拍了一下我的背，说：“一会有个人来找你查一下mongo的数据，你支持一下”。我心里一想，以前只做过mongo的数据导出、mongo主从搭建之类环境的处理，mongo里面查询数据还从来都没有玩过，都是基础应该看看就会了，一口答应到：“好！”。
+需求 从下面两个条件中捞出去重的client_ip
+
+send_st">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mongdb数据查询并导出">
+<meta property="og:url" content="http://yoursite.com/2017/04/14/Mongo-Export-Import/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="HI，I‘m Zaki，一名努力向高级DBA奋斗的童鞋。
+今天，繁忙的处理了问题之后，老板拍了一下我的背，说：“一会有个人来找你查一下mongo的数据，你支持一下”。我心里一想，以前只做过mongo的数据导出、mongo主从搭建之类环境的处理，mongo里面查询数据还从来都没有玩过，都是基础应该看看就会了，一口答应到：“好！”。
+需求 从下面两个条件中捞出去重的client_ip
+
+send_st">
+<meta property="og:image" content="http://7xtez3.com1.z0.glb.clouddn.com/Mongo-Export-Import-1.png">
+<meta property="og:image" content="http://7xtez3.com1.z0.glb.clouddn.com/Mongo-Export-Import-2.png">
+<meta property="og:updated_time" content="2017-08-09T07:35:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mongdb数据查询并导出">
+<meta name="twitter:description" content="HI，I‘m Zaki，一名努力向高级DBA奋斗的童鞋。
+今天，繁忙的处理了问题之后，老板拍了一下我的背，说：“一会有个人来找你查一下mongo的数据，你支持一下”。我心里一想，以前只做过mongo的数据导出、mongo主从搭建之类环境的处理，mongo里面查询数据还从来都没有玩过，都是基础应该看看就会了，一口答应到：“好！”。
+需求 从下面两个条件中捞出去重的client_ip
+
+send_st">
+<meta name="twitter:image" content="http://7xtez3.com1.z0.glb.clouddn.com/Mongo-Export-Import-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/14/Mongo-Export-Import/"/>
+
+
+
+
+
+  <title> Mongdb数据查询并导出 | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/14/Mongo-Export-Import/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Mongdb数据查询并导出
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-14T11:58:23+08:00">
+                2017-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/14/Mongo-Export-Import/" class="leancloud_visitors" data-flag-title="Mongdb数据查询并导出">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>HI，I‘m Zaki</code>，一名努力向高级DBA奋斗的童鞋。</p>
+<p>今天，繁忙的处理了问题之后，老板拍了一下我的背，说：“一会有个人来找你查一下<code>mongo</code>的数据，你支持一下”。我心里一想，以前只做过<code>mongo</code>的数据导出、<code>mongo</code>主从搭建之类环境的处理，<code>mongo</code>里面查询数据还从来都没有玩过，都是基础应该看看就会了，一口答应到：“好！”。</p>
+<h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p> 从下面两个条件中捞出去重的client_ip</p>
+<ul>
+<li>send_stamp 今天之内</li>
+<li>msg_way = 2</li>
+<li>结果集为client_ip </li>
+</ul>
+<h4 id="Mongo查询语法"><a href="#Mongo查询语法" class="headerlink" title="Mongo查询语法"></a>Mongo查询语法</h4><ul>
+<li>基本判断语法</li>
+</ul>
+<p><img src="http://7xtez3.com1.z0.glb.clouddn.com/Mongo-Export-Import-1.png" alt="Mongo-Export-Import-1.png"></p>
+<ul>
+<li>查询表全部字段</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.find()</div><div class="line"></div><div class="line">-- 相当于sql语法</div><div class="line">Select * from users</div></pre></td></tr></table></figure>
+<ul>
+<li>查询表部分字段</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.find(&#123;&#125;,&#123;a:1, b:1&#125;)</div><div class="line"></div><div class="line">-- 相当于sql语法</div><div class="line">Select a, b from users</div></pre></td></tr></table></figure>
+<ul>
+<li>条件查询</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.find(&#123;age:18&#125;)</div><div class="line"></div><div class="line">-- 相当于sql语法</div><div class="line">Select * from users where age=18</div></pre></td></tr></table></figure>
+<ul>
+<li>AND 条件的使用</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.find(&#123;a:1,b:'q'&#125;)</div><div class="line"></div><div class="line">-- 相当于sql语法</div><div class="line">select * from users where a=1 and b='q'</div></pre></td></tr></table></figure>
+<ul>
+<li>OR 条件的使用</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.find( &#123;$or : [&#123;a : 1&#125;,&#123;b : 2&#125;]&#125; )</div><div class="line"></div><div class="line">-- 相当于sql语法</div><div class="line">select * from users where a=1 or b=2</div></pre></td></tr></table></figure>
+<ul>
+<li>AND 和 OR 联合使用</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.find(&#123;a:1,$or: [&#123;b : 1&#125;,&#123;c : 2&#125;]&#125;)</div><div class="line"></div><div class="line">-- 相当于sql语法</div><div class="line">select * from users where a=1 and b=1 or c=2</div></pre></td></tr></table></figure>
+<ul>
+<li>Limit使用</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.users.findOne()</div><div class="line"></div><div class="line"><span class="comment">-- 相当于sql语法</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">limit</span> <span class="number">1</span></div></pre></td></tr></table></figure>
+<ul>
+<li>模糊匹配</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">db.users.find(&#123;name:/Joe/&#125;)</div><div class="line">-- 相当于sql语法</div><div class="line">select * from users where name like "%Joe%"</div><div class="line"></div><div class="line">db.users.find(&#123;name:/^Joe/&#125;)</div><div class="line">-- 相当于sql语法</div><div class="line">select * from users where name like "Joe%"</div></pre></td></tr></table></figure>
+<h4 id="需求完成"><a href="#需求完成" class="headerlink" title="需求完成"></a>需求完成</h4><p>学习了上面的基本语法之后，piapiapia的就写出了<code>Mongo</code>的查询语句。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.message_send.find(&#123;"send_stamp":&#123;$lt:NumberLong(1478768765000),$gt:NumberLong(1478620800000)&#125;,"msg_way":2&#125;,&#123;client_ip:1&#125;)</div></pre></td></tr></table></figure>
+<p>查询出来一看果然完成了需求，心里一阵窃喜，但是如何才能将所有的文件导出呢？</p>
+<h4 id="查询数据导出"><a href="#查询数据导出" class="headerlink" title="查询数据导出"></a>查询数据导出</h4><p>使用一个<code>Mongo</code>自带的导出工具<code>mongoexport</code>来将查询的数据导出为csv文件，具体语法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongoexport --authenticationDatabase admin -usa -p -d zhubajie_ums_merchant -c message_send -f client_ip -o clientip.csv -q &quot;&#123;send_stamp:&#123;\$lt:1478768765000,\$gt:1478620800000&#125;,msg_way:2&#125;,&#123;client_ip:1&#125;&quot;</div></pre></td></tr></table></figure>
+<p>最开始导出的时候出现了问题，问题如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">assertion: 16619 code FailedToParse: FailedToParse: First character in field must be [A-Za-z$_]: offset:8</div></pre></td></tr></table></figure>
+<p>通过<code>google</code>之后发现，原来是使用<code>$</code>号的时候需要使用<code>\</code>来进行转义，而且不能使用<code>NumberLong</code>函数，修改之后成功导出数据文件。</p>
+<p><strong>(关键点：将查询的双引号换成单引号，关键字符使用<code>\</code>来进行转义)</strong></p>
+<h4 id="数据文件整理"><a href="#数据文件整理" class="headerlink" title="数据文件整理"></a>数据文件整理</h4><p>给到业务为去从后的<code>client_ip</code>，而现在文件里面是所有的ip，没有去重，我们还需要对数据文件进行处理。</p>
+<p>先将文本处理成纯<code>ip</code>，然后通过使用<code>sort</code>进行排序，使用<code>uniq</code>进行统计，具体语法如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat clientip.csv | sort | uniq -c | sort -t&apos; &apos; -nk 1 &gt; Client_ip.txt</div></pre></td></tr></table></figure>
+<p>​    <img src="http://7xtez3.com1.z0.glb.clouddn.com/Mongo-Export-Import-2.png" alt="Mongo-Export-Import-2.png"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mongo/" rel="tag"># Mongo</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/27/Binlog-Parameter-analysis/" rel="next" title="binlog_row_image参数解析">
+                <i class="fa fa-chevron-left"></i> binlog_row_image参数解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/18/DISABLE:ENABLE-KEYS-effect/" rel="prev" title="DISABLE/ENABLE KEYS的作用">
+                DISABLE/ENABLE KEYS的作用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mongo查询语法"><span class="nav-number">2.</span> <span class="nav-text">Mongo查询语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#需求完成"><span class="nav-number">3.</span> <span class="nav-text">需求完成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询数据导出"><span class="nav-number">4.</span> <span class="nav-text">查询数据导出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据文件整理"><span class="nav-number">5.</span> <span class="nav-text">数据文件整理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  Zaki
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+  
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>

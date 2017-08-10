@@ -280,7 +280,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/22/nc-command-use/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/07/MySQL DBA面试经验总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -302,8 +302,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/03/22/nc-command-use/" itemprop="url">
-                  nc命令的基本使用
+                <a class="post-title-link" href="/2017/08/07/MySQL DBA面试经验总结/" itemprop="url">
+                  MySQL DBA面试经验总结(转载)
                 </a>
               
             
@@ -319,8 +319,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-22T11:38:05+08:00">
-                2017-03-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-07T11:11:05+08:00">
+                2017-08-07
               </time>
             
 
@@ -337,7 +337,7 @@
 
           
           
-             <span id="/2017/03/22/nc-command-use/" class="leancloud_visitors" data-flag-title="nc命令的基本使用">
+             <span id="/2017/08/07/MySQL DBA面试经验总结/" class="leancloud_visitors" data-flag-title="MySQL DBA面试经验总结(转载)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -368,11 +368,19 @@
       
         
           
-          作为运维人员，转移数据到其它服务器可能都已经是家常便饭的事儿了。但转移海量小文件时，传统的几种方式就显得心有余而力不足。日常用的工具在传输大量小文件时对I/O和网络资源利用不足，甚至每传一个文件都会花大量的时间来建立网络连接。比如，scp、rsync 等工具就很难满足这种需求。如果使用 nc + t
+          面试问得最多的一题
+
+MyISAM存储引擎和InnoDB存储引擎的区别
+如果遇到数据访问慢，你是怎么排查故障的？
+
+其他问题
+
+主从延迟一般可能是什么原因导致的，怎么解决？
+说说你对索引的理解。什么情
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/22/nc-command-use/#more" rel="contents">
+            <a class="btn" href="/2017/08/07/MySQL DBA面试经验总结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -418,7 +426,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/17/information-schema-use/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/04/让MySQL支持emoji表情符号/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -440,8 +448,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/03/17/information-schema-use/" itemprop="url">
-                  mysql系统表使用
+                <a class="post-title-link" href="/2017/08/04/让MySQL支持emoji表情符号/" itemprop="url">
+                  让MySQL支持emoji表情符号
                 </a>
               
             
@@ -457,8 +465,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-17T11:05:05+08:00">
-                2017-03-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-04T11:11:05+08:00">
+                2017-08-04
               </time>
             
 
@@ -475,7 +483,7 @@
 
           
           
-             <span id="/2017/03/17/information-schema-use/" class="leancloud_visitors" data-flag-title="mysql系统表使用">
+             <span id="/2017/08/04/让MySQL支持emoji表情符号/" class="leancloud_visitors" data-flag-title="让MySQL支持emoji表情符号">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -506,18 +514,12 @@
       
         
           
-          
-查看processlist
-
-1select * from information_schema.processlist where user in (&apos;serv_cent_rw&apos;);
-
-查看没有限制连接数的账号
-
-1select max_user_connections,us
+          Hi，I‘m Zaki，最近公司业务需要使用到emoji表情，但是目前的数据库字符集统一是utf8格式的字符集。那么MySQL怎么才能支持emoji表情呢？
+MySQL 需要支持 emoji表情符号版
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/17/information-schema-use/#more" rel="contents">
+            <a class="btn" href="/2017/08/04/让MySQL支持emoji表情符号/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -563,7 +565,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/07/Deadlock-Generation-Resolution/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/01/not in 和 exists的区别/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -585,8 +587,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/03/07/Deadlock-Generation-Resolution/" itemprop="url">
-                  死锁的产生与解决
+                <a class="post-title-link" href="/2017/08/01/not in 和 exists的区别/" itemprop="url">
+                  Not IN 和 Not Exists的区别
                 </a>
               
             
@@ -602,8 +604,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-07T17:01:05+08:00">
-                2017-03-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-01T11:11:05+08:00">
+                2017-08-01
               </time>
             
 
@@ -620,7 +622,7 @@
 
           
           
-             <span id="/2017/03/07/Deadlock-Generation-Resolution/" class="leancloud_visitors" data-flag-title="死锁的产生与解决">
+             <span id="/2017/08/01/not in 和 exists的区别/" class="leancloud_visitors" data-flag-title="Not IN 和 Not Exists的区别">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -651,12 +653,11 @@
       
         
           
-          ​    Hi，I&#39;m zaki，今天，一名开发找到了我们DBA，说程序里面产生了大量的死锁，想让我们帮助分析一下死锁的原因，也正好借此机会，对mysql的锁进行了学习。
-业务过程和开发聊了聊，业务流程主要是用户每次登陆之后，都会通过一个update语句来进行更新用户的登陆次数，但是涉及到的
+          Hi，I&#39;m Zaki，最近接到一个需求，使用SQL查询到表A中user_id不等于表B中user_id的数据，直接上来就使用了Not IN，发现效率巨慢，而且还特别消耗内存，后来使用了Not
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/03/07/Deadlock-Generation-Resolution/#more" rel="contents">
+            <a class="btn" href="/2017/08/01/not in 和 exists的区别/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -702,7 +703,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/06/How-to-build-file-system/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/02/ Mycat场景测试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -724,8 +725,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/06/How-to-build-file-system/" itemprop="url">
-                  如何快速搭建简易文件系统
+                <a class="post-title-link" href="/2017/07/02/ Mycat场景测试/" itemprop="url">
+                  Mycat场景测试
                 </a>
               
             
@@ -741,8 +742,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-06T16:11:05+08:00">
-                2017-02-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-02T11:11:05+08:00">
+                2017-07-02
               </time>
             
 
@@ -759,7 +760,7 @@
 
           
           
-             <span id="/2017/02/06/How-to-build-file-system/" class="leancloud_visitors" data-flag-title="如何快速搭建简易文件系统">
+             <span id="/2017/07/02/ Mycat场景测试/" class="leancloud_visitors" data-flag-title="Mycat场景测试">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -790,11 +791,11 @@
       
         
           
-          ​    Hi，I&#39;m zaki，春节过去了，2017年也终于来了，不知道大家春节玩得怎么样，反正我的春节每天在家吃吃喝喝打打牌，感觉像是一下子就到了老年人的生活一样，和往常过年也一样，没有什么大的惊喜，开年回来好好工作，好好计划一下，为自己的未来负责。之前把爱情看得很重的我，偶然发现其实越
+          Hi，I&#39;m Zaki,现网使用Mycat也有一段时间了，由于Mycat在新建数据源和新建账号后，进行reload @@config_all的时候，发现一直卡住，最后导致Mycat不可用，今天
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/02/06/How-to-build-file-system/#more" rel="contents">
+            <a class="btn" href="/2017/07/02/ Mycat场景测试/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -840,7 +841,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/30/ibd-file-too-big/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/28/MHA-Testing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -862,8 +863,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/30/ibd-file-too-big/" itemprop="url">
-                  ibd文件太大
+                <a class="post-title-link" href="/2017/06/28/MHA-Testing/" itemprop="url">
+                  MHA各种场景测试结果
                 </a>
               
             
@@ -879,8 +880,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-30T16:13:05+08:00">
-                2016-11-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T11:32:05+08:00">
+                2017-06-28
               </time>
             
 
@@ -897,7 +898,7 @@
 
           
           
-             <span id="/2016/11/30/ibd-file-too-big/" class="leancloud_visitors" data-flag-title="ibd文件太大">
+             <span id="/2017/06/28/MHA-Testing/" class="leancloud_visitors" data-flag-title="MHA各种场景测试结果">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -928,12 +929,15 @@
       
         
           
-          ​    Hi,I’m Zaki,最近发现数据库磁盘空间不足，那怎么做？加磁盘！最粗暴最傻的做法！BOSS直接一句，我们数据库的磁盘必须维持到明年的3月份才能再此进行采购。那没有办法，只有从数据上面来想办法了。
-​    很紧急的情况下，迁移了出来一个一个比较大但是主要是记录日志的表到其他的机器上去
+          Hi，I‘m Zaki，前面完成了MHA基础环境的搭建，为了通过MHA实现线上主库高可用，我决定对MHA进行各种场景的测试，让我们拭目以待吧。
+MHA自动切换
+主节点down掉，切换过程
+
+12345
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/11/30/ibd-file-too-big/#more" rel="contents">
+            <a class="btn" href="/2017/06/28/MHA-Testing/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -979,7 +983,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/04/Repair-Table/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/20/MHA-Parameter-details/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -1001,8 +1005,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/11/04/Repair-Table/" itemprop="url">
-                  Repair Table
+                <a class="post-title-link" href="/2017/06/20/MHA-Parameter-details/" itemprop="url">
+                  MHA 参数列表详解(转载)
                 </a>
               
             
@@ -1018,8 +1022,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-04T19:54:06+08:00">
-                2016-11-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-20T15:17:05+08:00">
+                2017-06-20
               </time>
             
 
@@ -1036,7 +1040,7 @@
 
           
           
-             <span id="/2016/11/04/Repair-Table/" class="leancloud_visitors" data-flag-title="Repair Table">
+             <span id="/2017/06/20/MHA-Parameter-details/" class="leancloud_visitors" data-flag-title="MHA 参数列表详解(转载)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1067,12 +1071,12 @@
       
         
           
-          I’m Zaki，好久都没有更新blog了，工作很多，每天忙来忙去，最后也没有什么产出。今天业务代码在查数据,发现出现了这样一个错误。
-1&apos;./zhubajie_cp.cp_remark&apos; is marked as crashed and last (automatic?) re
+          MHA 参数列表Local ：　指每一个配置块内部。　Local功能的参数需要放置在[server_xxx] 块下面
+App ：　参数作用于master/slave，　这些参数需要配置在[server
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/11/04/Repair-Table/#more" rel="contents">
+            <a class="btn" href="/2017/06/20/MHA-Parameter-details/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1118,7 +1122,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/29/MySQL5.7-Password-security/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/18/MHA-Environment-building/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -1140,8 +1144,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/29/MySQL5.7-Password-security/" itemprop="url">
-                  MySQL5.7密码安全策略
+                <a class="post-title-link" href="/2017/06/18/MHA-Environment-building/" itemprop="url">
+                  MHA环境搭建
                 </a>
               
             
@@ -1157,8 +1161,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-29T11:41:00+08:00">
-                2016-08-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-18T16:29:05+08:00">
+                2017-06-18
               </time>
             
 
@@ -1175,7 +1179,7 @@
 
           
           
-             <span id="/2016/08/29/MySQL5.7-Password-security/" class="leancloud_visitors" data-flag-title="MySQL5.7密码安全策略">
+             <span id="/2017/06/18/MHA-Environment-building/" class="leancloud_visitors" data-flag-title="MHA环境搭建">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1206,14 +1210,31 @@
       
         
           
-          MySQL5.7密码安全策略Hi，我是zaki，最近在玩MySQL5.7的时候，为它的密码安全策略操碎了心，下面我将简单记录一下我遇到的坑。
-初始化
-MySQL5.7使用mysql_install_db的时候会自己产生一个安全密码，会在用户根目录下创建一个.mysql_secret文件
-Mysql5
+          环境信息
+
+
+角色
+ip
+主机名
+
+
+
+
+MHA  Monitor
+172.26.4.214
+manager.mha
+
+
+Master
+172.26.4.211
+master.mha
+
+
+Candic
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/08/29/MySQL5.7-Password-security/#more" rel="contents">
+            <a class="btn" href="/2017/06/18/MHA-Environment-building/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1259,7 +1280,7 @@ Mysql5
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/26/Truncate-table/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/17/MySQL5.7-Zabbix-BUG/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -1281,8 +1302,8 @@ Mysql5
             
               
                 
-                <a class="post-title-link" href="/2016/05/26/Truncate-table/" itemprop="url">
-                  Truncate table命令的了解
+                <a class="post-title-link" href="/2017/06/17/MySQL5.7-Zabbix-BUG/" itemprop="url">
+                  Zabbix碰见mysql5.7怪现象(ICP优化器)
                 </a>
               
             
@@ -1298,8 +1319,8 @@ Mysql5
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-26T14:11:05+08:00">
-                2016-05-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-17T01:45:09+08:00">
+                2017-06-17
               </time>
             
 
@@ -1316,7 +1337,7 @@ Mysql5
 
           
           
-             <span id="/2016/05/26/Truncate-table/" class="leancloud_visitors" data-flag-title="Truncate table命令的了解">
+             <span id="/2017/06/17/MySQL5.7-Zabbix-BUG/" class="leancloud_visitors" data-flag-title="Zabbix碰见mysql5.7怪现象(ICP优化器)">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1347,15 +1368,12 @@ Mysql5
       
         
           
-          DELETE　・DML语言　・可以回退　・可以有条件的删除
-1DELETE FROM 表名 WHERE 条件
-TRUNCATE TABLE　・DDL语言　・无法回退　・默认所有的表内容都删除　・删除速度比delete快。
-1TRUNCATE TABLE 表名
-DROP TABLE　・DDL语言　・无
+          Hi，I,m Zaki，此刻已经凌晨1点45了，虽然明天已经约好了要早上8点起床去重邮玩耍，但是现在完全没有睡意，一个困扰我长时间的问题终于解决了，开心~
+由于现网换数据库的版本，将之前的mariad
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/26/Truncate-table/#more" rel="contents">
+            <a class="btn" href="/2017/06/17/MySQL5.7-Zabbix-BUG/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1401,7 +1419,7 @@ DROP TABLE　・DDL语言　・无
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/26/Create-table-as-select/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/06/MySQL5.7-Online-DDL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -1423,8 +1441,8 @@ DROP TABLE　・DDL语言　・无
             
               
                 
-                <a class="post-title-link" href="/2016/05/26/Create-table-as-select/" itemprop="url">
-                  Create table as select 方式无法创建主键
+                <a class="post-title-link" href="/2017/06/06/MySQL5.7-Online-DDL/" itemprop="url">
+                  MySQL5.7自生Online DDL详解
                 </a>
               
             
@@ -1440,8 +1458,8 @@ DROP TABLE　・DDL语言　・无
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-26T11:11:05+08:00">
-                2016-05-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-06T16:59:10+08:00">
+                2017-06-06
               </time>
             
 
@@ -1458,7 +1476,7 @@ DROP TABLE　・DDL语言　・无
 
           
           
-             <span id="/2016/05/26/Create-table-as-select/" class="leancloud_visitors" data-flag-title="Create table as select 方式无法创建主键">
+             <span id="/2017/06/06/MySQL5.7-Online-DDL/" class="leancloud_visitors" data-flag-title="MySQL5.7自生Online DDL详解">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1489,12 +1507,11 @@ DROP TABLE　・DDL语言　・无
       
         
           
-          　　Hi，I‘m Zaki，今天，在做数据变更，使用Create table as select的方式进行备份，最后还原回来的时候，发现整个表都没有了主键，然后进行了如下小实验来测试。
-建一个测试表12345678910111213141516CREATE TABLE `yq_ad` (  `ad_
+          Hi，I&#39;m Zaki，今天，接到一个需求，给一个150G的大表添加字段，该表已经达到了2亿多条数据，我们暂时不说这个表的问题，为了不让这个表添加字段而长时间影响到现网从库，导致从库延迟，我做
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/26/Create-table-as-select/#more" rel="contents">
+            <a class="btn" href="/2017/06/06/MySQL5.7-Online-DDL/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1540,7 +1557,7 @@ DROP TABLE　・DDL语言　・无
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/24/Eclipse-with-PyDev-Windows/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/20/Mongo3.4副本集搭建过程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -1562,8 +1579,8 @@ DROP TABLE　・DDL语言　・无
             
               
                 
-                <a class="post-title-link" href="/2016/05/24/Eclipse-with-PyDev-Windows/" itemprop="url">
-                  Eclipse和PyDev搭建完美Python 开发环境（Windows篇）
+                <a class="post-title-link" href="/2017/05/20/Mongo3.4副本集搭建过程/" itemprop="url">
+                  Mongo3.4副本集搭建过程
                 </a>
               
             
@@ -1579,8 +1596,8 @@ DROP TABLE　・DDL语言　・无
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-24T15:43:00+08:00">
-                2016-05-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-20T11:11:05+08:00">
+                2017-05-20
               </time>
             
 
@@ -1597,7 +1614,7 @@ DROP TABLE　・DDL语言　・无
 
           
           
-             <span id="/2016/05/24/Eclipse-with-PyDev-Windows/" class="leancloud_visitors" data-flag-title="Eclipse和PyDev搭建完美Python 开发环境（Windows篇）">
+             <span id="/2017/05/20/Mongo3.4副本集搭建过程/" class="leancloud_visitors" data-flag-title="Mongo3.4副本集搭建过程">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1628,11 +1645,32 @@ DROP TABLE　・DDL语言　・无
       
         
           
-          Hi，I’m zaki，最近在进行Python的基础学习，在选择Python IDE工具的时候下了不少功夫，在使用过Vim、Emacs、PyCharm、Sublime Text这些工具后，决定使用一下Eclipse with PyDev试试手感，本文主要介绍Eclipse with PyDev在wi
+          环境情况mongo版本：mongo3.4
+
+
+
+ip
+端口
+作用
+
+
+
+
+172.26.4.195
+2801
+仲裁节点
+
+
+172.26.4.194
+28001
+集群节点
+
+
+172.26.4.193
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2016/05/24/Eclipse-with-PyDev-Windows/#more" rel="contents">
+            <a class="btn" href="/2017/05/20/Mongo3.4副本集搭建过程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1673,7 +1711,7 @@ DROP TABLE　・DDL语言　・无
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1718,7 +1756,7 @@ DROP TABLE　・DDL语言　・无
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1731,7 +1769,7 @@ DROP TABLE　・DDL语言　・无
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
