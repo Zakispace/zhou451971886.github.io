@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="Zaki">
 <meta property="og:description" content="​    Hi，I’m Zaki，最近由于现网的mongo2空间不释放问题折腾得头疼，决定将现网的mongo2都升级成mongo3，并在架构上面也做出一定的调整，从之前的主从模式调整为副本集模式，今天我想就mongo3的账号管理模块做一些记录。
 ​    mongo3和mongo2有很大的变化，就账号管理这一块就做出了很大的改变，在mongo2中，是use到对应库下，使用addUser进行账号创建">
-<meta property="og:updated_time" content="2017-08-09T09:46:52.000Z">
+<meta property="og:updated_time" content="2017-08-16T03:21:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mongo3.4账号管理">
 <meta name="twitter:description" content="​    Hi，I’m Zaki，最近由于现网的mongo2空间不释放问题折腾得头疼，决定将现网的mongo2都升级成mongo3，并在架构上面也做出一定的调整，从之前的主从模式调整为副本集模式，今天我想就mongo3的账号管理模块做一些记录。
@@ -382,7 +382,7 @@
 <ul>
 <li>创建root账号示例</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt; db.createUser(</div><div class="line">...   &#123;</div><div class="line">...     user: &quot;dba&quot;,</div><div class="line">...     pwd: &quot;dba&quot;,</div><div class="line">...     roles: [ &#123; role: &quot;root&quot;, db: &quot;admin&quot; &#125; ]</div><div class="line">...   &#125;</div><div class="line">... )</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">db.createUser(</div><div class="line">&#123;</div><div class="line">user: &quot;dba&quot;,</div><div class="line">pwd: &quot;dba&quot;,</div><div class="line">roles: [ &#123; role: &quot;root&quot;, db: &quot;admin&quot; &#125; ]</div><div class="line">&#125;</div><div class="line">)</div></pre></td></tr></table></figure>
 <h5 id="mongo3角色介绍"><a href="#mongo3角色介绍" class="headerlink" title="mongo3角色介绍"></a>mongo3角色介绍</h5><ul>
 <li>role里面可以填写的角色名称</li>
 </ul>
@@ -524,7 +524,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

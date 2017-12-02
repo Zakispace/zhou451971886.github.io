@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MySQL,SQL开发," />
+  <meta name="keywords" content="MySQL," />
 
 
 
@@ -87,22 +87,19 @@
 
 
 
-<meta name="description" content="Hi，I&amp;#39;m Zaki，最近接到一个需求，使用SQL查询到表A中user_id不等于表B中user_id的数据，直接上来就使用了Not IN，发现效率巨慢，而且还特别消耗内存，后来使用了Not Exists进行替换，效率提高几千倍，下面我们一起来分析一下。
-结果对比分析我们来看一下Not IN 和 Not Exists的区别，我们先来看两个explain的对比。
-1234567891011">
+<meta name="description" content="MySQL数据库数据预热方法时间：2017-11-24
+概述MySQL5.5后默认存储引擎都是innodb。一般生产数据库重启之后，都需要进行预热，加载数据到innodb_buffer_pool业务正常的对数据读取会加热数据，但这个过程很漫长且影响服务，那重启mysql之后我们该怎么人工预热呢？ 对于MyISAM表，表的统计信息都是现成的，无需人工预热。 但InnoDB的存储格式和MyISAM不一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Not IN 和 Not Exists的区别">
-<meta property="og:url" content="http://yoursite.com/2017/08/01/not in 和 exists的区别/index.html">
+<meta property="og:title" content="MySQL数据库数据预热方法">
+<meta property="og:url" content="http://yoursite.com/2017/11/24/MySQL数据库数据预热方法/index.html">
 <meta property="og:site_name" content="Zaki">
-<meta property="og:description" content="Hi，I&amp;#39;m Zaki，最近接到一个需求，使用SQL查询到表A中user_id不等于表B中user_id的数据，直接上来就使用了Not IN，发现效率巨慢，而且还特别消耗内存，后来使用了Not Exists进行替换，效率提高几千倍，下面我们一起来分析一下。
-结果对比分析我们来看一下Not IN 和 Not Exists的区别，我们先来看两个explain的对比。
-1234567891011">
-<meta property="og:updated_time" content="2017-08-09T10:11:19.000Z">
+<meta property="og:description" content="MySQL数据库数据预热方法时间：2017-11-24
+概述MySQL5.5后默认存储引擎都是innodb。一般生产数据库重启之后，都需要进行预热，加载数据到innodb_buffer_pool业务正常的对数据读取会加热数据，但这个过程很漫长且影响服务，那重启mysql之后我们该怎么人工预热呢？ 对于MyISAM表，表的统计信息都是现成的，无需人工预热。 但InnoDB的存储格式和MyISAM不一">
+<meta property="og:updated_time" content="2017-12-02T16:14:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Not IN 和 Not Exists的区别">
-<meta name="twitter:description" content="Hi，I&amp;#39;m Zaki，最近接到一个需求，使用SQL查询到表A中user_id不等于表B中user_id的数据，直接上来就使用了Not IN，发现效率巨慢，而且还特别消耗内存，后来使用了Not Exists进行替换，效率提高几千倍，下面我们一起来分析一下。
-结果对比分析我们来看一下Not IN 和 Not Exists的区别，我们先来看两个explain的对比。
-1234567891011">
+<meta name="twitter:title" content="MySQL数据库数据预热方法">
+<meta name="twitter:description" content="MySQL数据库数据预热方法时间：2017-11-24
+概述MySQL5.5后默认存储引擎都是innodb。一般生产数据库重启之后，都需要进行预热，加载数据到innodb_buffer_pool业务正常的对数据读取会加热数据，但这个过程很漫长且影响服务，那重启mysql之后我们该怎么人工预热呢？ 对于MyISAM表，表的统计信息都是现成的，无需人工预热。 但InnoDB的存储格式和MyISAM不一">
 
 
 
@@ -130,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/01/not in 和 exists的区别/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/24/MySQL数据库数据预热方法/"/>
 
 
 
 
 
-  <title> Not IN 和 Not Exists的区别 | Zaki </title>
+  <title> MySQL数据库数据预热方法 | Zaki </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -285,7 +282,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/01/not in 和 exists的区别/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/24/MySQL数据库数据预热方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zaki">
@@ -306,7 +303,7 @@
             
             
               
-                Not IN 和 Not Exists的区别
+                MySQL数据库数据预热方法
               
             
           </h1>
@@ -321,8 +318,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-01T11:11:05+08:00">
-                2017-08-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-24T11:11:05+08:00">
+                2017-11-24
               </time>
             
 
@@ -339,7 +336,7 @@
 
           
           
-             <span id="/2017/08/01/not in 和 exists的区别/" class="leancloud_visitors" data-flag-title="Not IN 和 Not Exists的区别">
+             <span id="/2017/11/24/MySQL数据库数据预热方法/" class="leancloud_visitors" data-flag-title="MySQL数据库数据预热方法">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -368,14 +365,40 @@
       
 
       
-        <p><code>Hi，I&#39;m Zaki</code>，最近接到一个需求，使用<code>SQL</code>查询到表A中<code>user_id</code>不等于表B中<code>user_id</code>的数据，直接上来就使用了<code>Not IN</code>，发现效率巨慢，而且还特别消耗内存，后来使用了<code>Not Exists</code>进行替换，效率提高几千倍，下面我们一起来分析一下。</p>
-<h4 id="结果对比分析"><a href="#结果对比分析" class="headerlink" title="结果对比分析"></a>结果对比分析</h4><p>我们来看一下<code>Not IN</code> 和 <code>Not Exists</code>的区别，我们先来看两个<code>explain</code>的对比。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">-- 使用not in</div><div class="line">mysql&gt; explain select count(mobile) from test.mb_info20170801 where user_id not in ( select  user_id from test.mk_task20170801);</div><div class="line">+----+-------------+-----------------+------------+-------+---------------+-------------+---------+------+---------+----------+-------------+</div><div class="line">| id | select_type | table           | partitions | type  | possible_keys | key         | key_len | ref  | rows    | filtered | Extra       |</div><div class="line">+----+-------------+-----------------+------------+-------+---------------+-------------+---------+------+---------+----------+-------------+</div><div class="line">|  1 | PRIMARY     | mb_info20170801 | NULL       | ALL   | NULL          | NULL        | NULL    | NULL | 3401055 |   100.00 | Using where |</div><div class="line">|  2 | SUBQUERY    | mk_task20170801 | NULL       | index | idx_user_id   | idx_user_id | 4       | NULL | 4135014 |   100.00 | Using index |</div><div class="line">+----+-------------+-----------------+------------+-------+---------------+-------------+---------+------+---------+----------+-------------+</div><div class="line">2 rows in set, 1 warning (0.00 sec)</div><div class="line"></div><div class="line">-- 使用not exists</div><div class="line">mysql&gt; explain select count(mobile) from test.mb_info20170801 a where not exists (select user_id from test.mk_task20170801 b where a.user_id = b.user_id);</div><div class="line">+----+--------------------+-------+------------+------+---------------+-------------+---------+----------------+---------+----------+-------------+</div><div class="line">| id | select_type        | table | partitions | type | possible_keys | key         | key_len | ref            | rows    | filtered | Extra       |</div><div class="line">+----+--------------------+-------+------------+------+---------------+-------------+---------+----------------+---------+----------+-------------+</div><div class="line">|  1 | PRIMARY            | a     | NULL       | ALL  | NULL          | NULL        | NULL    | NULL           | 3401055 |   100.00 | Using where |</div><div class="line">|  2 | DEPENDENT SUBQUERY | b     | NULL       | ref  | idx_user_id   | idx_user_id | 4       | test.a.user_id |       1 |   100.00 | Using index |</div><div class="line">+----+--------------------+-------+------------+------+---------------+-------------+---------+----------------+---------+----------+-------------+</div><div class="line">2 rows in set, 2 warnings (0.00 sec)</div></pre></td></tr></table></figure>
-<p>可以清楚的看到执行计划，使用not in没有用到索引，而使用not exists的时候，子查询使用到了idx_user_id的索引。当然整体性能就不是差一点两点的了。</p>
-<h4 id="IN-和-Exists"><a href="#IN-和-Exists" class="headerlink" title="IN 和 Exists"></a>IN 和 Exists</h4><p><code>IN</code>是把外表和内表作<code>hash</code>连接，而<code>Exists</code>是对外表作<code>loop</code>循环，每次<code>loop</code>循环再对内表进行查询，一直以来认为<code>Exists</code>比<code>In</code>效率高的说法是不准确的。<br>如果查询的两个表大小相当，那么用IN和Exists差别不大；如果两个表中一个较小一个较大，则子查询表大的用Exists，子查询表小的用IN.</p>
-<h4 id="Not-IN-和-Not-Exists"><a href="#Not-IN-和-Not-Exists" class="headerlink" title="Not IN 和 Not Exists"></a>Not IN 和 Not Exists</h4><p><code>Not IN</code> 和<code>Not Exists</code>如果查询语句使用了<code>Not IN</code> 那么内外表都进行全表扫描，没有用到索引；而<code>Not Extsts</code> 的子查询依然能用到表上的索引。</p>
-<p><strong>结论：所以无论那个表大，用Not Exists都比Not In要快</strong>。</p>
-<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><p><a href="http://www.cnblogs.com/rainwang/p/4389282.html" target="_blank" rel="external">Mysql中 in or exists not exists not in区别 </a></p>
+        <h1 id="MySQL数据库数据预热方法"><a href="#MySQL数据库数据预热方法" class="headerlink" title="MySQL数据库数据预热方法"></a>MySQL数据库数据预热方法</h1><p>时间：2017-11-24</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>MySQL5.5后默认存储引擎都是innodb。一般生产数据库重启之后，都需要进行预热，加载数据到innodb_buffer_pool业务正常的对数据读取会加热数据，但这个过程很漫长且影响服务，那重启mysql之后我们该怎么人工预热呢？ 对于MyISAM表，表的统计信息都是现成的，无需人工预热。 但InnoDB的存储格式和MyISAM不一样, innodb会在mysql启动后的第一次访问表的时候,统计表的索引基数等相关信息,如果表很多的话,这是一个巨大的开销。所以在正式提供服务之前,就把表打开,放入到innodb buffer pool中。 默认情况，只有某条数据被读取一次，才会缓存在innodb_buffer_pool。所以，数据库刚刚启动，需要进行数据预热，将磁盘上所有数据缓存到内存中，数据预热可以提高读取神速。</p>
+<h3 id="实际操作"><a href="#实际操作" class="headerlink" title="实际操作"></a>实际操作</h3><p>对于Innodb 数据库，可以通过系统表信息，进行数据预热:</p>
+<ul>
+<li>将以下脚本保存为 <code>MakeSelectQueriesToLoad.sql</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">SELECT DISTINCT</div><div class="line">    CONCAT(&apos;SELECT &apos;,ndxcollist,&apos; FROM &apos;,db,&apos;.&apos;,tb,</div><div class="line">    &apos; ORDER BY &apos;,ndxcollist,&apos;;&apos;) SelectQueryToLoadCache</div><div class="line">    FROM</div><div class="line">    (</div><div class="line">        SELECT</div><div class="line">            engine,table_schema db,table_name tb,</div><div class="line">            index_name,GROUP_CONCAT(column_name ORDER BY seq_in_index) ndxcollist</div><div class="line">        FROM</div><div class="line">        (</div><div class="line">            SELECT</div><div class="line">                B.engine,A.table_schema,A.table_name,</div><div class="line">                A.index_name,A.column_name,A.seq_in_index</div><div class="line">            FROM</div><div class="line">                information_schema.statistics A INNER JOIN</div><div class="line">                (</div><div class="line">                    SELECT engine,table_schema,table_name</div><div class="line">                    FROM information_schema.tables WHERE</div><div class="line">                    engine=&apos;InnoDB&apos;</div><div class="line">                ) B USING (table_schema,table_name)</div><div class="line">            WHERE B.table_schema NOT IN (&apos;information_schema&apos;,&apos;mysql&apos;)</div><div class="line">            ORDER BY table_schema,table_name,index_name,seq_in_index</div><div class="line">        ) A</div><div class="line">        GROUP BY table_schema,table_name,index_name</div><div class="line">    ) AA</div><div class="line">ORDER BY db,tb</div><div class="line">;</div></pre></td></tr></table></figure>
+<ul>
+<li>执行<code>MakeSelectQueriesToLoad.sql</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -AN &lt; /root/MakeSelectQueriesToLoad.sql &gt; /root/SelectQueriesToLoad.sql</div></pre></td></tr></table></figure>
+<ul>
+<li>每次重启数据库，切换库之前，或者整库备份前需要预热的时候执行：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot &lt; /root/SelectQueriesToLoad.sql &gt; /dev/null 2&gt;&amp;1</div></pre></td></tr></table></figure>
+<h3 id="具体分析"><a href="#具体分析" class="headerlink" title="具体分析"></a>具体分析</h3><ul>
+<li>加载主键索引</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select count(*) from tbl where no_index_col=0;</div></pre></td></tr></table></figure>
+<ul>
+<li>加载非主键索引</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select count(*) from tbl where index_col like “%0%”;</div></pre></td></tr></table></figure>
+<ul>
+<li>加载BLOB/TEXT列</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select count(*) from tbl where blob_col like “%0%”；</div></pre></td></tr></table></figure>
+<ul>
+<li>分段加载大表数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select count(*) from tbl where id between 1 and 10000000 and no_index_col=0;</div></pre></td></tr></table></figure>
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><p><a href="https://linux.cn/article-5891-1.html" target="_blank" rel="external">MYSQL 调优和使用必读</a></p>
+<p><a href="https://github.com/tonyzhimin/DB_tips/wiki/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%B0%E6%8D%AE%E9%A2%84%E7%83%AD%E6%96%B9%E6%B3%95" target="_blank" rel="external">MySQL数据库数据预热方法</a></p>
+<p><a href="https://yq.aliyun.com/articles/49347" target="_blank" rel="external">innodb buffer pool相关特性</a></p>
 
       
     </div>
@@ -407,8 +430,6 @@
           
             <a href="/tags/MySQL/" rel="tag"># MySQL</a>
           
-            <a href="/tags/SQL开发/" rel="tag"># SQL开发</a>
-          
         </div>
       
 
@@ -420,8 +441,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/02/ Mycat场景测试/" rel="next" title="Mycat场景测试">
-                <i class="fa fa-chevron-left"></i> Mycat场景测试
+              <a href="/2017/08/07/MySQL DBA面试经验总结/" rel="next" title="MySQL DBA面试经验总结(转载)">
+                <i class="fa fa-chevron-left"></i> MySQL DBA面试经验总结(转载)
               </a>
             
           </div>
@@ -429,10 +450,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/04/让MySQL支持emoji表情符号/" rel="prev" title="让MySQL支持emoji表情符号">
-                让MySQL支持emoji表情符号 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -563,7 +580,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#结果对比分析"><span class="nav-number">1.</span> <span class="nav-text">结果对比分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IN-和-Exists"><span class="nav-number">2.</span> <span class="nav-text">IN 和 Exists</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Not-IN-和-Not-Exists"><span class="nav-number">3.</span> <span class="nav-text">Not IN 和 Not Exists</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL数据库数据预热方法"><span class="nav-number">1.</span> <span class="nav-text">MySQL数据库数据预热方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.0.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实际操作"><span class="nav-number">1.0.2.</span> <span class="nav-text">实际操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体分析"><span class="nav-number">1.0.3.</span> <span class="nav-text">具体分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章"><span class="nav-number">1.0.4.</span> <span class="nav-text">参考文章</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
