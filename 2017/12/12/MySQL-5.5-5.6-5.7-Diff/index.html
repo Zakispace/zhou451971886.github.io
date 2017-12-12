@@ -1,0 +1,879 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="MySQL 5.5/5.6/5.7出现的新特性概述MySQL5.7也已经发行了两年多，一直保持稳定，随着公司业务量逐渐增大，选择升级MySQL版本肯定是能对性能上带来提高，公司决定将MySQL5.5升级到MySQL5.7。本文章就MySQL5.5/5.6/5.7 3个版本出现的重要新特性和一些变化进行总结。本文主要是说明了一下大的变化，具体细节上面的变化，还需要变实践边记录。如果大家发现有哪些不一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zaki">
+<meta property="og:url" content="http://yoursite.com/2017/12/12/MySQL-5.5-5.6-5.7-Diff/index.html">
+<meta property="og:site_name" content="Zaki">
+<meta property="og:description" content="MySQL 5.5/5.6/5.7出现的新特性概述MySQL5.7也已经发行了两年多，一直保持稳定，随着公司业务量逐渐增大，选择升级MySQL版本肯定是能对性能上带来提高，公司决定将MySQL5.5升级到MySQL5.7。本文章就MySQL5.5/5.6/5.7 3个版本出现的重要新特性和一些变化进行总结。本文主要是说明了一下大的变化，具体细节上面的变化，还需要变实践边记录。如果大家发现有哪些不一">
+<meta property="og:updated_time" content="2017-12-12T08:07:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zaki">
+<meta name="twitter:description" content="MySQL 5.5/5.6/5.7出现的新特性概述MySQL5.7也已经发行了两年多，一直保持稳定，随着公司业务量逐渐增大，选择升级MySQL版本肯定是能对性能上带来提高，公司决定将MySQL5.5升级到MySQL5.7。本文章就MySQL5.5/5.6/5.7 3个版本出现的重要新特性和一些变化进行总结。本文主要是说明了一下大的变化，具体细节上面的变化，还需要变实践边记录。如果大家发现有哪些不一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/12/MySQL-5.5-5.6-5.7-Diff/"/>
+
+
+
+
+
+  <title>  | Zaki </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zaki</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-something">
+          <a href="/404.htm" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            美食与你
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/12/MySQL-5.5-5.6-5.7-Diff/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zaki">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zaki">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T16:07:44+08:00">
+                2017-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/12/12/MySQL-5.5-5.6-5.7-Diff/" class="leancloud_visitors" data-flag-title="">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="MySQL-5-5-5-6-5-7出现的新特性"><a href="#MySQL-5-5-5-6-5-7出现的新特性" class="headerlink" title="MySQL 5.5/5.6/5.7出现的新特性"></a>MySQL 5.5/5.6/5.7出现的新特性</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>MySQL5.7也已经发行了两年多，一直保持稳定，随着公司业务量逐渐增大，选择升级MySQL版本肯定是能对性能上带来提高，公司决定将MySQL5.5升级到MySQL5.7。本文章就MySQL5.5/5.6/5.7 3个版本出现的重要新特性和一些变化进行总结。<strong>本文主要是说明了一下大的变化，具体细节上面的变化，还需要变实践边记录。如果大家发现有哪些不一样的，可以补充上去。</strong></p>
+<h3 id="版本选择"><a href="#版本选择" class="headerlink" title="版本选择"></a>版本选择</h3><p>对于这些MySQL版本，如果想要了解之间的差异，一个可行的办法是阅读GA版本的Release Notes。</p>
+<p>MySQL的近几个版本发行时间间隔并不太大：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">版本</th>
+<th style="text-align:center">GA版发布时间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">5.5.20</td>
+<td style="text-align:center">2012-01-10</td>
+</tr>
+<tr>
+<td style="text-align:center">5.6.10</td>
+<td style="text-align:center">2013-02-05</td>
+</tr>
+<tr>
+<td style="text-align:center">5.7.17</td>
+<td style="text-align:center">2016-12-12</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Tips：为什么要选择5.7.17版本，是因为从MySQL 5.7.17版本开始，引入了新特性 MySQL Group Replication</p>
+</blockquote>
+<h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><h4 id="MySQL-5-5"><a href="#MySQL-5-5" class="headerlink" title="MySQL 5.5"></a>MySQL 5.5</h4><p>MySQL 5.5主推InnoDB引擎</p>
+<h5 id="1）InnoDB-作为默认存储引擎"><a href="#1）InnoDB-作为默认存储引擎" class="headerlink" title="1）InnoDB 作为默认存储引擎"></a>1）InnoDB 作为默认存储引擎</h5><p>InnoDB 因为支持事务、行级别锁而广为人知，并广泛应用。但是在之前的版本中，InnoDB并不是默认的存储引擎。在5.5中，InnoDB成为了默认的存储引擎。</p>
+<h5 id="2）半同步复制"><a href="#2）半同步复制" class="headerlink" title="2）半同步复制"></a>2）半同步复制</h5><p>半同步（<a href="https://dev.mysql.com/doc/refman/5.5/en/replication-semisync.html" target="_blank" rel="external">Semisynchronous Replication</a>复制最早是在MySQL5.5中以插件的形式实现的，相对于异步复制，半同步复制在一程度上提高了数据的安全性，当然也会带来写入上的性能损耗。</p>
+<h4 id="MySQL-5-6"><a href="#MySQL-5-6" class="headerlink" title="MySQL 5.6"></a>MySQL 5.6</h4><p>MySQL 5.6 的主要变化在性能优化方面。有一些小的新特性也值得关注。</p>
+<h5 id="1）表中可以设置多个Timestamp属性"><a href="#1）表中可以设置多个Timestamp属性" class="headerlink" title="1）表中可以设置多个Timestamp属性"></a>1）表中可以设置多个Timestamp属性</h5><p>MySQL 5.5 中，如果设定多个Timestamp的属性为 <code>ON UPDATE CURRENT_TIMESTAMP</code> 时，这样的操作是不能完成的，这样的需求，通常要在业务代码中完成。而到了 MySQL 5.6 中，这样的操作可以直接通过设定字段的属性即可完成。</p>
+<h5 id="2）InnoDB-支持全文索引"><a href="#2）InnoDB-支持全文索引" class="headerlink" title="2）InnoDB 支持全文索引"></a>2）InnoDB 支持全文索引</h5><p>详细可以参考文章：<a href="http://mysql.taobao.org/monthly/2015/10/01/" target="_blank" rel="external">InnoDB 全文索引简介</a></p>
+<h5 id="3）基于database多线程复制"><a href="#3）基于database多线程复制" class="headerlink" title="3）基于database多线程复制"></a>3）基于database多线程复制</h5><p>在MySQL 5.6中，会针对每一个数据库开启一个独立的复制线程，如果数据库压力平均的话，对于主从同步延迟会有一定的改善。但是如果数据操作都在一个数据库上，就不会有太多显著的效果了。</p>
+<h5 id="4）加入全局事务ID（GTID）"><a href="#4）加入全局事务ID（GTID）" class="headerlink" title="4）加入全局事务ID（GTID）"></a>4）加入全局事务ID（GTID）</h5><p>MySQL现在支持使用全局事务标识符（也称为 “ GTIDs ”）的基于事务的复制。有关在MySQL复制中实现和使用GTID的更完整信息，请参见<a href="https://dev.mysql.com/doc/refman/5.6/en/replication-gtids.html" target="_blank" rel="external">使用全局事务标识符进行复制</a></p>
+<h4 id="MySQL-5-7"><a href="#MySQL-5-7" class="headerlink" title="MySQL 5.7"></a>MySQL 5.7</h4><h5 id="1）安全性增强"><a href="#1）安全性增强" class="headerlink" title="1）安全性增强"></a>1）安全性增强</h5><ul>
+<li>用户表 mysql.user 的 plugin字段不允许为空， 默认值是 mysql_native_password，而不是 mysql_old_password，不再支持旧密码格式</li>
+<li>增加密码过期机制，过期后需要修改密码，否则会被禁用</li>
+<li>使用<code>mysqld --initialize</code>替代<code>mysql_install_db</code>脚本来完成实例初始化，默认会自动生成随机密码并写入到mysql启动错误文件中，初始化完成之后，还需要使用MySQL 5.7版本的客户端登录，并且修改默认密码，初始化不再创建除 root@localhost 外的其他账号，也不创建 test 库。当然你可以使用<code>mysqld --initialize --initial-insecure</code>完成实例的初始化，这样可以实现空密码登陆，详细查看文档<a href="Installing/MySQL-5.7-Install.md">MySQL 5.7 安装以及初始化</a></li>
+</ul>
+<h5 id="2）innodb-buffer-pool-size参数动态修改"><a href="#2）innodb-buffer-pool-size参数动态修改" class="headerlink" title="2）innodb_buffer_pool_size参数动态修改"></a>2）innodb_buffer_pool_size参数动态修改</h5><p>可以<strong>在线修改buffer pool</strong>对DBA来说实在太方便了，实例运行过程中可以动态调整，避免事先分配不合理的情况，不过 <a href="http://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_buffer_pool_instances" target="_blank" rel="external">innodb_buffer_pool_instances</a> 不能修改，而且在 innodb_buffer_pool_instances 大于 1 时，也不能将 buffer pool 调整到 1GB 以内，需要稍加注意。如果强行这样配置，启动mysql的时候会只初始化一个innodb_buffer_pool_instance，日志中可以看到信息<code>Adjusting innodb_buffer_pool_instances from 2 to 1 since innodb_buffer_pool_size is less than 1024 MiB</code>，不影响mysql正常启动。</p>
+<h5 id="3）多源复制"><a href="#3）多源复制" class="headerlink" title="3）多源复制"></a>3）多源复制</h5><p>即将多个主库的数据归并到一个从库的实例上。之前的MySQL，每个从库都只能拥有一个主库，如今MySQL提供了官方的解决方案，用于将多个主库的数据同步到一个从库之上。多源复制有一个关键概念，即频道（channel）。频道指代一个主从库之间用于同步binlog的连接，通过新增的<code>FOR CHANNEL</code>子句，指定一个非空的频道名称，按照先前版本的连接主库的方法，即可实现多源复制功能。<strong>需要注意的是，当多个主库均写入同一张表时，会存在主键和唯一索引冲突的风险，需要提前做好规划。</strong></p>
+<h5 id="4）JSON数据类型操作"><a href="#4）JSON数据类型操作" class="headerlink" title="4）JSON数据类型操作"></a>4）JSON数据类型操作</h5><p>对Json数据类型的支持，是一个很好的新特性，怎么去使用还有待探索。详细请参阅 <a href="https://dev.mysql.com/doc/refman/5.7/en/json.html#json-comparison" target="_blank" rel="external">JSON值的比较和排序</a></p>
+<h5 id="5）增强的多线程复制"><a href="#5）增强的多线程复制" class="headerlink" title="5）增强的多线程复制"></a>5）增强的多线程复制</h5><p>MySQL 5.7 MTS支持两种模式，一种是和5.6一样，另一种则是基于binlog group commit实现的多线程复制，也就是MASTER上同时提交的binlog在SLAVE端也可以同时被apply，实现并行复制。详细文章参考<a href="./MultiThreaded_Slave/Mysql5.7_MTS.md">MySQL 5.7 多线程复制</a></p>
+<h5 id="6）InnoDB"><a href="#6）InnoDB" class="headerlink" title="6）InnoDB"></a>6）InnoDB</h5><p>InnoDB地位进一步增强，这一次系统表已然变成了基于InnoDB存储引擎的表。并且也不能禁用InnoDB存储引擎了。就我的理解，在MySQL5.7中，innodb已经完全取代MyISAM引擎了。</p>
+<h5 id="7）MySQL-Group-Replication"><a href="#7）MySQL-Group-Replication" class="headerlink" title="7）MySQL Group Replication"></a>7）MySQL Group Replication</h5><p>全新的功能，能够减少大量运维成本，不过肯定也有不少坑，如果需要使用，还需要大量调研和测试。</p>
+<p>参考文档：<a href="http://blog.51cto.com/wangwei007/1893703" target="_blank" rel="external">MySQL Group Replication调研剖析</a>、<a href="http://dev.mysql.com/doc/refman/5.7/en/group-replication.html" target="_blank" rel="external">MySQL Group Replication</a></p>
+<h5 id="8）SQL-Mode变化"><a href="#8）SQL-Mode变化" class="headerlink" title="8）SQL Mode变化"></a>8）SQL Mode变化</h5><p>参数sql_mode默认值发生改变，MySQL5.5为空，MySQL5.7默认开启<code>ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</code>，详细查看文档<a href="https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sql-mode-changes" target="_blank" rel="external">sql-mode-change</a></p>
+<p>总之，开启严格模式会变得越来越严格，也会让SQL越来越规范，如果在可以的情况下，可以选择开启，避免一些奇葩的写法。当然局限性也很大。</p>
+<h5 id="9）支持修改索引名-非主键"><a href="#9）支持修改索引名-非主键" class="headerlink" title="9）支持修改索引名(非主键)"></a>9）支持修改索引名(非主键)</h5><p>直接用 <code>ALTER TABLE RENAME INDEX</code> 语法即可。</p>
+<h5 id="10）增加了sys-schema"><a href="#10）增加了sys-schema" class="headerlink" title="10）增加了sys schema"></a>10）增加了sys schema</h5><p>sys schema是MySQL 5.7.7中引入的一个系统库，包含了一系列视图、函数和存储过程，引入sys schema以后，MySQL的易用性将会得到极大地提升，MySQL的用户分析问题和定位问题，将更多的依赖sys schema，减少外部工具的使用。具体如何使用sys schema，还有待探索。详细参考文档<a href="https://dev.mysql.com/doc/refman/5.7/en/sys-schema.html" target="_blank" rel="external"><em>MySQL sys schema</em></a></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://dev.mysql.com/doc/refman/5.5/en/mysql-nutshell.html" target="_blank" rel="external">What Is New in MySQL 5.5</a></p>
+<p><a href="https://dev.mysql.com/doc/refman/5.6/en/mysql-nutshell.html" target="_blank" rel="external">What Is New in MySQL 5.6</a></p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/mysql-nutshell.html" target="_blank" rel="external">What Is New in MySQL 5.7</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/24/MySQL数据库数据预热方法/" rel="next" title="MySQL数据库数据预热方法">
+                <i class="fa fa-chevron-left"></i> MySQL数据库数据预热方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xtez3.com1.z0.glb.clouddn.com/IMG_0450.JPG"
+               alt="Zaki" />
+          <p class="site-author-name" itemprop="name">Zaki</p>
+           
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-5-5-5-6-5-7出现的新特性"><span class="nav-number">1.</span> <span class="nav-text">MySQL 5.5/5.6/5.7出现的新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本选择"><span class="nav-number">1.2.</span> <span class="nav-text">版本选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新特性"><span class="nav-number">1.3.</span> <span class="nav-text">新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL-5-5"><span class="nav-number">1.3.1.</span> <span class="nav-text">MySQL 5.5</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）InnoDB-作为默认存储引擎"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">1）InnoDB 作为默认存储引擎</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）半同步复制"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">2）半同步复制</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL-5-6"><span class="nav-number">1.3.2.</span> <span class="nav-text">MySQL 5.6</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）表中可以设置多个Timestamp属性"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">1）表中可以设置多个Timestamp属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）InnoDB-支持全文索引"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">2）InnoDB 支持全文索引</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3）基于database多线程复制"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">3）基于database多线程复制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4）加入全局事务ID（GTID）"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">4）加入全局事务ID（GTID）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL-5-7"><span class="nav-number">1.3.3.</span> <span class="nav-text">MySQL 5.7</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1）安全性增强"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">1）安全性增强</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2）innodb-buffer-pool-size参数动态修改"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">2）innodb_buffer_pool_size参数动态修改</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3）多源复制"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">3）多源复制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4）JSON数据类型操作"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">4）JSON数据类型操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5）增强的多线程复制"><span class="nav-number">1.3.3.5.</span> <span class="nav-text">5）增强的多线程复制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6）InnoDB"><span class="nav-number">1.3.3.6.</span> <span class="nav-text">6）InnoDB</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7）MySQL-Group-Replication"><span class="nav-number">1.3.3.7.</span> <span class="nav-text">7）MySQL Group Replication</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8）SQL-Mode变化"><span class="nav-number">1.3.3.8.</span> <span class="nav-text">8）SQL Mode变化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9）支持修改索引名-非主键"><span class="nav-number">1.3.3.9.</span> <span class="nav-text">9）支持修改索引名(非主键)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10）增加了sys-schema"><span class="nav-number">1.3.3.10.</span> <span class="nav-text">10）增加了sys schema</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考链接"><span class="nav-number">1.4.</span> <span class="nav-text">参考链接</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zaki</span>
+</div>
+
+
+<div class="powered-by">
+  Zaki
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("irdUYyX0kNduCKo3atibKalh-gzGzoHsz", "yI1UAMzULuJXfJxt5wuWjU0k");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+  
+  
+  
+    <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>
