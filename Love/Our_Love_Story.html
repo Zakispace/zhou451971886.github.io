@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)http://54.254.168.63:8080/HuanHuanLoveU/baobao.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Our Love Story</title>
+	
+	<style type="text/css">
+		@font-face {
+			font-family: digit;
+			src: url('digital-7_mono.ttf') format("truetype");
+		}
+	</style>
+	<link href="./Our Love Story_files/default.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="./Our Love Story_files/jquery.js"></script>
+	<script type="text/javascript" src="./Our Love Story_files/garden.js"></script>
+    <script type="text/javascript" src="./Our Love Story_files/functions.js"></script>
+    <script type="text/javascript">
+var canvas = document.getElementById("cavs");
+const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight;
+canvas.setAttribute("width", WIDTH);
+canvas.setAttribute("height", HEIGHT);
+var context = canvas.getContext("2d");
+var start =
+{
+    loves: [],
+    DURATION: 30,
+    begin: function()
+    {
+        this.createLove();
+    },
+    createLove: function()
+    {
+        for (var i = 0; i < WIDTH / 59; i++)
+        {
+            var love = new Love();
+            this.loves.push(love);
+        }
+        setInterval(this.drawLove.bind(this), this.DURATION);
+    },
+    drawLove: function()
+    {
+        context.clearRect(0, 0, WIDTH, HEIGHT);
+        for (var key in this.loves)
+        {
+            this.loves[key].draw();
+        }
+    }
+}
+function Love()
+{
+    var me = this;
+    function rand() 
+    {
+        me.maxScale = (Math.random() * 3.2 + 1.2) * WIDTH / 521;
+        me.curScale = 1.2 * WIDTH / 521;
+        me.x = Math.floor(Math.random() * WIDTH - 40);
+        me.y = Math.floor(HEIGHT - Math.random() * 200);
+        me.ColR = Math.floor(Math.random() * 255);
+        me.ColG = Math.floor(Math.random() * 255);
+        me.ColB = Math.floor(Math.random() * 255);
+        me.alpha = Math.random() * 0.2 + 0.8;
+        me.vector = Math.random() * 5 + 0.4;
+    }
+    (function(){rand();} ());
+    me.draw = function()
+    {
+        if (me.alpha < 0.01) rand();
+        if(me.curScale < me.maxScale) me.curScale += 0.3;
+        x = me.x;
+        y = me.y;
+        scale = me.curScale;
+        context.fillStyle = "rgba(" + me.ColR + "," + me.ColG + "," + me.ColB + "," + me.alpha + ")";
+        context.shadowBlur = 10;
+        context.shadowColor = "white";
+        context.beginPath();
+        context.bezierCurveTo( x + 2.5*scale, y + 2.5*scale, x + 2.0*scale, y, x, y );
+        context.bezierCurveTo( x - 3.0*scale, y, x - 3.0*scale, y + 3.5*scale,x - 3.0*scale,y + 3.5*scale );
+        context.bezierCurveTo( x - 3.0*scale, y + 5.5*scale, x - 1.0*scale, y + 7.7*scale, x + 2.5*scale, y + 9.5*scale );
+        context.bezierCurveTo( x + 6.0*scale, y + 7.7*scale, x + 8.0*scale, y + 5.5*scale, x + 8.0*scale, y + 3.5*scale );
+        context.bezierCurveTo( x + 8.0*scale, y + 3.5*scale, x + 8.0*scale, y, x + 5.0*scale, y );
+        context.bezierCurveTo( x + 3.5*scale, y, x + 2.5*scale, y + 2.5*scale, x + 2.5*scale, y + 2.5*scale );
+        context.fill();
+        context.closePath();
+        me.y -= me.vector;
+        me.alpha -= (me.vector / 2.9 * 3.5 / HEIGHT);
+    }
+}
+window.onload = function()
+{
+    start.begin();
+}
+</script>
+</head>
+
+<body mpa-version="4.6.13" mpa-extension-id="ibefaeehajgcpooopoegkifhgecigeeg">
+	<div id="mainDiv">
+		<div id="content" style="width: 1110px; height: 625px; margin-top: 51px; margin-left: 165px;">
+			<div id="code" style="margin-top: 112.5px;">
+				<!--<span class="comments">傻瓜，</span><br>-->
+				<span class="space"><span class="comments">寒来暑往，秋收冬藏</span><br>
+				<span class="space"><span class="comments">我们在一起一年了</span><br>
+				<span class="space"><span class="comments">一年的时间，不长也不短</span><br>
+				<span class="space"><span class="comments">一年的时间发生了很多事情</span><br>
+				<span class="space"><span class="comments">大学毕业的雨夜，一顿烧烤一把伞</span><br>
+				<span class="space"><span class="comments">之后我们的故事开始了</span><br>
+				<span class="space"><span class="comments">第一次单独一起吃饭——学校外的老地方</span><br>
+				<span class="space"><span class="comments">第一次正式约会——龙湖天街肉蟹煲</span><br>
+				<span class="space"><span class="comments">第一次一起电影——大鱼海棠</span><br>
+				<span class="space"><span class="comments">第一次牵手——在电影院看多啦A梦</span><br>
+				<span class="space"><span class="comments">第一次尝试亲吻——歇台子</span><br>
+				<span class="space"><span class="comments">第一次一起洗脚^_^，然后发生了不可描述的事情</span><br>
+				<span class="space"><span class="comments">第一次一起做饭</span><br>
+				<span class="space"><span class="comments">第一次一起看小黄片</span><br>
+				<span class="space"><span class="comments">第一次互相陪伴对方的生日</span><br>
+				<span class="space"><span class="comments">第一次一起看星空——峨眉山的晚上</span><br>
+				<span class="space"><span class="comments">第一次一起看日出——峨眉山的清晨</span><br>
+				<span class="space"><span class="comments">第一次两人单独旅游——稻城亚丁</span><br>
+				<span class="space"><span class="comments">第一次一起爬上5100海拔的高山</span><br>
+				<span class="space"><span class="comments">第一次.............</span><br>
+				<span class="space"><span class="comments">我们一起经历了太多太多的第一次</span><br>
+				<span class="space"><span class="comments">可能有些第一次我没有想起来，我们可以一起回忆记录下来</span><br>
+				<span class="space"><span class="comments">以后老了我们一起把我们经历过的第一次再做一遍^_^</span><br>
+				<span class="space"><span class="comments">宝贝，一周年纪念日快乐！</span><br>
+				<span class="space"><span class="comments">未来我们还会有更多的有趣经历</span><br>
+				<span class="space"><span class="comments">我们都可以一起记录下来哟！</span></span></span></span></div>
+			<br>
+			<br>
+			<br><br><br>
+			<div id="loveHeart">
+				<canvas id="garden" width="670" height="625"></canvas>
+				<div id="words">
+					<div id="messages">
+						宝宝,我爱你！
+						<div id="elapseClock"><span class="digit">552</span> days <span class="digit">19</span> hours <span class="digit">27</span> minutes <span class="digit">30</span> seconds</div>
+					</div>
+					<div id="loveu">
+						Love u forever and ever.<br>
+						<div class="signature">- Zaki</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+	<script type="text/javascript">
+		var offsetX = $("#loveHeart").width() / 2;
+		var offsetY = $("#loveHeart").height() / 2 - 55;
+		var together = new Date();
+		together.setFullYear(2016, 11, 25);
+		together.setHours(0);
+		together.setMinutes(0);
+		together.setSeconds(0);
+		together.setMilliseconds(0);
+		
+		if (!document.createElement('canvas').getContext) {
+			var msg = document.createElement("div");
+			msg.id = "errorMsg";
+			msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"; 
+			document.body.appendChild(msg);
+			$("#code").css("display", "none")
+			$("#copyright").css("position", "absolute");
+			$("#copyright").css("bottom", "10px");
+		    document.execCommand("stop");
+		} else {
+			setTimeout(function () {
+				startHeartAnimation();
+			}, 5000);
+
+			timeElapse(together);
+			setInterval(function () {
+				timeElapse(together);
+			}, 500);
+
+			adjustCodePosition();
+			$("#code").typewriter();
+		}
+	</script>
+
+
+<div class="mpa-sc account-switcher" data-z="100" style="display: block;"></div><div class="mpa-sc article-gatherer new mpa-rootsc" data-z="100" style="display: block;" id="mpa-rootsc-article-gatherer"></div><div class="mpa-sc image-gatherer new mpa-rootsc" data-z="100" style="display: block;" id="mpa-rootsc-image-gatherer"></div><div class="mpa-sc page-clipper new mpa-rootsc" data-z="100" style="display: block;" id="mpa-rootsc-page-clipper"></div><div class="mpa-sc notifier new mpa-rootsc" data-z="110" style="display: block;" id="mpa-rootsc-notifier"></div></body></html>
